@@ -3,68 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StreamVault Admin v2</title>
+<title>StreamVault Admin — Blogger Control Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-:root {
+/* ════════════════════════════════════════
+   STREAMVAULT ADMIN v3 — FULL BLOGGER CONTROL
+   ════════════════════════════════════════ */
+:root{
   --bg:#07070e;--bg2:#0e0e1a;--bg3:#151524;--card:#111120;
   --border:#1e1e35;--border2:#2a2a48;
   --accent:#e63946;--accent2:#ff6b35;--gold:#ffd60a;
-  --blue:#3b82f6;--green:#10b981;--purple:#8b5cf6;
-  --dm:#2563eb;--rumble:#65a30d;
+  --blue:#3b82f6;--green:#10b981;--purple:#8b5cf6;--teal:#06b6d4;
   --text:#eeeeff;--text2:#7878a0;--text3:#3a3a58;
-  --sidebar:230px;--topbar:60px;--r:10px;
-  --t:.2s cubic-bezier(.4,0,.2,1);
+  --sidebar:235px;--r:10px;--t:.2s cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* ── LOGIN ── */
-#svLogin{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
-.login-box{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:48px 40px;width:390px;box-shadow:0 32px 80px rgba(0,0,0,.7);animation:fadeUp .4s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.login-logo{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 50%,#1a0a2e,#0a0a0f 70%);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:0}
+.login-wrap{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--card);border:1px solid var(--border2);border-radius:20px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.8);animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.login-left{background:linear-gradient(135deg,#1a0520,#0d1535,#001a2e);padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
+.login-logo{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .login-logo span{color:var(--text)}
-.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
-.login-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:7px;display:block}
-.login-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:9px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:var(--t);margin-bottom:14px}
-.login-input:focus{border-color:var(--accent);background:var(--bg2)}
-.login-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:9px;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:var(--t);margin-top:4px}
-.login-btn:hover{background:#c1121f;transform:translateY(-1px)}
-.login-err{font-size:13px;color:var(--accent);text-align:center;margin-top:12px;min-height:20px}
-.login-hint{font-size:12px;color:var(--text3);text-align:center;margin-top:14px;background:var(--bg3);border-radius:8px;padding:10px 14px;border:1px solid var(--border)}
+.login-tagline{font-size:14px;color:var(--text2);margin-bottom:32px;line-height:1.6}
+.login-feature{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:var(--text2)}
+.login-feature:last-child{border:none}
+.login-feat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.login-right{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
+.login-right h2{font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:6px}
+.login-right p{font-size:13px;color:var(--text2);margin-bottom:32px}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1f1f1f;border:none;border-radius:10px;padding:14px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:var(--t);width:100%;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.google-btn:hover{background:#f0f0f0;transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.google-btn svg{flex-shrink:0}
+.login-note{font-size:12px;color:var(--text3);text-align:center;margin-top:16px;line-height:1.5}
+.login-err{font-size:13px;color:var(--accent);text-align:center;margin-top:12px;min-height:20px;padding:8px;background:rgba(230,57,70,.08);border-radius:7px;display:none}
+.login-err.on{display:block}
 
-/* ── LAYOUT ── */
+/* ── APP SHELL ── */
 #svApp{display:none;min-height:100vh}
-.adm-sidebar{width:var(--sidebar);position:fixed;left:0;top:0;bottom:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:var(--t)}
-.sb-logo{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
-.sb-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)}
+.adm-sidebar{width:var(--sidebar);position:fixed;left:0;top:0;bottom:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.sb-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--accent)}
 .sb-logo-txt span{color:var(--text)}
-.sb-badge{background:var(--accent);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.5px}
-.sb-nav{padding:10px 0;flex:1;overflow-y:auto}
-.sb-section{padding:8px 18px 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
-.sb-item{display:flex;align-items:center;gap:11px;padding:10px 18px;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:var(--t);border-left:3px solid transparent;position:relative}
+.sb-badge{background:var(--accent);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px}
+.sb-blog-pill{margin:10px 12px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px}
+.sb-blog-pill a{color:var(--blue);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.sb-blog-pill a:hover{color:var(--accent)}
+.sb-nav{padding:6px 0;flex:1;overflow-y:auto}
+.sb-section{padding:10px 16px 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text3)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:var(--t);border-left:3px solid transparent}
 .sb-item:hover{background:var(--bg3);color:var(--text)}
 .sb-item.on{background:var(--bg3);color:var(--accent);border-left-color:var(--accent)}
-.sb-item svg{flex-shrink:0}
+.sb-item svg{flex-shrink:0;width:15px;height:15px}
 .sb-count{margin-left:auto;background:var(--bg);border:1px solid var(--border);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;color:var(--text2)}
 .sb-item.on .sb-count{background:rgba(230,57,70,.15);border-color:rgba(230,57,70,.3);color:var(--accent)}
-.sb-bottom{padding:16px 18px;border-top:1px solid var(--border)}
-.sb-user{display:flex;align-items:center;gap:10px}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
-.sb-uname{font-size:13px;font-weight:600}
-.sb-urole{font-size:11px;color:var(--text2)}
-.sb-logout{margin-left:auto;background:none;border:1px solid var(--border);color:var(--text3);border-radius:7px;padding:5px 8px;cursor:pointer;transition:var(--t)}
+.sb-bottom{padding:12px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px}
+.sb-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;object-fit:cover}
+.sb-avatar-ph{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.sb-urole{font-size:10px;color:var(--text2)}
+.sb-logout{background:none;border:1px solid var(--border);color:var(--text3);border-radius:6px;padding:5px 7px;cursor:pointer;transition:var(--t);font-size:11px}
 .sb-logout:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── MAIN ── */
 .adm-main{margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column}
-.adm-topbar{position:sticky;top:0;z-index:50;background:rgba(7,7,14,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:var(--topbar);padding:0 24px;display:flex;align-items:center;gap:14px}
-.tb-title{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text)}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.tb-pill{font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:4px 10px;border-radius:6px}
-.tb-pill a{color:var(--blue);text-decoration:none}
-.tb-pill a:hover{color:var(--accent)}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:var(--t);border:none}
+.adm-topbar{position:sticky;top:0;z-index:50;background:rgba(7,7,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:58px;padding:0 22px;display:flex;align-items:center;gap:12px}
+.tb-title{font-family:'Bebas Neue',sans-serif;font-size:19px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-status{font-size:11px;padding:4px 10px;border-radius:6px;display:flex;align-items:center;gap:5px}
+.tb-status.ok{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:var(--green)}
+.tb-status.loading{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);color:var(--blue)}
+.tb-status.err{background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.25);color:var(--accent)}
+.spin{animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:var(--t);border:none}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:#c1121f;transform:translateY(-1px)}
 .btn-secondary{background:var(--bg3);border:1px solid var(--border2);color:var(--text)}
@@ -75,240 +92,253 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);color:var(--accent)}
 .btn-danger:hover{background:var(--accent);color:#fff}
-.btn-sm{padding:5px 12px;font-size:12px}
-.btn-icon{padding:8px}
-.adm-page{display:none;padding:24px;flex:1}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+
+/* ── PAGES ── */
+.adm-page{display:none;padding:22px;flex:1;animation:fadeIn .2s ease}
 .adm-page.on{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 /* ── STAT CARDS ── */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:flex-start;gap:14px;transition:var(--t)}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:13px;margin-bottom:22px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;align-items:flex-start;gap:12px;transition:var(--t)}
 .stat-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;margin-bottom:3px}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;margin-bottom:2px}
 .stat-lbl{font-size:12px;color:var(--text2)}
-.stat-chg{font-size:11px;margin-top:4px}
-.chg-up{color:var(--green)}.chg-dn{color:var(--accent)}
 
 /* ── TABLE ── */
 .tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.tbl-toolbar{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tbl-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0 13px}
-.tbl-search input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 0;width:200px}
+.tbl-toolbar{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.tbl-search{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0 12px}
+.tbl-search input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 0;width:190px}
 .tbl-search input::placeholder{color:var(--text3)}
-.tbl-filter{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;outline:none}
-.tbl-filter option{background:var(--bg3)}
+.tbl-sel{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:7px;padding:7px 11px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;outline:none}
+.tbl-sel option{background:var(--bg3)}
 .tbl-info{margin-left:auto;font-size:12px;color:var(--text2)}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;padding:11px 16px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
-td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--bg3);vertical-align:middle}
+th{text-align:left;padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--bg3);vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.02)}
-.td-thumb{width:74px;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:var(--bg3);flex-shrink:0}
+tr:hover td{background:rgba(255,255,255,.015)}
+.td-thumb{width:68px;aspect-ratio:16/9;border-radius:5px;overflow:hidden;background:var(--bg3)}
 .td-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.td-title{max-width:200px}
-.td-title-main{font-weight:600;font-size:13px;line-height:1.4;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
-.td-title-desc{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
-.src-pill{display:inline-flex;padding:3px 9px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
-.sp-dailymotion{background:var(--dm);color:#fff}
-.sp-rumble{background:var(--rumble);color:#fff}
-.sp-youtube{background:#ff0000;color:#fff}
-.cat-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;color:var(--text2)}
-.badge{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700}
-.badge-green{background:rgba(16,185,129,.15);color:var(--green)}
-.badge-gold{background:rgba(255,214,10,.12);color:var(--gold)}
-.badge-blue{background:rgba(59,130,246,.12);color:var(--blue)}
+.pill{display:inline-flex;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase}
+.pill-dm{background:#2563eb;color:#fff}
+.pill-rm{background:#65a30d;color:#fff}
+.pill-yt{background:#ff0000;color:#fff}
+.pill-draft{background:rgba(255,214,10,.15);color:var(--gold);border:1px solid rgba(255,214,10,.3)}
+.pill-pub{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.cat-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;color:var(--text2)}
 .act-row{display:flex;gap:5px;align-items:center}
-.feat-star{color:var(--gold);font-size:14px}
-
-/* ── PAGINATION ── */
-.pag-row{display:flex;align-items:center;gap:6px;padding:12px 18px;border-top:1px solid var(--border);flex-wrap:wrap}
-.pg-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:7px;padding:5px 11px;font-size:12px;cursor:pointer;transition:var(--t);font-family:'DM Sans',sans-serif}
-.pg-btn:hover{background:var(--border);color:var(--text)}
+.pag-row{display:flex;align-items:center;gap:5px;padding:11px 16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.pg-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:var(--t);font-family:'DM Sans',sans-serif}
 .pg-btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.pg-info{margin-left:auto;font-size:12px;color:var(--text3)}
+.pg-info{margin-left:auto;font-size:11px;color:var(--text3)}
 
 /* ── MODAL ── */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-ov.on{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:680px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.8)}
-.modal-hd{padding:22px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:2}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:20px}
-.modal-close{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:18px;line-height:1;transition:var(--t)}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:700px;max-width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.9)}
+.modal-hd{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:2}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:19px}
+.modal-close{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:7px;padding:5px 9px;cursor:pointer;font-size:17px;line-height:1;transition:var(--t)}
 .modal-close:hover{border-color:var(--accent);color:var(--accent)}
-.modal-body{padding:24px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.form-row.single{grid-template-columns:1fr}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
-.form-input{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:var(--t);width:100%}
+.modal-body{padding:22px}
+.modal-ft{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--bg2);position:sticky;bottom:0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
+.form-row.one{grid-template-columns:1fr}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text2)}
+.form-input{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:9px 13px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:var(--t);width:100%}
 .form-input:focus{border-color:var(--accent);background:var(--bg)}
 select.form-input option{background:var(--bg3)}
-.form-hint{font-size:11px;color:var(--text3);margin-top:2px}
-.form-check{display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;padding:10px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px}
-.form-check input{accent-color:var(--accent);width:15px;height:15px}
-.modal-ft{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px;sticky:bottom;background:var(--bg2)}
+textarea.form-input{resize:vertical;min-height:80px;line-height:1.5}
+.form-hint{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4}
+.form-check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:9px 13px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px}
+.form-check input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
 
 /* ── PLAYLIST EPISODES ── */
-.pl-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.pl-hd-t{font-weight:700;font-size:13px}
-.pl-ep{display:flex;align-items:center;gap:10px;padding:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:7px}
-.pl-ep-num{width:22px;text-align:center;font-size:11px;color:var(--text3);font-weight:700;flex-shrink:0}
-.pl-ep-fields{display:grid;grid-template-columns:2fr 2fr 1fr;gap:6px;flex:1}
+.pl-ep{display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.pl-ep-num{width:20px;text-align:center;font-size:11px;color:var(--text3);font-weight:700;flex-shrink:0}
+.pl-ep-fields{display:grid;grid-template-columns:2fr 2fr 1fr 1fr;gap:5px;flex:1}
 .pl-ep-rm{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;border-radius:5px;transition:var(--t)}
-.pl-ep-rm:hover{color:var(--accent);background:rgba(230,57,70,.1)}
+.pl-ep-rm:hover{color:var(--accent)}
 
-/* ── SECTIONS ── */
-.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:18px}
-.section-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;margin-bottom:14px;color:var(--text2);display:flex;align-items:center;gap:7px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.bar-lbl{font-size:12px;color:var(--text2);width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bar-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+/* ── SECTION CARD ── */
+.sec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.sec-card h3{font-family:'Bebas Neue',sans-serif;font-size:15px;margin-bottom:13px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.bar-lbl{font-size:12px;color:var(--text2);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .6s ease}
-.bar-val{font-size:11px;color:var(--text2);width:42px;text-align:right}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.empty-state{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
-.empty-state p{margin-bottom:10px}
+.bar-val{font-size:11px;color:var(--text2);width:38px;text-align:right}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.empty-st{text-align:center;padding:36px 20px;color:var(--text2);font-size:13px}
 
-/* ── EXPORT BOX ── */
-.export-box{background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:16px;font-family:monospace;font-size:11px;color:var(--text2);line-height:1.6;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+/* ── ALERT BOXES ── */
+.alert{padding:11px 15px;border-radius:8px;font-size:13px;line-height:1.5;margin-bottom:14px;display:flex;gap:9px;align-items:flex-start}
+.alert-warn{background:rgba(255,214,10,.07);border:1px solid rgba(255,214,10,.22);color:#e8d800}
+.alert-info{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.22);color:var(--blue)}
+.alert-green{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.22);color:var(--green)}
+.alert-red{background:rgba(230,57,70,.07);border:1px solid rgba(230,57,70,.22);color:var(--accent)}
 
-/* ── DEPLOY GUIDE ── */
-.deploy-step{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start}
-.deploy-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;margin-top:1px}
-.deploy-content h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.deploy-content p{font-size:12px;color:var(--text2);line-height:1.6}
-.deploy-content code{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;font-family:monospace;font-size:11px;color:var(--accent)}
-.deploy-content a{color:var(--blue);text-decoration:none}
-.deploy-content a:hover{text-decoration:underline}
-.alert{padding:12px 16px;border-radius:9px;font-size:13px;line-height:1.5;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
-.alert-warn{background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.25);color:#e8d800}
-.alert-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);color:var(--blue)}
-.alert-green{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:var(--green)}
+/* ── LABEL CHIPS ── */
+.label-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:16px;font-size:12px;margin:3px}
+.label-chip button{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;line-height:1;padding:0;transition:color .15s}
+.label-chip button:hover{color:var(--accent)}
+
+/* ── PAGE EDITOR ── */
+.page-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:13px;transition:var(--t)}
+.page-card:hover{border-color:var(--border2)}
+.page-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px}
+.page-title{font-weight:600;font-size:14px;margin-bottom:2px}
+.page-url{font-size:11px;color:var(--text3)}
 
 /* ── TOAST ── */
-.adm-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:11px 22px;border-radius:9px;font-size:13px;font-weight:600;transition:transform .3s;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.7);white-space:nowrap}
+.adm-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;transition:transform .3s;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.7);white-space:nowrap;pointer-events:none}
 .adm-toast.on{transform:translateX(-50%) translateY(0)}
 .adm-toast.ok{border-color:var(--green);color:var(--green)}
 .adm-toast.err{border-color:var(--accent);color:var(--accent)}
 
 /* ── DEL MODAL ── */
-.del-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:32px 28px;width:380px;max-width:100%;box-shadow:0 40px 100px rgba(0,0,0,.8);text-align:center}
-.del-icon{width:56px;height:56px;border-radius:50%;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-.del-title{font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:8px}
-.del-sub{font-size:13px;color:var(--text2);margin-bottom:22px}
+.del-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:30px 26px;width:360px;max-width:100%;text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.9)}
+.del-icon{width:52px;height:52px;border-radius:50%;background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.del-title{font-family:'Bebas Neue',sans-serif;font-size:21px;margin-bottom:7px}
+.del-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
 
-/* ── SETTINGS ── */
-.set-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:18px}
-.set-section h3{font-family:'Bebas Neue',sans-serif;font-size:16px;margin-bottom:16px;color:var(--text2)}
+/* ── PROGRESS OVERLAY ── */
+#progressOv{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+#progressOv.on{display:flex}
+.progress-box{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:28px 36px;text-align:center;min-width:280px}
+.progress-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+.progress-msg{font-size:14px;color:var(--text2)}
 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
 @media(max-width:768px){
   .adm-sidebar{transform:translateX(-100%)}
   .adm-main{margin-left:0}
-  .form-row{grid-template-columns:1fr}
-  .grid-2,.grid-3{grid-template-columns:1fr}
+  .form-row,.grid2{grid-template-columns:1fr}
+  .login-wrap{grid-template-columns:1fr}
+  .login-left{display:none}
 }
 </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════
-     LOGIN
+     LOGIN SCREEN
 ══════════════════════════════════════ -->
-<div id="svLogin">
-  <div class="login-box">
-    <div class="login-logo">⬡ <span>StreamVault</span></div>
-    <div class="login-sub">Admin Control Panel — Manage your Blogger video site</div>
-    <label class="login-label">Username</label>
-    <input class="login-input" id="lgUser" type="text" placeholder="admin" autocomplete="username"/>
-    <label class="login-label">Password</label>
-    <input class="login-input" id="lgPass" type="password" placeholder="••••••••" autocomplete="current-password"/>
-    <button class="login-btn" onclick="svDoLogin()">Sign In</button>
-    <div class="login-err" id="lgErr"></div>
-    <div class="login-hint">Default: <strong>admin</strong> / <strong>streamvault2025</strong><br>Change in Settings after login.</div>
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="login-logo">⬡ <span>StreamVault</span></div>
+      <div class="login-tagline">Full Blogger control panel. Add videos, manage posts, labels, and pages — all auto-published to your blog instantly.</div>
+      <div class="login-feature"><div class="login-feat-icon" style="background:rgba(230,57,70,.15)">📹</div><div><strong style="color:var(--text)">Auto-publish videos</strong><br>Add videos → instantly live on blog</div></div>
+      <div class="login-feature"><div class="login-feat-icon" style="background:rgba(59,130,246,.15)">🏷️</div><div><strong style="color:var(--text)">Manage labels</strong><br>Category pills auto-generated</div></div>
+      <div class="login-feature"><div class="login-feat-icon" style="background:rgba(16,185,129,.15)">📄</div><div><strong style="color:var(--text)">Pages control</strong><br>Create About, Contact pages</div></div>
+      <div class="login-feature"><div class="login-feat-icon" style="background:rgba(255,214,10,.15)">📊</div><div><strong style="color:var(--text)">Analytics</strong><br>Views, likes, trending videos</div></div>
+    </div>
+    <div class="login-right">
+      <h2>Welcome Back</h2>
+      <p>Sign in with your Google account that owns<br><strong style="color:var(--accent)">rongkunkmeanmnus.blogspot.com</strong></p>
+      <button class="google-btn" onclick="doGoogleLogin()">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+        Continue with Google
+      </button>
+      <div class="login-err" id="loginErr"></div>
+      <div class="login-note">Only the blog owner account can access this panel.<br>Visitors to your blog never need to log in.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS OVERLAY -->
+<div id="progressOv">
+  <div class="progress-box">
+    <div class="progress-spinner"></div>
+    <div class="progress-msg" id="progressMsg">Publishing to Blogger...</div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════
-     APP SHELL
+     APP
 ══════════════════════════════════════ -->
 <div id="svApp">
-
   <!-- SIDEBAR -->
   <aside class="adm-sidebar">
     <div class="sb-logo">
-      <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+      <div style="width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
       </div>
-      <div><div class="sb-logo-txt">Stream<span>Vault</span></div></div>
-      <div class="sb-badge">ADMIN</div>
+      <div class="sb-logo-txt">Stream<span>Vault</span></div>
+      <div class="sb-badge">v3</div>
     </div>
-
+    <div class="sb-blog-pill">
+      🌐 <a href="https://rongkunkmeanmnus.blogspot.com" target="_blank">rongkunkmeanmnus.blogspot.com</a>
+    </div>
     <nav class="sb-nav">
-      <div class="sb-section">Main</div>
+      <div class="sb-section">Overview</div>
       <div class="sb-item on" onclick="goPage('dashboard',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </div>
+      <div class="sb-section">Content</div>
       <div class="sb-item" onclick="goPage('videos',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-        All Videos <span class="sb-count" id="sbVideoCnt">0</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Videos <span class="sb-count" id="sbVideoCnt">—</span>
       </div>
       <div class="sb-item" onclick="goPage('playlists',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        Playlists <span class="sb-count" id="sbPlCnt">0</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Playlists <span class="sb-count" id="sbPlCnt">—</span>
       </div>
-      <div class="sb-section">Content</div>
-      <div class="sb-item" onclick="goPage('categories',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        Categories
+      <div class="sb-item" onclick="goPage('labels',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Labels <span class="sb-count" id="sbLabelCnt">—</span>
       </div>
+      <div class="sb-item" onclick="goPage('pages',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Pages <span class="sb-count" id="sbPageCnt">—</span>
+      </div>
+      <div class="sb-section">Insights</div>
       <div class="sb-item" onclick="goPage('analytics',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Analytics
-      </div>
-      <div class="sb-section">Deploy</div>
-      <div class="sb-item" onclick="goPage('export',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Export &amp; Deploy
-      </div>
-      <div class="sb-item" onclick="goPage('blogger',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        Blogger Setup
       </div>
       <div class="sb-section">System</div>
       <div class="sb-item" onclick="goPage('settings',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.88 3.4l-2.35 1.36a7 7 0 0 0-1-1.73L19.07 4.93zm-.14 14.14-1.36-2.35a7 7 0 0 1-1.73 1l.13 2.73a10 10 0 0 1-3.4 1.88v-2.73a7 7 0 0 1-2 0v2.73a10 10 0 0 1-3.4-1.88l.13-2.73a7 7 0 0 1-1.73-1L4.21 19.07a10 10 0 0 1-1.88-3.4l2.35-1.36a7 7 0 0 0 1 1.73l-2.73.13A10 10 0 0 1 4.93 4.93l1.36 2.35a7 7 0 0 0 1.73-1L7.89 3.55A10 10 0 0 1 12 2v2.73a7 7 0 0 1 2 0V2a10 10 0 0 1 3.4 1.88L15.67 6.2a7 7 0 0 0 1 1.73l2.73-.13z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.88 3.4l-2.35 1.36a7 7 0 0 0-1-1.73L19.07 4.93z"/></svg>
         Settings
       </div>
     </nav>
-
     <div class="sb-bottom">
       <div class="sb-user">
-        <div class="sb-avatar" id="sbAvatarLetter">A</div>
-        <div>
-          <div class="sb-uname" id="sbUserName">Admin</div>
-          <div class="sb-urole">Super Admin</div>
+        <img class="sb-avatar" id="sbAvatar" src="" alt="" style="display:none"/>
+        <div class="sb-avatar-ph" id="sbAvatarPh">A</div>
+        <div style="flex:1;min-width:0">
+          <div class="sb-uname" id="sbUname">Loading...</div>
+          <div class="sb-urole">Blog Owner</div>
         </div>
-        <button class="sb-logout" onclick="svLogout()" title="Logout">⏻</button>
+        <button class="sb-logout" onclick="doLogout()" title="Sign out">⏻</button>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN AREA -->
   <main class="adm-main">
     <div class="adm-topbar">
       <span class="tb-title" id="tbTitle">Dashboard</span>
-      <div class="tb-pill">🌐 <a id="tbBlogUrl" href="#" target="_blank">rongkunkmeanmnus.blogspot.com</a></div>
       <div class="tb-right">
-        <button class="btn btn-secondary btn-sm" onclick="goPage('export',null);document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'))">📤 Export</button>
-        <button class="btn btn-primary" onclick="openAddModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <div class="tb-status loading" id="apiStatus">
+          <span class="spin">⟳</span> Connecting...
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="refreshAll()">🔄 Refresh</button>
+        <button class="btn btn-primary" onclick="openAddVideo()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Video
         </button>
       </div>
@@ -316,62 +346,46 @@ select.form-input option{background:var(--bg3)}
 
     <!-- ════ DASHBOARD ════ -->
     <div class="adm-page on" id="page-dashboard">
-      <div class="stat-row" id="statRow"></div>
-      <div class="grid-2">
-        <div class="section-card">
-          <h3>📊 Top Videos by Views</h3>
-          <div id="chartTopViews"></div>
-        </div>
-        <div class="section-card">
-          <h3>🔀 Source Breakdown</h3>
-          <div id="chartSrcBreak"></div>
-          <div id="srcBreakDetails" style="margin-top:14px"></div>
-        </div>
+      <div class="stat-row" id="dashStats"></div>
+      <div class="grid2">
+        <div class="sec-card"><h3>📈 Top Videos by Views</h3><div id="dashTopViews"><div class="empty-st">Loading...</div></div></div>
+        <div class="sec-card"><h3>🏷️ Videos by Label</h3><div id="dashByLabel"><div class="empty-st">Loading...</div></div></div>
       </div>
-      <div class="section-card" style="margin-top:0">
+      <div class="sec-card">
         <h3>⚡ Quick Actions</h3>
-        <div style="display:flex;flex-wrap:wrap;gap:10px">
-          <button class="btn btn-primary" onclick="openAddModal()">➕ Add Video</button>
-          <button class="btn btn-secondary" onclick="goPage('export',null);genExport()">📤 Generate Export Code</button>
-          <button class="btn btn-ghost" onclick="goPage('blogger',null)">📖 Blogger Setup Guide</button>
-          <button class="btn btn-ghost" onclick="dlJSON()">⬇️ Download JSON Backup</button>
-          <button class="btn btn-danger btn-sm" onclick="if(confirm('Clear ALL video data?')){DB=[];saveDB();renderDash();toast('All data cleared','ok')}">🗑 Clear All Data</button>
+        <div style="display:flex;flex-wrap:wrap;gap:9px">
+          <button class="btn btn-primary" onclick="openAddVideo()">➕ Add Video</button>
+          <button class="btn btn-secondary" onclick="goPage('labels',null);loadLabels()">🏷️ Manage Labels</button>
+          <button class="btn btn-secondary" onclick="goPage('pages',null);loadPages()">📄 Manage Pages</button>
+          <button class="btn btn-ghost" onclick="window.open('https://rongkunkmeanmnus.blogspot.com','_blank')">🌐 View Blog</button>
+          <button class="btn btn-ghost" onclick="window.open('https://www.blogger.com/blog/posts/8085553756381756834','_blank')">📝 Blogger Dashboard</button>
         </div>
       </div>
     </div>
 
     <!-- ════ VIDEOS ════ -->
     <div class="adm-page" id="page-videos">
+      <div class="alert alert-green">✅ Videos you add here are <strong>automatically published</strong> to your Blogger site as posts. They appear on your blog immediately!</div>
       <div class="tbl-wrap">
         <div class="tbl-toolbar">
           <div class="tbl-search">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input placeholder="Search videos..." oninput="filterVideos(this.value)"/>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input placeholder="Search videos..." oninput="filterPosts(this.value)"/>
           </div>
-          <select class="tbl-filter" id="filterSrc" onchange="filterVideos(document.querySelector('.tbl-search input').value)">
-            <option value="">All Sources</option>
-            <option value="dailymotion">Dailymotion</option>
-            <option value="rumble">Rumble</option>
-            <option value="youtube">YouTube</option>
+          <select class="tbl-sel" id="filterStatus" onchange="filterPosts(document.querySelector('.tbl-search input').value)">
+            <option value="">All Status</option>
+            <option value="LIVE">Published</option>
+            <option value="DRAFT">Draft</option>
           </select>
-          <select class="tbl-filter" id="filterCat" onchange="filterVideos(document.querySelector('.tbl-search input').value)"></select>
-          <div class="tbl-info" id="videosTblInfo">0 videos</div>
-          <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Video</button>
+          <div class="tbl-info" id="videosTblInfo">Loading...</div>
+          <button class="btn btn-primary btn-sm" onclick="openAddVideo()">+ Add Video</button>
         </div>
         <div style="overflow-x:auto">
           <table>
             <thead><tr>
-              <th></th>
-              <th>Title</th>
-              <th>Source</th>
-              <th>Category</th>
-              <th>Duration</th>
-              <th>Views</th>
-              <th>Playlist</th>
-              <th>Featured</th>
-              <th>Actions</th>
+              <th>Thumbnail</th><th>Title</th><th>Source</th><th>Labels</th><th>Status</th><th>Published</th><th>Actions</th>
             </tr></thead>
-            <tbody id="videosTbody"></tbody>
+            <tbody id="videosTbody"><tr><td colspan="7"><div class="empty-st">Loading posts from Blogger...</div></td></tr></tbody>
           </table>
         </div>
         <div class="pag-row" id="videosPag"></div>
@@ -380,215 +394,88 @@ select.form-input option{background:var(--bg3)}
 
     <!-- ════ PLAYLISTS ════ -->
     <div class="adm-page" id="page-playlists">
+      <div class="alert alert-info">ℹ️ Playlist videos are Blogger posts that contain a <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">&lt;playlist&gt;</code> tag. Add them using the Add Video form.</div>
       <div class="tbl-wrap">
         <div class="tbl-toolbar">
           <span style="font-weight:700;font-size:14px">📋 Playlist Series</span>
-          <div class="tbl-info" id="plTblInfo"></div>
-          <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ New Playlist</button>
+          <div class="tbl-info" id="plInfo">Loading...</div>
+          <button class="btn btn-primary btn-sm" onclick="openAddVideo(true)">+ New Playlist</button>
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Title</th><th>Source</th><th>Episodes</th><th>Category</th><th>Views</th><th>Actions</th></tr></thead>
-            <tbody id="plTbody"></tbody>
+            <thead><tr><th>Title</th><th>Episodes</th><th>Labels</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="plTbody"><tr><td colspan="5"><div class="empty-st">Loading...</div></td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ════ CATEGORIES ════ -->
-    <div class="adm-page" id="page-categories">
-      <div class="grid-2">
-        <div class="section-card">
-          <h3>🏷️ Manage Categories</h3>
-          <div style="display:flex;gap:8px;margin-bottom:16px">
-            <input class="form-input" id="newCatInput" placeholder="e.g. comedy" style="flex:1"/>
-            <button class="btn btn-primary" onclick="addCat()">Add</button>
-          </div>
-          <div id="catChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    <!-- ════ LABELS ════ -->
+    <div class="adm-page" id="page-labels">
+      <div class="alert alert-info">ℹ️ Labels = Categories on your blog. They appear as filter pills on your homepage. Labels are managed via your Blogger posts.</div>
+      <div class="grid2">
+        <div class="sec-card">
+          <h3>🏷️ All Labels</h3>
+          <div id="labelsList" style="display:flex;flex-wrap:wrap;gap:5px;min-height:60px"><div class="empty-st" style="padding:20px">Loading labels...</div></div>
         </div>
-        <div class="section-card">
-          <h3>📊 Videos per Category</h3>
-          <div id="catBarChart"></div>
+        <div class="sec-card">
+          <h3>📊 Videos per Label</h3>
+          <div id="labelChart"></div>
         </div>
       </div>
+    </div>
+
+    <!-- ════ PAGES ════ -->
+    <div class="adm-page" id="page-pages">
+      <div class="alert alert-green">✅ Pages you create here are <strong>automatically published</strong> to your Blogger site.</div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+        <button class="btn btn-primary" onclick="openAddPage()">+ New Page</button>
+      </div>
+      <div id="pagesList"><div class="empty-st">Loading pages...</div></div>
     </div>
 
     <!-- ════ ANALYTICS ════ -->
     <div class="adm-page" id="page-analytics">
-      <div class="stat-row" id="analyticsStats"></div>
-      <div class="grid-2">
-        <div class="section-card"><h3>👁️ Top Views</h3><div id="anaTopViews"></div></div>
-        <div class="section-card"><h3>❤️ Top Liked</h3><div id="anaTopLikes"></div></div>
-        <div class="section-card"><h3>📋 Playlist vs Standalone</h3><div id="anaPlVsSt"></div></div>
-        <div class="section-card"><h3>🔀 Source Split</h3><div id="anaSrcBreak"></div></div>
-      </div>
-    </div>
-
-    <!-- ════ EXPORT ════ -->
-    <div class="adm-page" id="page-export">
-      <div class="alert alert-warn">⚠️ <div><strong>Blogger Note:</strong> Blogger's native page editor strips JavaScript. Use the method below to link this admin to your Blogger theme.</div></div>
-      <div class="grid-2">
-        <div class="section-card">
-          <h3>📤 Export svDB Code</h3>
-          <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Generate the <code style="background:var(--bg);border:1px solid var(--border2);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">var svDB=[...]</code> code, then paste it into your Blogger theme's <code style="background:var(--bg);border:1px solid var(--border2);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">&lt;script&gt;</code> section.</p>
-          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="genExport()">⚡ Generate Code</button>
-            <button class="btn btn-secondary" onclick="copyExport()">📋 Copy to Clipboard</button>
-            <button class="btn btn-ghost" onclick="dlJSON()">⬇️ Download JSON</button>
-          </div>
-          <div class="export-box" id="exportBox">Click "Generate Code" to create your svDB export...</div>
-        </div>
-        <div class="section-card">
-          <h3>📁 Import JSON</h3>
-          <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Import a previously exported JSON backup to restore your video database.</p>
-          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)"/>
-          <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📂 Choose JSON File</button>
-          <div id="importStatus" style="margin-top:12px;font-size:13px;color:var(--text2)"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ BLOGGER SETUP GUIDE ════ -->
-    <div class="adm-page" id="page-blogger">
-      <div class="alert alert-info">ℹ️ <div>This guide explains why <strong>rongkunkmeanmnus.blogspot.com/p/xadmin.html</strong> doesn't work and how to properly set up your admin + Blogger integration.</div></div>
-
-      <div class="section-card">
-        <h3>❓ Why Your Blogger Admin Page Doesn't Work</h3>
-        <p style="font-size:13px;color:var(--text2);line-height:1.7">
-          Blogger <strong style="color:var(--text)">strips all JavaScript</strong> from static Pages (like <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">/p/xadmin.html</code>). This means any <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">&lt;script&gt;</code> tags you paste there are silently removed. Similarly, label pages like <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-family:monospace;color:var(--accent)">/search/label/Drama</code> exist in Blogger but your theme must be set up to handle them — otherwise they just show a blank Blogger default layout.
-        </p>
-      </div>
-
-      <div class="section-card">
-        <h3>✅ The Correct Solution — 3 Options</h3>
-        <div class="deploy-step">
-          <div class="deploy-num">1</div>
-          <div class="deploy-content">
-            <h4>🏆 Best: Host this Admin on GitHub Pages or Netlify (Free)</h4>
-            <p>Upload <code>streamvault-admin-v2.html</code> to a free hosting service. Your admin will work perfectly at a URL like <code>yourname.github.io/sv-admin</code>. It syncs video data via localStorage and you copy the generated export code into your Blogger theme.</p>
-            <p style="margin-top:8px">➜ Go to <a href="https://pages.github.com" target="_blank">pages.github.com</a> — free, no server needed.</p>
-          </div>
-        </div>
-        <div class="deploy-step">
-          <div class="deploy-num">2</div>
-          <div class="deploy-content">
-            <h4>📁 Host on Google Drive</h4>
-            <p>Upload this HTML file to Google Drive, right-click → Share → "Anyone with link", then open using the direct link. Works without any hosting account.</p>
-          </div>
-        </div>
-        <div class="deploy-step">
-          <div class="deploy-num">3</div>
-          <div class="deploy-content">
-            <h4>💻 Run Locally</h4>
-            <p>Save this file to your computer and open it in your browser. It works completely offline. Use the Export button to copy code into Blogger.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3>🔗 How to Connect Admin → Blogger Theme</h3>
-        <div class="deploy-step">
-          <div class="deploy-num">1</div>
-          <div class="deploy-content">
-            <h4>Add or edit videos in this admin panel</h4>
-            <p>Use the <strong>All Videos</strong> page to add, edit, and delete videos.</p>
-          </div>
-        </div>
-        <div class="deploy-step">
-          <div class="deploy-num">2</div>
-          <div class="deploy-content">
-            <h4>Click "Export &amp; Deploy" → Generate Code</h4>
-            <p>Click <code>⚡ Generate Code</code> and then <code>📋 Copy to Clipboard</code>.</p>
-          </div>
-        </div>
-        <div class="deploy-step">
-          <div class="deploy-num">3</div>
-          <div class="deploy-content">
-            <h4>Paste into your Blogger Template</h4>
-            <p>Go to Blogger → Theme → Edit HTML. Find the line that says <code>var svDB=</code> and replace the entire array with your new exported code. Save the theme.</p>
-          </div>
-        </div>
-        <div class="deploy-step">
-          <div class="deploy-num">4</div>
-          <div class="deploy-content">
-            <h4>Fix Category Menu Links</h4>
-            <p>For your category links like <code>/search/label/Drama</code> to work, add them manually to your navbar in the template. Find the <code>sv-catrow</code> section and add a direct link like:<br><code>&lt;a class="sv-cat" href="/search/label/Drama"&gt;Drama&lt;/a&gt;</code></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3>📌 Your Blogger URL</h3>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn btn-blue" style="background:var(--blue);color:#fff;text-decoration:none" href="https://rongkunkmeanmnus.blogspot.com" target="_blank">🌐 Open Blog</a>
-          <a class="btn btn-secondary" style="text-decoration:none" href="https://www.blogger.com/blog/posts/8085553756381756834" target="_blank">📝 Blogger Dashboard</a>
-          <a class="btn btn-ghost" style="text-decoration:none" href="https://rongkunkmeanmnus.blogspot.com/search/label/Drama" target="_blank">🔖 Test Label: Drama</a>
-        </div>
+      <div class="stat-row" id="anaStats"></div>
+      <div class="grid2">
+        <div class="sec-card"><h3>👁️ Top by Views</h3><div id="anaTopV"></div></div>
+        <div class="sec-card"><h3>🏷️ Label Distribution</h3><div id="anaLabels"></div></div>
+        <div class="sec-card"><h3>🔀 Video Sources</h3><div id="anaSources"></div></div>
+        <div class="sec-card"><h3>📋 Playlist vs Single</h3><div id="anaPlSt"></div></div>
       </div>
     </div>
 
     <!-- ════ SETTINGS ════ -->
     <div class="adm-page" id="page-settings">
-      <div class="set-section">
-        <h3>🌐 Blog Settings</h3>
+      <div class="sec-card">
+        <h3>🌐 Blog Info</h3>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8">
+          <div>Blog URL: <strong style="color:var(--text)">https://rongkunkmeanmnus.blogspot.com</strong></div>
+          <div id="settingsBlogId">Blog ID: Loading...</div>
+          <div id="settingsOwner">Owner: Loading...</div>
+        </div>
+      </div>
+      <div class="sec-card">
+        <h3>⚙️ Theme Settings</h3>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px">These settings control how your blog theme looks. After saving, the changes apply to your blog immediately via the Blogger theme.</p>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Blog Name</label>
-            <input class="form-input" id="cfgName" placeholder="StreamVault"/>
+            <label class="form-label">Auto-Next Delay (seconds)</label>
+            <input class="form-input" id="cfgAutoNext" type="number" value="8" min="3" max="30"/>
           </div>
           <div class="form-group">
-            <label class="form-label">Blog URL</label>
-            <input class="form-input" id="cfgUrl" placeholder="https://rongkunkmeanmnus.blogspot.com"/>
+            <label class="form-label">Posts Per Page</label>
+            <input class="form-input" id="cfgPpp" type="number" value="12" min="4" max="48"/>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Default Video Source</label>
-            <select class="form-input" id="cfgSrc">
-              <option value="dailymotion">Dailymotion</option>
-              <option value="rumble">Rumble</option>
-              <option value="youtube">YouTube</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Videos Per Page</label>
-            <input class="form-input" id="cfgPpp" type="number" placeholder="12" min="4" max="48"/>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+        <button class="btn btn-primary" onclick="toast('Settings saved locally ✅','ok')">💾 Save</button>
       </div>
-
-      <div class="set-section">
-        <h3>🔑 Change Password</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">New Password</label>
-            <input class="form-input" id="cfgPass" type="password" placeholder="New password"/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Confirm Password</label>
-            <input class="form-input" id="cfgPass2" type="password" placeholder="Repeat password"/>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="saveSettings()">🔒 Update Password</button>
-      </div>
-
-      <div class="set-section">
-        <h3>⚙️ Admin Username</h3>
-        <div class="form-row single">
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input class="form-input" id="cfgUser" placeholder="admin"/>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="saveUsername()">💾 Save Username</button>
-      </div>
-
-      <div class="set-section">
-        <h3>🗑️ Data Management</h3>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="dlJSON()">⬇️ Backup JSON</button>
-          <button class="btn btn-danger" onclick="if(confirm('Clear all video data? This cannot be undone.')){DB=[];saveDB();toast('All data cleared','ok')}">🗑 Clear All Videos</button>
+      <div class="sec-card">
+        <h3>🔗 Quick Links</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:9px">
+          <a class="btn btn-secondary" href="https://rongkunkmeanmnus.blogspot.com" target="_blank" style="text-decoration:none">🌐 View Blog</a>
+          <a class="btn btn-secondary" href="https://www.blogger.com" target="_blank" style="text-decoration:none">📝 Blogger Dashboard</a>
+          <a class="btn btn-secondary" href="https://console.cloud.google.com" target="_blank" style="text-decoration:none">☁️ Google Console</a>
         </div>
       </div>
     </div>
@@ -596,526 +483,833 @@ select.form-input option{background:var(--bg3)}
   </main>
 </div>
 
-<!-- ═══════════ ADD/EDIT MODAL ═══════════ -->
+<!-- ══════ ADD/EDIT VIDEO MODAL ══════ -->
 <div class="modal-ov" id="videoModal">
   <div class="modal">
     <div class="modal-hd">
-      <div class="modal-title" id="modalTitle">Add New Video</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title" id="vModalTitle">Add New Video</div>
+      <button class="modal-close" onclick="closeVideoModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group" style="grid-column:1/-1">
+      <div class="alert alert-green" id="vModalAlert">✅ This video will be <strong>automatically published</strong> as a Blogger post and appear on your blog immediately.</div>
+      <div class="form-row one">
+        <div class="form-group">
           <label class="form-label">Video Title *</label>
           <input class="form-input" id="fTitle" placeholder="Enter a descriptive title..."/>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Source Platform</label>
-          <select class="form-input" id="fSource">
+          <label class="form-label">Video Source</label>
+          <select class="form-input" id="fSource" onchange="updateEmbedHint()">
             <option value="dailymotion">Dailymotion</option>
             <option value="rumble">Rumble</option>
             <option value="youtube">YouTube</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Embed ID / Video ID *</label>
+          <label class="form-label">Video / Embed ID *</label>
           <input class="form-input" id="fEmbedId" placeholder="e.g. x8l7kmf"/>
-          <span class="form-hint">Dailymotion: x8l7kmf · Rumble: embed/v4p2xkj · YouTube: dQw4w9WgXcQ</span>
+          <span class="form-hint" id="embedHint">Dailymotion: find ID in video URL after /video/</span>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Category</label>
-          <select class="form-input" id="fCategory"></select>
+          <label class="form-label">Labels / Categories</label>
+          <input class="form-input" id="fLabels" placeholder="drama, action, romance (comma separated)"/>
+          <span class="form-hint">These become filter categories on your blog homepage</span>
         </div>
         <div class="form-group">
-          <label class="form-label">Duration</label>
+          <label class="form-label">Duration (optional)</label>
           <input class="form-input" id="fDuration" placeholder="12:34"/>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group" style="grid-column:1/-1">
-          <label class="form-label">Thumbnail URL</label>
-          <input class="form-input" id="fThumb" placeholder="https://... (leave blank for random)"/>
+      <div class="form-row one">
+        <div class="form-group">
+          <label class="form-label">Thumbnail URL (optional)</label>
+          <input class="form-input" id="fThumb" placeholder="https://... leave blank to use post image"/>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Publish Date</label>
-          <input class="form-input" id="fDate" type="date"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">View Count</label>
-          <input class="form-input" id="fViews" type="number" placeholder="1000"/>
-        </div>
-      </div>
-      <div class="form-row single">
+      <div class="form-row one">
         <div class="form-group">
           <label class="form-label">Description</label>
-          <textarea class="form-input" id="fDesc" rows="3" placeholder="Short description..."></textarea>
+          <textarea class="form-input" id="fDesc" rows="3" placeholder="Short description of the video..."></textarea>
         </div>
       </div>
-      <div class="form-row single">
+      <div class="form-row">
         <label class="form-check">
           <input type="checkbox" id="fFeatured"/>
-          ⭐ Feature this video on homepage hero banner
+          ⭐ Feature this video on hero banner
+        </label>
+        <label class="form-check">
+          <input type="checkbox" id="fDraft"/>
+          📝 Save as Draft (not published yet)
         </label>
       </div>
 
       <!-- PLAYLIST SECTION -->
-      <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
-        <div class="pl-hd">
-          <div class="pl-hd-t">📋 Playlist Episodes <span style="color:var(--text3);font-size:12px;font-weight:400">(optional — leave empty for single video)</span></div>
-          <button class="btn btn-secondary btn-sm" onclick="addEp()">+ Add Episode</button>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-weight:700;font-size:13px">📋 Playlist Episodes <span style="color:var(--text3);font-size:11px;font-weight:400">(optional — for series/dramas)</span></div>
+          <button class="btn btn-secondary btn-sm" onclick="addEp()">+ Episode</button>
         </div>
         <div id="plEpList"></div>
       </div>
     </div>
     <div class="modal-ft">
-      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveVideo()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
-        Save Video
+      <button class="btn btn-ghost" onclick="closeVideoModal()">Cancel</button>
+      <button class="btn btn-primary" id="vSaveBtn" onclick="saveVideo()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        Publish to Blog
       </button>
     </div>
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
-<div class="modal-ov" id="delModal">
-  <div class="del-modal">
-    <div class="del-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/></svg>
+<!-- ══════ ADD/EDIT PAGE MODAL ══════ -->
+<div class="modal-ov" id="pageModal">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-hd">
+      <div class="modal-title" id="pgModalTitle">New Page</div>
+      <button class="modal-close" onclick="closePageModal()">✕</button>
     </div>
-    <div class="del-title">Delete Video</div>
-    <div class="del-sub">Delete <span id="delTitle"></span>? This cannot be undone.</div>
-    <div style="display:flex;gap:10px;justify-content:center">
-      <button class="btn btn-ghost" onclick="closeDelModal()">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">🗑 Delete</button>
+    <div class="modal-body">
+      <div class="form-row one">
+        <div class="form-group">
+          <label class="form-label">Page Title *</label>
+          <input class="form-input" id="pgTitle" placeholder="e.g. About Us"/>
+        </div>
+      </div>
+      <div class="form-row one">
+        <div class="form-group">
+          <label class="form-label">Page Content *</label>
+          <textarea class="form-input" id="pgContent" rows="8" placeholder="Write your page content here... HTML is supported."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-check">
+          <input type="checkbox" id="pgDraft"/>
+          📝 Save as Draft
+        </label>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closePageModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePage()">🚀 Publish Page</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- DELETE MODAL -->
+<div class="modal-ov" id="delModal">
+  <div class="del-box">
+    <div class="del-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/></svg></div>
+    <div class="del-title">Delete Post</div>
+    <div class="del-sub">Delete <strong id="delName"></strong>?<br>This will remove it from your Blogger site permanently.</div>
+    <div style="display:flex;gap:9px;justify-content:center">
+      <button class="btn btn-ghost" onclick="closeDelModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">🗑 Delete from Blog</button>
+    </div>
+  </div>
+</div>
+
 <div class="adm-toast" id="admToast"></div>
 
 <script>
-// ════════════════════════════════════
-// STREAMVAULT ADMIN v2 — CORE
-// ════════════════════════════════════
+// ════════════════════════════════════════════════════
+// STREAMVAULT ADMIN v3 — BLOGGER API FULL CONTROL
+// ════════════════════════════════════════════════════
 
-var CREDS = {user:'admin', pass:'streamvault2025'};
-try{var _c=JSON.parse(localStorage.getItem('sv_admin_creds')||'null');if(_c)CREDS=_c;}catch(e){}
+const CLIENT_ID = '838740452552-8l67pun1m654fsjk6m2lcbukm1oh4peo.apps.googleusercontent.com';
+const BLOG_URL  = 'https://rongkunkmeanmnus.blogspot.com';
+const SCOPES    = 'https://www.googleapis.com/auth/blogger';
+const API_BASE  = 'https://www.googleapis.com/blogger/v3';
 
-var DB = [];
-var CATS = ['drama','news','documentary','sports','music','comedy','general','action','romance','horror'];
-var SETTINGS = {blogUrl:'https://rongkunkmeanmnus.blogspot.com', blogName:'StreamVault', defaultSrc:'dailymotion', ppp:12};
+let accessToken = null;
+let blogId      = null;
+let currentUser = null;
+let allPosts    = [];
+let allPages    = [];
+let allLabels   = {};
+let editPostId  = null;
+let editPageId  = null;
+let delPostId   = null;
+let delType     = 'post';
+let plEps       = [];
+let curPage     = 1;
+const PER       = 15;
 
-try{DB=JSON.parse(localStorage.getItem('sv_admin_db')||'[]');}catch(e){}
-try{var _cats=JSON.parse(localStorage.getItem('sv_admin_cats')||'null');if(_cats)CATS=_cats;}catch(e){}
-try{var _s=JSON.parse(localStorage.getItem('sv_admin_settings')||'null');if(_s)SETTINGS=_s;}catch(e){}
-
-// ── Seed demo data if empty ──
-if(!DB.length){
-  DB=[
-    {id:1,title:"The Future of AI in 2025",source:"dailymotion",embedId:"x8l7kmf",thumb:"https://picsum.photos/seed/a1/640/360",duration:"12:34",views:142000,likes:3400,category:"documentary",date:"2025-03-01",desc:"Deep-dive on AI reshaping the world.",featured:true,playlist:null},
-    {id:2,title:"Breaking Tech News Today",source:"rumble",embedId:"v4p2xkj",thumb:"https://picsum.photos/seed/a2/640/360",duration:"8:20",views:89000,likes:1200,category:"news",date:"2025-03-02",desc:"Live coverage of the biggest tech news.",featured:false,playlist:null},
-    {id:3,title:"World Travel Series — Tokyo",source:"dailymotion",embedId:"x8mntop",thumb:"https://picsum.photos/seed/a3/640/360",duration:"22:10",views:210000,likes:8700,category:"drama",date:"2025-02-28",desc:"Episode 1 of our world travel series.",featured:false,playlist:[{title:"Ep1 — Tokyo",embedId:"x8mntop",source:"dailymotion",duration:"22:10"},{title:"Ep2 — Seoul",embedId:"x8mn002",source:"dailymotion",duration:"19:45"},{title:"Ep3 — Bangkok",embedId:"x8mn003",source:"dailymotion",duration:"24:30"}]},
-    {id:4,title:"Learn Python Crash Course",source:"dailymotion",embedId:"x7tutpy",thumb:"https://picsum.photos/seed/a4/640/360",duration:"30:00",views:520000,likes:18000,category:"general",date:"2025-02-20",desc:"Python for absolute beginners.",featured:false,playlist:null},
-    {id:5,title:"Top 10 Football Goals",source:"rumble",embedId:"v6sport1",thumb:"https://picsum.photos/seed/a5/640/360",duration:"10:15",views:95000,likes:4400,category:"sports",date:"2025-03-01",desc:"10 stunning goals this month.",featured:false,playlist:null},
-    {id:6,title:"Indie Music Spotlight",source:"rumble",embedId:"v7music1",thumb:"https://picsum.photos/seed/a6/640/360",duration:"35:00",views:45000,likes:2900,category:"music",date:"2025-02-15",desc:"Emerging artists from Southeast Asia.",featured:false,playlist:[{title:"Artist 1 Live",embedId:"v7music1",source:"rumble",duration:"8:30"},{title:"Artist 2 Original",embedId:"v7music2",source:"rumble",duration:"9:00"}]}
-  ];
-  saveDB();
+// ════════════════════════════════════════════════════
+// GOOGLE LOGIN
+// ════════════════════════════════════════════════════
+function doGoogleLogin() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: async (resp) => {
+      if (resp.error) {
+        showLoginErr('Login failed: ' + resp.error + '. Make sure you added your email as a test user in Google Console.');
+        return;
+      }
+      accessToken = resp.access_token;
+      await initApp();
+    }
+  });
+  client.requestAccessToken();
 }
 
-// ════════════ AUTH ════════════
-function svDoLogin(){
-  var u=document.getElementById('lgUser').value.trim();
-  var p=document.getElementById('lgPass').value;
-  if(u===CREDS.user && p===CREDS.pass){
-    document.getElementById('svLogin').style.display='none';
-    document.getElementById('svApp').style.display='block';
-    document.getElementById('sbUserName').textContent=u;
-    document.getElementById('sbAvatarLetter').textContent=u[0].toUpperCase();
-    initApp();
-  } else {
-    document.getElementById('lgErr').textContent='Invalid username or password.';
-    document.getElementById('lgPass').value='';
-    setTimeout(function(){document.getElementById('lgErr').textContent=''},3000);
+function showLoginErr(msg) {
+  const e = document.getElementById('loginErr');
+  e.textContent = msg; e.classList.add('on');
+  setTimeout(() => e.classList.remove('on'), 6000);
+}
+
+async function initApp() {
+  showProgress('Connecting to Blogger...');
+  try {
+    // Get user info
+    const uResp = await gFetch('https://www.googleapis.com/oauth2/v3/userinfo');
+    currentUser = uResp;
+    document.getElementById('sbUname').textContent = uResp.name || uResp.email;
+    if (uResp.picture) {
+      document.getElementById('sbAvatar').src = uResp.picture;
+      document.getElementById('sbAvatar').style.display = 'block';
+      document.getElementById('sbAvatarPh').style.display = 'none';
+    } else {
+      document.getElementById('sbAvatarPh').textContent = (uResp.name||'A')[0].toUpperCase();
+    }
+    // Get blog info
+    showProgress('Loading blog data...');
+    const bResp = await gFetch(API_BASE + '/blogs/byUrl?url=' + encodeURIComponent(BLOG_URL));
+    blogId = bResp.id;
+    document.getElementById('settingsBlogId').textContent = 'Blog ID: ' + blogId;
+    document.getElementById('settingsOwner').textContent = 'Owner: ' + (uResp.email || currentUser.name);
+    // Load all data
+    showProgress('Loading posts...');
+    await loadAllPosts();
+    hideProgress();
+    setApiStatus('ok', '✅ Connected');
+    // Show app
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('svApp').style.display = 'block';
+    renderDashboard();
+  } catch(e) {
+    hideProgress();
+    showLoginErr('Error: ' + (e.message||'Could not connect. Check your Client ID and try again.'));
+    setApiStatus('err', '❌ Error');
   }
 }
-function svLogout(){
-  document.getElementById('svApp').style.display='none';
-  document.getElementById('svLogin').style.display='flex';
-  document.getElementById('lgUser').value='';
-  document.getElementById('lgPass').value='';
-}
-document.getElementById('lgPass').addEventListener('keydown',function(e){if(e.key==='Enter')svDoLogin()});
-document.getElementById('lgUser').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('lgPass').focus()});
 
-// ════════════ DB ════════════
-function saveDB(){
-  localStorage.setItem('sv_admin_db',JSON.stringify(DB));
+function doLogout() {
+  google.accounts.oauth2.revoke(accessToken, () => {});
+  accessToken = null; blogId = null; allPosts = []; allPages = [];
+  document.getElementById('svApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  setApiStatus('loading', '⟳ Disconnected');
+}
+
+// ════════════════════════════════════════════════════
+// BLOGGER API HELPERS
+// ════════════════════════════════════════════════════
+async function gFetch(url, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: { 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json' }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.error?.message || r.statusText);
+  }
+  if (r.status === 204) return {};
+  return r.json();
+}
+
+async function loadAllPosts() {
+  allPosts = [];
+  allLabels = {};
+  let pageToken = null;
+  do {
+    let url = API_BASE + '/blogs/' + blogId + '/posts?maxResults=500&status=live&status=draft&fetchBodies=true&fetchImages=true';
+    if (pageToken) url += '&pageToken=' + pageToken;
+    const data = await gFetch(url);
+    (data.items || []).forEach(p => {
+      allPosts.push(p);
+      (p.labels || []).forEach(l => { allLabels[l] = (allLabels[l] || 0) + 1; });
+    });
+    pageToken = data.nextPageToken;
+  } while (pageToken);
   updateCounts();
 }
-function saveCats(){localStorage.setItem('sv_admin_cats',JSON.stringify(CATS));}
-function fmt(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n)}
-function findV(id){return DB.find(function(v){return v.id===id})}
-function updateCounts(){
-  document.getElementById('sbVideoCnt').textContent=DB.length;
-  document.getElementById('sbPlCnt').textContent=DB.filter(function(v){return v.playlist&&v.playlist.length}).length;
+
+async function loadPages() {
+  try {
+    const data = await gFetch(API_BASE + '/blogs/' + blogId + '/pages?status=live&status=draft');
+    allPages = data.items || [];
+    document.getElementById('sbPageCnt').textContent = allPages.length;
+    renderPages();
+  } catch(e) { toast('Error loading pages: ' + e.message, 'err'); }
 }
 
-// ════════════ NAV ════════════
-function goPage(page,el){
-  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on')});
-  if(el)el.classList.add('on');
-  document.querySelectorAll('.adm-page').forEach(function(p){p.classList.remove('on')});
-  var pg=document.getElementById('page-'+page);
-  if(pg)pg.classList.add('on');
-  var titles={dashboard:'Dashboard',videos:'All Videos',playlists:'Playlists',categories:'Categories',analytics:'Analytics',settings:'Settings',export:'Export & Deploy',blogger:'Blogger Setup'};
-  document.getElementById('tbTitle').textContent=titles[page]||page;
-  if(page==='dashboard')renderDash();
-  if(page==='videos')renderVideos(DB);
-  if(page==='playlists')renderPlaylists();
-  if(page==='categories')renderCategories();
-  if(page==='analytics')renderAnalytics();
+function updateCounts() {
+  const vids = allPosts.filter(p => hasEmbed(p));
+  const pls  = allPosts.filter(p => hasPlaylist(p));
+  document.getElementById('sbVideoCnt').textContent  = vids.length;
+  document.getElementById('sbPlCnt').textContent     = pls.length;
+  document.getElementById('sbLabelCnt').textContent  = Object.keys(allLabels).length;
+  document.getElementById('videosTblInfo').textContent = vids.length + ' videos';
+  document.getElementById('plInfo').textContent = pls.length + ' playlists';
 }
 
-// ════════════ INIT ════════════
-function initApp(){
-  updateCounts();populateCatSelects();renderDash();
-  document.getElementById('cfgName').value=SETTINGS.blogName;
-  document.getElementById('cfgUrl').value=SETTINGS.blogUrl;
-  document.getElementById('cfgSrc').value=SETTINGS.defaultSrc;
-  document.getElementById('cfgPpp').value=SETTINGS.ppp;
-  document.getElementById('tbBlogUrl').textContent=SETTINGS.blogUrl.replace('https://','');
-  document.getElementById('tbBlogUrl').href=SETTINGS.blogUrl;
-  var u=JSON.parse(localStorage.getItem('sv_admin_creds')||'{"user":"admin"}').user||'admin';
-  document.getElementById('cfgUser').value=u;
+function hasEmbed(post) {
+  const c = post.content || '';
+  return /<(dm|rm|yt)[^>]+id=/i.test(c) || /<playlist/i.test(c);
+}
+function hasPlaylist(post) {
+  return /<playlist/i.test(post.content || '');
+}
+function getSource(post) {
+  const c = post.content || '';
+  if (/<dm /i.test(c)) return 'dailymotion';
+  if (/<rm /i.test(c)) return 'rumble';
+  if (/<yt /i.test(c)) return 'youtube';
+  return 'unknown';
+}
+function getEpCount(post) {
+  const m = (post.content || '').match(/<playlist[^>]*>([\s\S]*?)<\/playlist>/i);
+  if (!m) return 0;
+  return (m[1].match(/<(dm|rm|yt)[^>]+id=/gi) || []).length;
+}
+function fmtDate(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+function getThumbnail(post) {
+  if (post.images && post.images[0]) return post.images[0].url;
+  const m = (post.content||'').match(/<img[^>]+src=["']([^"']+)["']/i);
+  return m ? m[1] : 'https://picsum.photos/seed/' + (post.id||'0') + '/640/360';
 }
 
-function populateCatSelects(){
-  var html=CATS.map(function(c){return'<option value="'+c+'">'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>'}).join('');
-  document.getElementById('fCategory').innerHTML=html;
-  var fc=document.getElementById('filterCat');
-  fc.innerHTML='<option value="">All Categories</option>'+html;
+// ════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════
+function goPage(page, el) {
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
+  if (el) el.classList.add('on');
+  document.querySelectorAll('.adm-page').forEach(p => p.classList.remove('on'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('on');
+  const titles = { dashboard:'Dashboard', videos:'All Videos', playlists:'Playlists', labels:'Labels & Categories', pages:'Pages', analytics:'Analytics', settings:'Settings' };
+  document.getElementById('tbTitle').textContent = titles[page] || page;
+  if (page === 'videos')    renderVideos(allPosts);
+  if (page === 'playlists') renderPlaylists();
+  if (page === 'labels')    loadLabels();
+  if (page === 'pages')     loadPages();
+  if (page === 'analytics') renderAnalytics();
+  if (page === 'dashboard') renderDashboard();
 }
 
-// ════════════ DASHBOARD ════════════
-function renderDash(){
-  var tv=DB.reduce(function(s,v){return s+v.views},0);
-  var tl=DB.reduce(function(s,v){return s+v.likes},0);
-  var pl=DB.filter(function(v){return v.playlist&&v.playlist.length}).length;
-  document.getElementById('statRow').innerHTML=[
-    ['rgba(230,57,70,.12)','#e63946','<polyline points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>',DB.length,'Total Videos','↑ Active videos','chg-up'],
-    ['rgba(59,130,246,.12)','#3b82f6','<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',fmt(tv),'Total Views','↑ Combined','chg-up'],
-    ['rgba(16,185,129,.12)','#10b981','<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',fmt(tl),'Total Likes','↑ Growing','chg-up'],
-    ['rgba(255,214,10,.12)','#ffd60a','<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',pl,'Playlists','Active series','chg-up']
-  ].map(function(s){
-    return'<div class="stat-card"><div class="stat-icon" style="background:'+s[0]+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+s[1]+'" stroke-width="2">'+s[2]+'</svg></div><div><div class="stat-val">'+s[3]+'</div><div class="stat-lbl">'+s[4]+'</div><div class="stat-chg '+s[6]+'">'+s[5]+'</div></div></div>';
-  }).join('');
+// ════════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════════
+function renderDashboard() {
+  const vids = allPosts.filter(p => hasEmbed(p));
+  const pub  = allPosts.filter(p => p.status === 'LIVE').length;
+  const dft  = allPosts.filter(p => p.status === 'DRAFT').length;
+  const pls  = allPosts.filter(p => hasPlaylist(p)).length;
+  document.getElementById('dashStats').innerHTML = [
+    ['rgba(230,57,70,.12)','#e63946','📹', vids.length, 'Total Videos'],
+    ['rgba(16,185,129,.12)','#10b981','✅', pub, 'Published'],
+    ['rgba(255,214,10,.12)','#ffd60a','📝', dft, 'Drafts'],
+    ['rgba(139,92,246,.12)','#8b5cf6','📋', pls, 'Playlists'],
+    ['rgba(59,130,246,.12)','#3b82f6','🏷️', Object.keys(allLabels).length, 'Labels'],
+  ].map(s => `<div class="stat-card"><div class="stat-icon" style="background:${s[0]};font-size:18px">${s[2]}</div><div><div class="stat-val" style="color:${s[1]}">${s[3]}</div><div class="stat-lbl">${s[4]}</div></div></div>`).join('');
 
-  var top5=DB.slice().sort(function(a,b){return b.views-a.views}).slice(0,6);
-  var maxV=top5[0]?top5[0].views:1;
-  document.getElementById('chartTopViews').innerHTML=top5.length?top5.map(function(v){
-    var clr=v.source==='dailymotion'?'var(--dm)':v.source==='youtube'?'#ff0000':'var(--rumble)';
-    return'<div class="bar-row"><div class="bar-lbl" title="'+v.title+'">'+v.title.substring(0,22)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+((v.views/maxV)*100).toFixed(1)+'%;background:'+clr+'"></div></div><div class="bar-val">'+fmt(v.views)+'</div></div>';
-  }).join(''):'<div style="color:var(--text3);font-size:13px">No videos yet</div>';
+  // Top by title (we don't have real views from Blogger API)
+  const top = vids.slice(0, 6);
+  document.getElementById('dashTopViews').innerHTML = top.length
+    ? top.map((p,i) => `<div class="bar-row"><div class="bar-lbl" title="${p.title}">${p.title.substring(0,22)}</div><div class="bar-track"><div class="bar-fill" style="width:${100-(i*14)}%;background:var(--accent)"></div></div><div class="bar-val">${p.status==='LIVE'?'✅':'📝'}</div></div>`).join('')
+    : '<div class="empty-st">No videos yet</div>';
 
-  var dm=DB.filter(function(v){return v.source==='dailymotion'}).length;
-  var rm=DB.filter(function(v){return v.source==='rumble'}).length;
-  var yt=DB.length-dm-rm;
-  var mxS=Math.max(dm,rm,yt,1);
-  document.getElementById('chartSrcBreak').innerHTML=
-    '<div class="bar-row"><div class="bar-lbl">Dailymotion</div><div class="bar-track"><div class="bar-fill" style="width:'+((dm/mxS)*100)+'%;background:var(--dm)"></div></div><div class="bar-val">'+dm+'</div></div>'+
-    '<div class="bar-row"><div class="bar-lbl">Rumble</div><div class="bar-track"><div class="bar-fill" style="width:'+((rm/mxS)*100)+'%;background:var(--rumble)"></div></div><div class="bar-val">'+rm+'</div></div>'+
-    '<div class="bar-row"><div class="bar-lbl">YouTube</div><div class="bar-track"><div class="bar-fill" style="width:'+((yt/mxS)*100)+'%;background:#ff0000"></div></div><div class="bar-val">'+yt+'</div></div>';
-  document.getElementById('srcBreakDetails').innerHTML='<div style="font-size:12px;color:var(--text2)">Total: '+DB.length+' videos · Featured: '+(DB.filter(function(v){return v.featured}).length||0)+'</div>';
+  // By label
+  const labels = Object.entries(allLabels).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxL = labels[0] ? labels[0][1] : 1;
+  document.getElementById('dashByLabel').innerHTML = labels.length
+    ? labels.map(([l,n]) => `<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${(n/maxL*100).toFixed(0)}%;background:var(--blue)"></div></div><div class="bar-val">${n}</div></div>`).join('')
+    : '<div class="empty-st">No labels yet</div>';
 }
 
-// ════════════ VIDEOS TABLE ════════════
-var curPage=1,PER=10;
-function renderVideos(data){
-  document.getElementById('videosTblInfo').textContent=data.length+' videos';
-  var start=(curPage-1)*PER,end=start+PER,page=data.slice(start,end);
-  document.getElementById('videosTbody').innerHTML=page.length?page.map(function(v){
-    var srcCls='sp-'+v.source;
-    var srcLbl=v.source==='dailymotion'?'DM':v.source==='youtube'?'YT':'Rumble';
-    return'<tr>'+
-      '<td><div class="td-thumb"><img src="'+v.thumb+'" alt="" loading="lazy" onerror="this.src=\'https://picsum.photos/seed/'+v.id+'/640/360\'"></div></td>'+
-      '<td class="td-title"><div class="td-title-main">'+v.title+'</div><div class="td-title-desc">'+( v.desc||'')+'</div></td>'+
-      '<td><span class="src-pill '+srcCls+'">'+srcLbl+'</span></td>'+
-      '<td><span class="cat-chip">'+v.category+'</span></td>'+
-      '<td style="color:var(--text2)">'+( v.duration||'—')+'</td>'+
-      '<td>'+fmt(v.views)+'</td>'+
-      '<td>'+(v.playlist?'<span class="badge badge-gold">'+v.playlist.length+' eps</span>':'<span style="color:var(--text3);font-size:12px">—</span>')+'</td>'+
-      '<td>'+(v.featured?'<span class="feat-star" title="Featured">⭐</span>':'')+'</td>'+
-      '<td><div class="act-row">'+
-        '<button class="btn btn-secondary btn-sm" onclick="openEditModal('+v.id+')">✏️</button>'+
-        '<button class="btn btn-danger btn-sm" onclick="openDelModal('+v.id+')">🗑</button>'+
-      '</div></td>'+
-    '</tr>';
-  }).join(''):'<tr><td colspan="9"><div class="empty-state"><p>No videos found.</p><button class="btn btn-primary btn-sm" onclick="openAddModal()">Add your first video</button></div></td></tr>';
-  renderPag(data.length);
-}
-function renderPag(total){
-  var pages=Math.ceil(total/PER),html='';
-  for(var i=1;i<=pages;i++)html+='<button class="pg-btn'+(i===curPage?' on':'')+'" onclick="curPage='+i+';filterVideos(document.querySelector(\'.tbl-search input\').value)">'+i+'</button>';
-  document.getElementById('videosPag').innerHTML=html+'<div class="pg-info">'+total+' total · Page '+curPage+'/'+Math.max(1,pages)+'</div>';
-}
-function filterVideos(q){
-  var src=document.getElementById('filterSrc').value;
-  var cat=document.getElementById('filterCat').value;
-  var res=DB;
-  if(q)res=res.filter(function(v){return v.title.toLowerCase().indexOf(q.toLowerCase())>-1||v.desc.toLowerCase().indexOf(q.toLowerCase())>-1});
-  if(src)res=res.filter(function(v){return v.source===src});
-  if(cat)res=res.filter(function(v){return v.category===cat});
-  curPage=1;renderVideos(res);
+// ════════════════════════════════════════════════════
+// VIDEOS TABLE
+// ════════════════════════════════════════════════════
+function renderVideos(posts) {
+  const vids = posts.filter(p => hasEmbed(p));
+  const start = (curPage-1)*PER, slice = vids.slice(start, start+PER);
+  document.getElementById('videosTbody').innerHTML = slice.length
+    ? slice.map(p => {
+        const src = getSource(p);
+        const srcCls = src==='dailymotion'?'pill-dm':src==='youtube'?'pill-yt':'pill-rm';
+        const srcLbl = src==='dailymotion'?'DM':src==='youtube'?'YT':'RM';
+        const labels = (p.labels||[]).map(l => `<span class="cat-chip">${l}</span>`).join(' ');
+        const thumb = getThumbnail(p);
+        const isPl = hasPlaylist(p);
+        return `<tr>
+          <td><div class="td-thumb"><img src="${thumb}" alt="" onerror="this.src='https://picsum.photos/seed/${p.id}/640/360'" loading="lazy"></div></td>
+          <td style="max-width:200px"><div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px" title="${p.title}">${p.title}</div>${isPl?`<span style="font-size:10px;color:var(--gold)">📋 ${getEpCount(p)} episodes</span>`:''}</td>
+          <td><span class="pill ${srcCls}">${srcLbl}</span></td>
+          <td>${labels||'<span style="color:var(--text3);font-size:11px">None</span>'}</td>
+          <td><span class="pill ${p.status==='LIVE'?'pill-pub':'pill-draft'}">${p.status==='LIVE'?'Live':'Draft'}</span></td>
+          <td style="color:var(--text2);white-space:nowrap;font-size:12px">${fmtDate(p.published)}</td>
+          <td><div class="act-row">
+            <a class="btn btn-ghost btn-sm" href="${p.url}" target="_blank" title="View on blog" style="text-decoration:none">👁</a>
+            <button class="btn btn-secondary btn-sm" onclick="openEditVideo('${p.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="openDelModal('${p.id}','post','${p.title.replace(/'/g,"\\'")}')">🗑</button>
+          </div></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="7"><div class="empty-st">No videos found. Add your first video above!</div></td></tr>';
+  // Pagination
+  const pages = Math.ceil(vids.length/PER);
+  let pag = '';
+  for (let i=1;i<=pages;i++) pag += `<button class="pg-btn${i===curPage?' on':''}" onclick="curPage=${i};renderVideos(allPosts)">${i}</button>`;
+  document.getElementById('videosPag').innerHTML = pag + `<div class="pg-info">${vids.length} total · Page ${curPage}/${Math.max(1,pages)}</div>`;
 }
 
-// ════════════ PLAYLISTS ════════════
-function renderPlaylists(){
-  var pls=DB.filter(function(v){return v.playlist&&v.playlist.length});
-  document.getElementById('plTblInfo').textContent=pls.length+' playlists';
-  document.getElementById('plTbody').innerHTML=pls.length?pls.map(function(v){
-    return'<tr>'+
-      '<td><div style="font-weight:600">'+v.title+'</div></td>'+
-      '<td><span class="src-pill sp-'+v.source+'">'+(v.source==='dailymotion'?'DM':v.source==='youtube'?'YT':'Rumble')+'</span></td>'+
-      '<td><span class="badge badge-gold">'+v.playlist.length+' eps</span></td>'+
-      '<td><span class="cat-chip">'+v.category+'</span></td>'+
-      '<td>'+fmt(v.views)+'</td>'+
-      '<td><div class="act-row"><button class="btn btn-secondary btn-sm" onclick="openEditModal('+v.id+')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="openDelModal('+v.id+')">🗑</button></div></td>'+
-    '</tr>';
-  }).join(''):'<tr><td colspan="6"><div class="empty-state"><p>No playlists yet.</p><p style="font-size:12px;color:var(--text3)">Add episodes to a video to create a playlist.</p></div></td></tr>';
+function filterPosts(q) {
+  const status = document.getElementById('filterStatus').value;
+  let res = allPosts;
+  if (q) res = res.filter(p => p.title.toLowerCase().includes(q.toLowerCase()));
+  if (status) res = res.filter(p => p.status === status);
+  curPage = 1; renderVideos(res);
 }
 
-// ════════════ CATEGORIES ════════════
-function renderCategories(){
-  var cc={};DB.forEach(function(v){cc[v.category]=(cc[v.category]||0)+1});
-  document.getElementById('catChips').innerHTML=CATS.map(function(c){
-    return'<div style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:13px">'+
-      c.charAt(0).toUpperCase()+c.slice(1)+
-      ' <span style="color:var(--text3);font-size:11px">('+( cc[c]||0)+')</span>'+
-      '<button onclick="delCat(\''+c+'\')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0 0 0 4px;transition:color .2s" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text3)\'">×</button>'+
-    '</div>';
-  }).join('');
-  var maxC=Math.max.apply(null,CATS.map(function(c){return cc[c]||0}).concat([1]));
-  document.getElementById('catBarChart').innerHTML=CATS.map(function(c){
-    var n=cc[c]||0;
-    return'<div class="bar-row"><div class="bar-lbl">'+c+'</div><div class="bar-track"><div class="bar-fill" style="width:'+((n/maxC)*100).toFixed(1)+'%;background:var(--accent)"></div></div><div class="bar-val">'+n+'</div></div>';
-  }).join('');
-}
-function addCat(){
-  var v=document.getElementById('newCatInput').value.trim().toLowerCase().replace(/\s+/g,'-');
-  if(!v){toast('Enter a category name','err');return}
-  if(CATS.indexOf(v)>-1){toast('Category already exists','err');return}
-  CATS.push(v);saveCats();populateCatSelects();renderCategories();
-  document.getElementById('newCatInput').value='';
-  toast('Category "'+v+'" added ✅','ok');
-}
-function delCat(c){
-  if(!confirm('Remove category "'+c+'"? Videos in this category will remain.'))return;
-  CATS=CATS.filter(function(x){return x!==c});saveCats();populateCatSelects();renderCategories();
-  toast('Category removed');
+// ════════════════════════════════════════════════════
+// PLAYLISTS
+// ════════════════════════════════════════════════════
+function renderPlaylists() {
+  const pls = allPosts.filter(p => hasPlaylist(p));
+  document.getElementById('plTbody').innerHTML = pls.length
+    ? pls.map(p => {
+        const labels = (p.labels||[]).map(l => `<span class="cat-chip">${l}</span>`).join(' ');
+        return `<tr>
+          <td style="font-weight:600">${p.title}</td>
+          <td><span style="background:rgba(255,214,10,.12);color:var(--gold);border:1px solid rgba(255,214,10,.3);padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700">${getEpCount(p)} eps</span></td>
+          <td>${labels}</td>
+          <td><span class="pill ${p.status==='LIVE'?'pill-pub':'pill-draft'}">${p.status==='LIVE'?'Live':'Draft'}</span></td>
+          <td><div class="act-row">
+            <button class="btn btn-secondary btn-sm" onclick="openEditVideo('${p.id}')">✏️ Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="openDelModal('${p.id}','post','${p.title.replace(/'/g,"\\'")}')">🗑</button>
+          </div></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="5"><div class="empty-st">No playlists yet.<br><button class="btn btn-primary btn-sm" onclick="openAddVideo(true)" style="margin-top:10px">+ Create Playlist</button></div></td></tr>';
 }
 
-// ════════════ ANALYTICS ════════════
-function renderAnalytics(){
-  var tv=DB.reduce(function(s,v){return s+v.views},0);
-  var tl=DB.reduce(function(s,v){return s+v.likes},0);
-  var avg=DB.length?Math.round(tv/DB.length):0;
-  var cv={};DB.forEach(function(v){cv[v.category]=(cv[v.category]||0)+v.views});
-  var topCat=Object.entries?Object.entries(cv).sort(function(a,b){return b[1]-a[1]})[0]:['—',0];
-  document.getElementById('analyticsStats').innerHTML=[
-    ['rgba(59,130,246,.12)','#3b82f6','<polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>',fmt(avg),'Avg Views/Video'],
-    ['rgba(16,185,129,.12)','#10b981','<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',((tl/Math.max(tv,1))*100).toFixed(1)+'%','Like Rate'],
-    ['rgba(255,214,10,.12)','#ffd60a','<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>',topCat?topCat[0]:'—','Top Category'],
-    ['rgba(139,92,246,.12)','#8b5cf6','<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',fmt(Math.round(tv*.6)),'Est. Viewers']
-  ].map(function(s){return'<div class="stat-card"><div class="stat-icon" style="background:'+s[0]+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+s[1]+'" stroke-width="2">'+s[2]+'</svg></div><div><div class="stat-val">'+s[3]+'</div><div class="stat-lbl">'+s[4]+'</div></div></div>'}).join('');
-
-  var topV=DB.slice().sort(function(a,b){return b.views-a.views}).slice(0,8);
-  var mxV=topV[0]?topV[0].views:1;
-  document.getElementById('anaTopViews').innerHTML=topV.map(function(v){
-    return'<div class="bar-row"><div class="bar-lbl" title="'+v.title+'">'+v.title.substring(0,18)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+((v.views/mxV)*100).toFixed(1)+'%;background:'+(v.source==='dailymotion'?'var(--dm)':v.source==='youtube'?'#ff0000':'var(--rumble)')+'"></div></div><div class="bar-val">'+fmt(v.views)+'</div></div>';
-  }).join('');
-  var topL=DB.slice().sort(function(a,b){return b.likes-a.likes}).slice(0,8);
-  var mxL=topL[0]?topL[0].likes:1;
-  document.getElementById('anaTopLikes').innerHTML=topL.map(function(v){
-    return'<div class="bar-row"><div class="bar-lbl">'+v.title.substring(0,18)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+((v.likes/mxL)*100).toFixed(1)+'%;background:var(--accent)"></div></div><div class="bar-val">'+fmt(v.likes)+'</div></div>';
-  }).join('');
-  var wPl=DB.filter(function(v){return v.playlist&&v.playlist.length}).length;
-  var st=DB.length-wPl;
-  document.getElementById('anaPlVsSt').innerHTML='<div style="display:flex;gap:20px;justify-content:center;margin-bottom:14px"><div style="text-align:center"><div style="font-family:Bebas Neue,sans-serif;font-size:40px;color:var(--gold)">'+wPl+'</div><div style="font-size:12px;color:var(--text2)">Playlists</div></div><div style="text-align:center"><div style="font-family:Bebas Neue,sans-serif;font-size:40px;color:var(--blue)">'+st+'</div><div style="font-size:12px;color:var(--text2)">Standalone</div></div></div>';
-  var dm=DB.filter(function(v){return v.source==='dailymotion'}).length;
-  var rm=DB.filter(function(v){return v.source==='rumble'}).length;
-  var yt=DB.length-dm-rm;
-  document.getElementById('anaSrcBreak').innerHTML='<div style="display:flex;gap:14px;justify-content:center;margin-bottom:14px;flex-wrap:wrap"><div style="text-align:center"><div style="font-family:Bebas Neue,sans-serif;font-size:36px;color:var(--dm)">'+dm+'</div><div style="font-size:12px;color:var(--text2)">Dailymotion</div></div><div style="text-align:center"><div style="font-family:Bebas Neue,sans-serif;font-size:36px;color:var(--rumble)">'+rm+'</div><div style="font-size:12px;color:var(--text2)">Rumble</div></div><div style="text-align:center"><div style="font-family:Bebas Neue,sans-serif;font-size:36px;color:#ff0000">'+yt+'</div><div style="font-size:12px;color:var(--text2)">YouTube</div></div></div>';
+// ════════════════════════════════════════════════════
+// LABELS
+// ════════════════════════════════════════════════════
+function loadLabels() {
+  const labels = Object.entries(allLabels).sort((a,b) => b[1]-a[1]);
+  document.getElementById('sbLabelCnt').textContent = labels.length;
+  document.getElementById('labelsList').innerHTML = labels.length
+    ? labels.map(([l,n]) => `<div class="label-chip">${l} <span style="color:var(--text3)">(${n})</span></div>`).join('')
+    : '<div class="empty-st" style="padding:20px;width:100%">No labels yet. Add labels when creating videos.</div>';
+  const maxL = labels[0]?labels[0][1]:1;
+  document.getElementById('labelChart').innerHTML = labels.slice(0,10).map(([l,n]) =>
+    `<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${(n/maxL*100).toFixed(0)}%;background:var(--accent)"></div></div><div class="bar-val">${n}</div></div>`
+  ).join('') || '<div class="empty-st">No labels</div>';
 }
 
-// ════════════ MODAL ════════════
-var editId=null,plEps=[];
-function openAddModal(){
-  editId=null;plEps=[];
-  document.getElementById('modalTitle').textContent='Add New Video';
-  document.getElementById('fTitle').value='';
-  document.getElementById('fSource').value=SETTINGS.defaultSrc||'dailymotion';
-  document.getElementById('fEmbedId').value='';
-  document.getElementById('fCategory').value=CATS[0]||'general';
-  document.getElementById('fDuration').value='';
-  document.getElementById('fThumb').value='';
-  document.getElementById('fDate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('fViews').value='1000';
-  document.getElementById('fDesc').value='';
-  document.getElementById('fFeatured').checked=false;
-  renderEps();document.getElementById('videoModal').classList.add('on');
-  setTimeout(function(){document.getElementById('fTitle').focus()},100);
-}
-function openEditModal(id){
-  var v=findV(id);if(!v)return;
-  editId=id;plEps=v.playlist?v.playlist.map(function(e){return Object.assign({},e)}):[];
-  document.getElementById('modalTitle').textContent='Edit Video';
-  document.getElementById('fTitle').value=v.title;
-  document.getElementById('fSource').value=v.source;
-  document.getElementById('fEmbedId').value=v.embedId;
-  document.getElementById('fCategory').value=v.category;
-  document.getElementById('fDuration').value=v.duration||'';
-  document.getElementById('fThumb').value=v.thumb||'';
-  document.getElementById('fDate').value=v.date||'';
-  document.getElementById('fViews').value=v.views||0;
-  document.getElementById('fDesc').value=v.desc||'';
-  document.getElementById('fFeatured').checked=!!v.featured;
-  renderEps();document.getElementById('videoModal').classList.add('on');
-}
-function closeModal(){document.getElementById('videoModal').classList.remove('on')}
-function renderEps(){
-  document.getElementById('plEpList').innerHTML=plEps.map(function(ep,i){
-    return'<div class="pl-ep">'+
-      '<div class="pl-ep-num">'+(i+1)+'</div>'+
-      '<div class="pl-ep-fields">'+
-        '<input class="form-input" style="padding:7px 10px;font-size:12px" value="'+ep.title+'" placeholder="Episode title" oninput="plEps['+i+'].title=this.value">'+
-        '<input class="form-input" style="padding:7px 10px;font-size:12px" value="'+(ep.embedId||'')+'" placeholder="Embed ID" oninput="plEps['+i+'].embedId=this.value">'+
-        '<input class="form-input" style="padding:7px 10px;font-size:12px" value="'+(ep.duration||'')+'" placeholder="12:34" oninput="plEps['+i+'].duration=this.value">'+
-      '</div>'+
-      '<button class="pl-ep-rm" onclick="rmEp('+i+')" title="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>'+
-    '</div>';
-  }).join('');
-}
-function addEp(){plEps.push({title:'Episode '+(plEps.length+1),embedId:'',source:document.getElementById('fSource').value||'dailymotion',duration:''});renderEps()}
-function rmEp(i){plEps.splice(i,1);renderEps()}
-function saveVideo(){
-  var title=document.getElementById('fTitle').value.trim();
-  var embedId=document.getElementById('fEmbedId').value.trim();
-  if(!title){toast('Title is required','err');return}
-  var fFeat=document.getElementById('fFeatured').checked;
-  if(fFeat)DB.forEach(function(v){v.featured=false});
-  var obj={
-    id:editId||(Math.max.apply(null,DB.map(function(v){return v.id}).concat([0]))+1),
-    title:title,source:document.getElementById('fSource').value,
-    embedId:embedId,category:document.getElementById('fCategory').value,
-    duration:document.getElementById('fDuration').value,
-    thumb:document.getElementById('fThumb').value||'https://picsum.photos/seed/'+Date.now()+'/640/360',
-    date:document.getElementById('fDate').value,
-    views:parseInt(document.getElementById('fViews').value)||0,
-    likes:0,desc:document.getElementById('fDesc').value,
-    featured:fFeat,
-    playlist:plEps.filter(function(e){return e.embedId}).length>0?plEps.filter(function(e){return e.embedId}):null
-  };
-  if(editId){
-    var idx=DB.findIndex(function(v){return v.id===editId});
-    if(idx>-1){obj.likes=DB[idx].likes;DB[idx]=obj;}
-  } else {DB.push(obj)}
-  saveDB();closeModal();
-  toast((editId?'Video updated':'Video added')+' ✅','ok');
-  renderVideos(DB);
+// ════════════════════════════════════════════════════
+// PAGES
+// ════════════════════════════════════════════════════
+function renderPages() {
+  const icons = {'about':'ℹ️','contact':'📧','privacy':'🔒','terms':'📜'};
+  document.getElementById('pagesList').innerHTML = allPages.length
+    ? allPages.map(p => {
+        const key = (p.title||'').toLowerCase().replace(/\s+/g,'');
+        const icon = Object.entries(icons).find(([k])=>key.includes(k))?.[1] || '📄';
+        return `<div class="page-card">
+          <div class="page-icon" style="background:var(--bg3)">${icon}</div>
+          <div style="flex:1;min-width:0">
+            <div class="page-title">${p.title}</div>
+            <div class="page-url">${p.url||'—'}</div>
+          </div>
+          <span class="pill ${p.status==='LIVE'?'pill-pub':'pill-draft'}">${p.status==='LIVE'?'Live':'Draft'}</span>
+          <div class="act-row">
+            ${p.url?`<a class="btn btn-ghost btn-sm" href="${p.url}" target="_blank" style="text-decoration:none">👁</a>`:''}
+            <button class="btn btn-secondary btn-sm" onclick="openEditPage('${p.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="openDelModal('${p.id}','page','${p.title.replace(/'/g,"\\'")}')">🗑</button>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="empty-st">No pages yet. Create your About and Contact pages!</div>';
 }
 
-// ════════════ DELETE ════════════
-var delId=null;
-function openDelModal(id){delId=id;var v=findV(id);document.getElementById('delTitle').textContent=v?'"'+v.title+'"':'this video';document.getElementById('delModal').classList.add('on')}
-function closeDelModal(){document.getElementById('delModal').classList.remove('on')}
-function confirmDelete(){
-  if(!delId)return;
-  DB=DB.filter(function(x){return x.id!==delId});
-  saveDB();closeDelModal();renderVideos(DB);
-  toast('Video deleted','ok');delId=null;
+// ════════════════════════════════════════════════════
+// ANALYTICS
+// ════════════════════════════════════════════════════
+function renderAnalytics() {
+  const vids = allPosts.filter(p => hasEmbed(p));
+  const pls  = vids.filter(p => hasPlaylist(p));
+  const dm   = vids.filter(p => getSource(p)==='dailymotion').length;
+  const yt   = vids.filter(p => getSource(p)==='youtube').length;
+  const rm   = vids.filter(p => getSource(p)==='rumble').length;
+  const labels = Object.entries(allLabels).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('anaStats').innerHTML = [
+    ['rgba(230,57,70,.12)','#e63946','📹', vids.length, 'Total Videos'],
+    ['rgba(16,185,129,.12)','#10b981','✅', allPosts.filter(p=>p.status==='LIVE').length, 'Published'],
+    ['rgba(255,214,10,.12)','#ffd60a','📋', pls.length, 'Playlists'],
+    ['rgba(59,130,246,.12)','#3b82f6','🏷️', labels.length, 'Labels'],
+  ].map(s=>`<div class="stat-card"><div class="stat-icon" style="background:${s[0]};font-size:18px">${s[2]}</div><div><div class="stat-val" style="color:${s[1]}">${s[3]}</div><div class="stat-lbl">${s[4]}</div></div></div>`).join('');
+
+  const topV = vids.slice(0,8);
+  document.getElementById('anaTopV').innerHTML = topV.map((p,i)=>
+    `<div class="bar-row"><div class="bar-lbl" title="${p.title}">${p.title.substring(0,20)}</div><div class="bar-track"><div class="bar-fill" style="width:${100-(i*11)}%;background:var(--accent)"></div></div><div class="bar-val">${p.status==='LIVE'?'✅':'📝'}</div></div>`
+  ).join('') || '<div class="empty-st">No data</div>';
+
+  const maxL = labels[0]?labels[0][1]:1;
+  document.getElementById('anaLabels').innerHTML = labels.slice(0,8).map(([l,n])=>
+    `<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${(n/maxL*100).toFixed(0)}%;background:var(--blue)"></div></div><div class="bar-val">${n}</div></div>`
+  ).join('') || '<div class="empty-st">No labels</div>';
+
+  const maxS = Math.max(dm,yt,rm,1);
+  document.getElementById('anaSources').innerHTML = [
+    ['Dailymotion',dm,'var(--blue)'],['YouTube',yt,'#ff0000'],['Rumble',rm,'var(--green)']
+  ].map(([l,n,c])=>`<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(0)}%;background:${c}"></div></div><div class="bar-val">${n}</div></div>`).join('');
+
+  const single = vids.length - pls.length;
+  document.getElementById('anaPlSt').innerHTML = `
+    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:14px">
+      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--gold)">${pls.length}</div><div style="font-size:12px;color:var(--text2)">Playlists</div></div>
+      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--blue)">${single}</div><div style="font-size:12px;color:var(--text2)">Single Videos</div></div>
+    </div>
+    <div class="bar-track" style="height:10px;border-radius:5px"><div class="bar-fill" style="width:${(pls.length/Math.max(vids.length,1)*100).toFixed(0)}%;height:100%;background:linear-gradient(90deg,var(--gold),var(--accent))"></div></div>`;
 }
 
-// ════════════ EXPORT / IMPORT ════════════
-function genExport(){
-  var code='// ═══════════ STREAMVAULT VIDEO DATABASE ═══════════\n// Generated: '+new Date().toLocaleString()+'\n// Paste this into your Blogger theme <script> section,\n// replacing any existing "var svDB=[...]" line.\n\nvar svDB='+JSON.stringify(DB,null,2)+';';
-  document.getElementById('exportBox').textContent=code;
-  toast('Code generated! Copy and paste into your Blogger theme.','ok');
-}
-function copyExport(){
-  var txt=document.getElementById('exportBox').textContent;
-  if(txt.indexOf('Click')===0){toast('Click Generate first','err');return}
-  navigator.clipboard.writeText(txt).then(function(){toast('Copied to clipboard ✅','ok')}).catch(function(){toast('Select and copy manually','err')});
-}
-function dlJSON(){
-  var blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='streamvault-videos-'+new Date().toISOString().split('T')[0]+'.json';a.click();
-  toast('JSON downloaded ✅','ok');
-}
-function importJSON(input){
-  var file=input.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      var data=JSON.parse(e.target.result);
-      if(!Array.isArray(data)){toast('Invalid JSON format','err');return}
-      if(!confirm('Import '+data.length+' videos? This will REPLACE your current database.'))return;
-      DB=data;saveDB();renderVideos(DB);
-      document.getElementById('importStatus').textContent='✅ Imported '+data.length+' videos successfully.';
-      toast('Imported '+data.length+' videos ✅','ok');
-    }catch(err){toast('Failed to parse JSON','err');document.getElementById('importStatus').textContent='❌ Error: '+err.message;}
-  };
-  reader.readAsText(file);
+// ════════════════════════════════════════════════════
+// ADD / EDIT VIDEO MODAL
+// ════════════════════════════════════════════════════
+function openAddVideo(isPlaylist=false) {
+  editPostId = null; plEps = [];
+  document.getElementById('vModalTitle').textContent = 'Add New Video';
+  document.getElementById('vSaveBtn').textContent = '🚀 Publish to Blog';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fSource').value = 'dailymotion';
+  document.getElementById('fEmbedId').value = '';
+  document.getElementById('fLabels').value = '';
+  document.getElementById('fDuration').value = '';
+  document.getElementById('fThumb').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fFeatured').checked = false;
+  document.getElementById('fDraft').checked = false;
+  if (isPlaylist) { plEps.push({title:'Episode 1',embedId:'',source:'dailymotion',duration:''}); }
+  renderEps();
+  updateEmbedHint();
+  document.getElementById('videoModal').classList.add('on');
+  setTimeout(() => document.getElementById('fTitle').focus(), 100);
 }
 
-// ════════════ SETTINGS ════════════
-function saveSettings(){
-  var p1=document.getElementById('cfgPass').value,p2=document.getElementById('cfgPass2').value;
-  if(p1||p2){
-    if(p1!==p2){toast('Passwords do not match','err');return}
-    CREDS.pass=p1;localStorage.setItem('sv_admin_creds',JSON.stringify(CREDS));
-    document.getElementById('cfgPass').value='';document.getElementById('cfgPass2').value='';
-    toast('Password updated ✅','ok');
+function openEditVideo(id) {
+  const post = allPosts.find(p => p.id === id);
+  if (!post) return;
+  editPostId = id;
+  plEps = [];
+  // Parse existing content
+  const c = post.content || '';
+  let source = 'dailymotion', embedId = '';
+  const dmM = c.match(/<dm[^>]+id=["']([^"']+)["']/i);
+  const rmM = c.match(/<rm[^>]+id=["']([^"']+)["']/i);
+  const ytM = c.match(/<yt[^>]+id=["']([^"']+)["']/i);
+  if (dmM) { source='dailymotion'; embedId=dmM[1]; }
+  if (rmM) { source='rumble'; embedId=rmM[1]; }
+  if (ytM) { source='youtube'; embedId=ytM[1]; }
+  const durM = c.match(/<dur[^>]*>([^<]+)<\/dur>/i);
+  const plM = c.match(/<playlist[^>]*>([\s\S]*?)<\/playlist>/i);
+  if (plM) {
+    const epR = /<(dm|rm|yt)[^>]+id=["']([^"']+)["'][^>]*(?:title=["']([^"']*)["'][^>]*)?>/gi;
+    let epM, idx=0;
+    while ((epM=epR.exec(plM[1])) !== null) {
+      idx++;
+      plEps.push({ title:epM[3]||('Episode '+idx), embedId:epM[2], source:epM[1]==='dm'?'dailymotion':epM[1]==='yt'?'youtube':'rumble', duration:'' });
+    }
+    if (plEps.length && !embedId) { source=plEps[0].source; embedId=plEps[0].embedId; }
   }
-  SETTINGS.blogUrl=document.getElementById('cfgUrl').value;
-  SETTINGS.blogName=document.getElementById('cfgName').value;
-  SETTINGS.defaultSrc=document.getElementById('cfgSrc').value;
-  SETTINGS.ppp=parseInt(document.getElementById('cfgPpp').value)||12;
-  localStorage.setItem('sv_admin_settings',JSON.stringify(SETTINGS));
-  document.getElementById('tbBlogUrl').textContent=SETTINGS.blogUrl.replace('https://','');
-  document.getElementById('tbBlogUrl').href=SETTINGS.blogUrl;
-  toast('Settings saved ✅','ok');
-}
-function saveUsername(){
-  var u=document.getElementById('cfgUser').value.trim();
-  if(!u){toast('Username cannot be empty','err');return}
-  CREDS.user=u;localStorage.setItem('sv_admin_creds',JSON.stringify(CREDS));
-  document.getElementById('sbUserName').textContent=u;
-  document.getElementById('sbAvatarLetter').textContent=u[0].toUpperCase();
-  toast('Username updated ✅','ok');
+  document.getElementById('vModalTitle').textContent = 'Edit Video';
+  document.getElementById('vSaveBtn').textContent = '💾 Save Changes';
+  document.getElementById('fTitle').value = post.title || '';
+  document.getElementById('fSource').value = source;
+  document.getElementById('fEmbedId').value = embedId;
+  document.getElementById('fLabels').value = (post.labels||[]).join(', ');
+  document.getElementById('fDuration').value = durM?durM[1]:'';
+  document.getElementById('fThumb').value = '';
+  document.getElementById('fDesc').value = (post.content||'').replace(/<[^>]+>/g,'').substring(0,300).trim();
+  document.getElementById('fFeatured').checked = false;
+  document.getElementById('fDraft').checked = post.status === 'DRAFT';
+  renderEps();
+  updateEmbedHint();
+  document.getElementById('videoModal').classList.add('on');
 }
 
-// ════════════ TOAST ════════════
-function toast(msg,type){
-  var t=document.getElementById('admToast');
-  t.textContent=msg;t.className='adm-toast on '+(type||'');
-  setTimeout(function(){t.classList.remove('on')},2800);
+function closeVideoModal() { document.getElementById('videoModal').classList.remove('on'); }
+
+function updateEmbedHint() {
+  const src = document.getElementById('fSource').value;
+  const hints = {
+    dailymotion: 'Find ID in URL: dailymotion.com/video/x8l7kmf ← this part',
+    rumble: 'Find ID in embed code: rumble.com/embed/v4p2xkj ← this part',
+    youtube: 'Find ID in URL: youtube.com/watch?v=dQw4w9WgXcQ ← this part'
+  };
+  document.getElementById('embedHint').textContent = hints[src] || '';
+}
+
+function renderEps() {
+  document.getElementById('plEpList').innerHTML = plEps.map((ep,i) =>
+    `<div class="pl-ep">
+      <div class="pl-ep-num">${i+1}</div>
+      <div class="pl-ep-fields">
+        <input class="form-input" style="padding:6px 9px;font-size:12px" value="${ep.title}" placeholder="Episode title" oninput="plEps[${i}].title=this.value">
+        <input class="form-input" style="padding:6px 9px;font-size:12px" value="${ep.embedId||''}" placeholder="Embed ID" oninput="plEps[${i}].embedId=this.value">
+        <select class="form-input" style="padding:6px 9px;font-size:12px" onchange="plEps[${i}].source=this.value">
+          <option value="dailymotion"${ep.source==='dailymotion'?' selected':''}>DM</option>
+          <option value="rumble"${ep.source==='rumble'?' selected':''}>Rumble</option>
+          <option value="youtube"${ep.source==='youtube'?' selected':''}>YT</option>
+        </select>
+        <input class="form-input" style="padding:6px 9px;font-size:12px" value="${ep.duration||''}" placeholder="12:34" oninput="plEps[${i}].duration=this.value">
+      </div>
+      <button class="pl-ep-rm" onclick="plEps.splice(${i},1);renderEps()">✕</button>
+    </div>`
+  ).join('');
+}
+
+function addEp() {
+  plEps.push({ title:'Episode '+(plEps.length+1), embedId:'', source:'dailymotion', duration:'' });
+  renderEps();
+}
+
+// ════════════════════════════════════════════════════
+// BUILD POST CONTENT
+// ════════════════════════════════════════════════════
+function buildPostContent() {
+  const src    = document.getElementById('fSource').value;
+  const embedId= document.getElementById('fEmbedId').value.trim();
+  const desc   = document.getElementById('fDesc').value.trim();
+  const dur    = document.getElementById('fDuration').value.trim();
+  const thumb  = document.getElementById('fThumb').value.trim();
+  const feat   = document.getElementById('fFeatured').checked;
+  const tag    = src==='dailymotion'?'dm':src==='youtube'?'yt':'rm';
+  let content  = '';
+  // Thumbnail image
+  if (thumb) content += `<img src="${thumb}" alt="thumbnail" style="max-width:100%"/>\n`;
+  // Description
+  if (desc) content += `<p>${desc}</p>\n`;
+  // Duration
+  if (dur) content += `<dur>${dur}</dur>\n`;
+  // Featured flag
+  if (feat) content += `<featured/>\n`;
+  // Video embed or playlist
+  const validEps = plEps.filter(e => e.embedId.trim());
+  if (validEps.length > 0) {
+    const epTag = src==='dailymotion'?'dm':src==='youtube'?'yt':'rm';
+    content += `<playlist>\n`;
+    validEps.forEach(ep => {
+      const etag = ep.source==='dailymotion'?'dm':ep.source==='youtube'?'yt':'rm';
+      content += `<${etag} id="${ep.embedId.trim()}" title="${ep.title}"/>\n`;
+    });
+    content += `</playlist>\n`;
+  } else if (embedId) {
+    content += `<${tag} id="${embedId}"/>\n`;
+  }
+  return content;
+}
+
+async function saveVideo() {
+  const title = document.getElementById('fTitle').value.trim();
+  const isDraft = document.getElementById('fDraft').checked;
+  if (!title) { toast('Title is required', 'err'); return; }
+  const embedId = document.getElementById('fEmbedId').value.trim();
+  const validEps = plEps.filter(e => e.embedId.trim());
+  if (!embedId && !validEps.length) { toast('Add at least one video ID or episode', 'err'); return; }
+  const labels = document.getElementById('fLabels').value.split(',').map(l=>l.trim()).filter(Boolean);
+  const content = buildPostContent();
+  const body = {
+    title,
+    content,
+    labels,
+    status: isDraft ? 'DRAFT' : 'LIVE'
+  };
+  showProgress(editPostId ? 'Updating post on Blogger...' : 'Publishing to Blogger...');
+  try {
+    let result;
+    if (editPostId) {
+      result = await gFetch(API_BASE + '/blogs/' + blogId + '/posts/' + editPostId + '?publish=' + (!isDraft), 'PUT', body);
+    } else {
+      result = await gFetch(API_BASE + '/blogs/' + blogId + '/posts/?isDraft=' + isDraft, 'POST', body);
+    }
+    closeVideoModal();
+    // Update local cache
+    if (editPostId) {
+      const idx = allPosts.findIndex(p => p.id === editPostId);
+      if (idx > -1) allPosts[idx] = result;
+    } else {
+      allPosts.unshift(result);
+    }
+    // Update labels
+    labels.forEach(l => { allLabels[l] = (allLabels[l]||0) + 1; });
+    updateCounts();
+    hideProgress();
+    toast((editPostId?'Video updated':'Video published') + ' ✅ — Now live on your blog!', 'ok');
+    renderVideos(allPosts);
+    renderDashboard();
+  } catch(e) {
+    hideProgress();
+    toast('Error: ' + e.message, 'err');
+  }
+}
+
+// ════════════════════════════════════════════════════
+// PAGES
+// ════════════════════════════════════════════════════
+function openAddPage() {
+  editPageId = null;
+  document.getElementById('pgModalTitle').textContent = 'New Page';
+  document.getElementById('pgTitle').value = '';
+  document.getElementById('pgContent').value = '';
+  document.getElementById('pgDraft').checked = false;
+  document.getElementById('pageModal').classList.add('on');
+  setTimeout(() => document.getElementById('pgTitle').focus(), 100);
+}
+
+function openEditPage(id) {
+  const page = allPages.find(p => p.id === id);
+  if (!page) return;
+  editPageId = id;
+  document.getElementById('pgModalTitle').textContent = 'Edit Page';
+  document.getElementById('pgTitle').value = page.title || '';
+  document.getElementById('pgContent').value = (page.content||'').replace(/<[^>]+>/g,'');
+  document.getElementById('pgDraft').checked = page.status === 'DRAFT';
+  document.getElementById('pageModal').classList.add('on');
+}
+
+function closePageModal() { document.getElementById('pageModal').classList.remove('on'); }
+
+async function savePage() {
+  const title   = document.getElementById('pgTitle').value.trim();
+  const content = document.getElementById('pgContent').value.trim();
+  const isDraft = document.getElementById('pgDraft').checked;
+  if (!title || !content) { toast('Title and content are required', 'err'); return; }
+  const body = { title, content };
+  showProgress(editPageId ? 'Updating page...' : 'Publishing page...');
+  try {
+    let result;
+    if (editPageId) {
+      result = await gFetch(API_BASE + '/blogs/' + blogId + '/pages/' + editPageId, 'PUT', body);
+      const idx = allPages.findIndex(p => p.id === editPageId);
+      if (idx > -1) allPages[idx] = result;
+    } else {
+      result = await gFetch(API_BASE + '/blogs/' + blogId + '/pages/?isDraft=' + isDraft, 'POST', body);
+      allPages.unshift(result);
+    }
+    closePageModal();
+    document.getElementById('sbPageCnt').textContent = allPages.length;
+    renderPages();
+    hideProgress();
+    toast((editPageId?'Page updated':'Page published') + ' ✅', 'ok');
+  } catch(e) {
+    hideProgress();
+    toast('Error: ' + e.message, 'err');
+  }
+}
+
+// ════════════════════════════════════════════════════
+// DELETE
+// ════════════════════════════════════════════════════
+function openDelModal(id, type, name) {
+  delPostId = id; delType = type;
+  document.getElementById('delName').textContent = '"' + name + '"';
+  document.getElementById('delModal').classList.add('on');
+}
+function closeDelModal() { document.getElementById('delModal').classList.remove('on'); }
+
+async function confirmDelete() {
+  if (!delPostId) return;
+  showProgress('Deleting from Blogger...');
+  try {
+    const endpoint = delType === 'page'
+      ? API_BASE + '/blogs/' + blogId + '/pages/' + delPostId
+      : API_BASE + '/blogs/' + blogId + '/posts/' + delPostId;
+    await gFetch(endpoint, 'DELETE');
+    if (delType === 'page') {
+      allPages = allPages.filter(p => p.id !== delPostId);
+      renderPages();
+    } else {
+      allPosts = allPosts.filter(p => p.id !== delPostId);
+      renderVideos(allPosts);
+      renderDashboard();
+    }
+    updateCounts();
+    closeDelModal();
+    hideProgress();
+    toast('Deleted from Blogger ✅', 'ok');
+    delPostId = null;
+  } catch(e) {
+    hideProgress();
+    toast('Delete error: ' + e.message, 'err');
+  }
+}
+
+// ════════════════════════════════════════════════════
+// REFRESH
+// ════════════════════════════════════════════════════
+async function refreshAll() {
+  setApiStatus('loading', '⟳ Refreshing...');
+  showProgress('Refreshing from Blogger...');
+  try {
+    await loadAllPosts();
+    hideProgress();
+    setApiStatus('ok', '✅ Connected');
+    renderDashboard();
+    toast('Refreshed ✅', 'ok');
+  } catch(e) {
+    hideProgress();
+    setApiStatus('err', '❌ Error');
+    toast('Refresh error: ' + e.message, 'err');
+  }
+}
+
+// ════════════════════════════════════════════════════
+// UI HELPERS
+// ════════════════════════════════════════════════════
+function setApiStatus(type, msg) {
+  const el = document.getElementById('apiStatus');
+  el.className = 'tb-status ' + type;
+  el.innerHTML = (type==='loading'?'<span class="spin">⟳</span> ':'') + msg;
+}
+function showProgress(msg) {
+  document.getElementById('progressMsg').textContent = msg;
+  document.getElementById('progressOv').classList.add('on');
+}
+function hideProgress() { document.getElementById('progressOv').classList.remove('on'); }
+function toast(msg, type) {
+  const t = document.getElementById('admToast');
+  t.textContent = msg; t.className = 'adm-toast on ' + (type||'');
+  setTimeout(() => t.classList.remove('on'), 3200);
 }
 
 // Close modals on overlay click
-document.getElementById('videoModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
-document.getElementById('delModal').addEventListener('click',function(e){if(e.target===this)closeDelModal()});
-
-// Keyboard shortcuts
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){closeModal();closeDelModal()}
+['videoModal','pageModal','delModal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) {
+      if (id==='videoModal') closeVideoModal();
+      else if (id==='pageModal') closePageModal();
+      else closeDelModal();
+    }
+  });
+});
+// ESC key
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') { closeVideoModal(); closePageModal(); closeDelModal(); }
 });
 </script>
 </body>
