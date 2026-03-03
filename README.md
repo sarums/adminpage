@@ -1,0 +1,2 @@
+# adminpage
+Bogger admin control
