@@ -73,6 +73,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-secondary:hover{background:var(--border)}
 .btn-success{background:var(--green);color:#fff}
 .btn-success:hover{background:#059669}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:#7c3aed;transform:translateY(-1px)}
 .btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2)}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);color:var(--accent)}
@@ -84,7 +86,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* PAGES */
 .page{display:none;padding:22px;flex:1;animation:fadeUp .2s ease}
 .page.on{display:block}
-.page-hd{margin-bottom:22px}
+.page-hd{margin-bottom:22px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.page-hd-left h2{font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:4px}
+.page-hd-left p{font-size:13px;color:var(--text2)}
 .page-hd h2{font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:4px}
 .page-hd p{font-size:13px;color:var(--text2)}
 
@@ -121,6 +125,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .badge-green{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
 .badge-gold{background:rgba(255,214,10,.08);color:var(--gold);border:1px solid rgba(255,214,10,.2)}
 .badge-blue{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.badge-purple{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.25)}
 .act-row{display:flex;gap:5px}
 
 /* CHARTS */
@@ -147,7 +152,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
 /* PLAYLIST BUILDER */
 .pl-builder{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px}
-.pl-ep{display:flex;align-items:center;gap:7px;background:var(--bg2);border-radius:7px;padding:8px 10px;margin-bottom:7px;border:1px solid var(--border)}
+.pl-ep{display:flex;align-items:center;gap:7px;background:var(--bg2);border-radius:7px;padding:8px 10px;margin-bottom:7px;border:1px solid var(--border);cursor:grab;transition:var(--t)}
+.pl-ep:hover{border-color:var(--border2)}
 .pl-ep-n{font-size:11px;color:var(--text3);width:16px;text-align:center;flex-shrink:0}
 .pl-ep-fields{flex:1;display:grid;grid-template-columns:1fr 64px 110px 80px;gap:6px}
 .pl-ep-rm{background:none;border:none;color:var(--text3);cursor:pointer;padding:3px;border-radius:4px;transition:var(--t);display:flex;align-items:center}
@@ -155,10 +161,65 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .pl-add{width:100%;padding:8px;background:none;border:1px dashed var(--border2);color:var(--text3);border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:var(--t);margin-top:4px}
 .pl-add:hover{border-color:var(--accent);color:var(--accent)}
 
+/* PLAYLIST ASSIGN */
+.pl-assign-box{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.pl-assign-row{display:flex;gap:8px;align-items:center}
+.pl-assign-row select{flex:1}
+
+/* PLAYLIST PAGE CARDS */
+.pl-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.pl-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:var(--t)}
+.pl-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.pl-card-thumb{width:100%;aspect-ratio:16/9;background:var(--bg3);position:relative;overflow:hidden}
+.pl-card-thumb img{width:100%;height:100%;object-fit:cover}
+.pl-card-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,var(--bg2),var(--bg3))}
+.pl-ep-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.8);color:var(--gold);font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;backdrop-filter:blur(4px)}
+.pl-card-body{padding:14px}
+.pl-card-title{font-weight:700;font-size:14px;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-card-meta{font-size:11px;color:var(--text2);margin-bottom:10px}
+.pl-card-eps{display:flex;flex-direction:column;gap:3px;max-height:90px;overflow:auto;margin-bottom:10px;scrollbar-width:none}
+.pl-card-eps::-webkit-scrollbar{display:none}
+.pl-ep-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pl-ep-row:last-child{border-bottom:none}
+.pl-ep-num{width:16px;color:var(--text3);flex-shrink:0}
+.pl-ep-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-ep-dur{color:var(--text3);flex-shrink:0}
+.pl-card-actions{display:flex;gap:6px}
+
+/* ADD TO PLAYLIST MODAL */
+.add-to-pl-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0 12px;margin-bottom:12px}
+.add-to-pl-search input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 0;flex:1}
+.add-to-pl-search input::placeholder{color:var(--text3)}
+.pl-picker-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;scrollbar-width:thin}
+.pl-picker-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--t);background:var(--bg3)}
+.pl-picker-item:hover{border-color:var(--accent);background:rgba(230,57,70,.05)}
+.pl-picker-item.selected{border-color:var(--accent);background:rgba(230,57,70,.08)}
+.pl-picker-thumb{width:48px;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background:var(--bg2);flex-shrink:0}
+.pl-picker-thumb img{width:100%;height:100%;object-fit:cover}
+.pl-picker-info{flex:1;min-width:0}
+.pl-picker-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-picker-cnt{font-size:11px;color:var(--text2);margin-top:2px}
+.pl-picker-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--t)}
+.pl-picker-item.selected .pl-picker-check{background:var(--accent);border-color:var(--accent)}
+
+/* CREATE PLAYLIST MINI FORM */
+.create-pl-inline{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:12px;display:none}
+.create-pl-inline.on{display:block}
+.create-pl-inline .form-grid{grid-template-columns:1fr 1fr;gap:8px}
+
+/* QUICK ADD EP MODAL */
+.quick-ep-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;max-height:200px;overflow-y:auto;scrollbar-width:thin}
+.quick-ep-row{display:flex;align-items:center;gap:7px;background:var(--bg2);border-radius:6px;padding:7px 9px;border:1px solid var(--border);font-size:12px}
+.quick-ep-num{color:var(--text3);width:16px;flex-shrink:0}
+.quick-ep-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.quick-ep-dur{color:var(--text3);font-size:11px}
+
 /* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-bg.on{display:flex}
 .modal{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:26px;width:680px;max-width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp .2s ease;scrollbar-width:thin}
+.modal-sm{width:480px}
+.modal-lg{width:780px}
 .modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px}
 .modal-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t);font-size:16px}
@@ -167,6 +228,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
 /* PREVIEW */
 .post-preview{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:14px;font-family:monospace;font-size:12px;color:var(--green);max-height:160px;overflow:auto;white-space:pre-wrap;line-height:1.6;margin-top:6px}
+
+/* SECTION DIVIDER */
+.section-div{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+.section-div-line{flex:1;height:1px;background:var(--border)}
+.section-div-txt{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
 
 /* LOADING */
 .loading-ov{position:fixed;inset:0;background:rgba(7,7,14,.88);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
@@ -189,6 +255,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
+/* PLAYLIST ASSIGN TOGGLE */
+.pl-mode-tabs{display:flex;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.pl-mode-tab{flex:1;padding:8px 10px;font-size:12px;font-weight:600;text-align:center;cursor:pointer;background:var(--bg3);color:var(--text2);transition:var(--t);border:none;font-family:'DM Sans',sans-serif}
+.pl-mode-tab.on{background:var(--accent);color:#fff}
+
 @media(max-width:768px){
   .sidebar{width:54px}
   .sb-logo-txt,.sb-grp,.sb-item span,.sb-cnt,.sb-uname,.sb-uemail{display:none}
@@ -197,6 +268,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
   .main{margin-left:54px}
   .charts-row,.form-grid{grid-template-columns:1fr}
   .pl-ep-fields{grid-template-columns:1fr 80px}
+  .pl-cards{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -282,6 +354,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
           <div class="api-dot" id="apiDot"></div>
           <span id="apiTxt">Connecting...</span>
         </div>
+        <button class="btn btn-purple btn-sm" onclick="openCreatePlaylist()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Playlist
+        </button>
         <button class="btn btn-primary btn-sm" onclick="goPage('new',null)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           New Video
@@ -306,8 +382,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <!-- ALL POSTS PAGE -->
     <div class="page" id="page-posts">
       <div class="page-hd">
-        <h2>All Posts</h2>
-        <p>✅ Edit or delete here = instantly updates your website at <b style="color:var(--text)">rongkunkmeanmnus.blogspot.com</b></p>
+        <div class="page-hd-left">
+          <h2>All Posts</h2>
+          <p>✅ Edit or delete here = instantly updates your website at <b style="color:var(--text)">rongkunkmeanmnus.blogspot.com</b></p>
+        </div>
       </div>
       <div class="tbl-wrap">
         <div class="tbl-top">
@@ -317,6 +395,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <select class="tbl-sel" id="filterLbl" onchange="filterPosts(document.querySelector('.tbl-search input').value)">
             <option value="">All Labels</option>
+          </select>
+          <select class="tbl-sel" id="filterType" onchange="filterPosts(document.querySelector('.tbl-search input').value)">
+            <option value="">All Types</option>
+            <option value="playlist">Playlists only</option>
+            <option value="single">Single videos</option>
           </select>
           <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(()=>{renderPosts(allPosts);renderDash()})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -338,8 +421,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <!-- ADD NEW VIDEO PAGE -->
     <div class="page" id="page-new">
       <div class="page-hd">
-        <h2 id="formPageTitle">Add New Video</h2>
-        <p>Fill in the form → click Publish → your video appears on the website <b style="color:var(--green)">instantly</b></p>
+        <div class="page-hd-left">
+          <h2 id="formPageTitle">Add New Video</h2>
+          <p>Fill in the form → click Publish → your video appears on the website <b style="color:var(--green)">instantly</b></p>
+        </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start">
 
@@ -379,17 +464,39 @@ tr:hover td{background:rgba(255,255,255,.015)}
               <label class="form-lbl">Description</label>
               <textarea class="form-textarea" id="fDesc" placeholder="Short description for the video page..."></textarea>
             </div>
-            <div class="form-group form-full">
-              <label class="form-lbl">
-                Playlist Episodes
-                <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px"> — leave empty for single video</span>
-              </label>
-              <div class="pl-builder">
-                <div id="plEpList"></div>
-                <button class="pl-add" onclick="addEp()">+ Add Episode</button>
+          </div>
+
+          <!-- PLAYLIST SECTION IN ADD FORM -->
+          <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">📋 Playlist Options</div><div class="section-div-line"></div></div>
+          
+          <div class="pl-mode-tabs">
+            <button class="pl-mode-tab on" onclick="setPlMode('none',this)">Single Video (No Playlist)</button>
+            <button class="pl-mode-tab" onclick="setPlMode('assign',this)">Assign to Existing Playlist</button>
+            <button class="pl-mode-tab" onclick="setPlMode('new',this)">Create New Playlist</button>
+          </div>
+
+          <!-- Mode: assign to existing -->
+          <div id="plModeAssign" style="display:none">
+            <div class="pl-assign-box">
+              <div style="font-size:12px;color:var(--text2);margin-bottom:4px">Select a playlist to add this video as an episode:</div>
+              <div class="pl-assign-row">
+                <select class="form-select" id="fAssignPlaylist" style="flex:1">
+                  <option value="">— Select Playlist —</option>
+                </select>
               </div>
+              <div id="assignPlPreview" style="display:none;margin-top:8px;background:var(--bg2);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text2)"></div>
             </div>
           </div>
+
+          <!-- Mode: build new playlist -->
+          <div id="plModeNew" style="display:none">
+            <div class="pl-builder">
+              <div style="font-size:12px;color:var(--text2);margin-bottom:8px">This video will be <b style="color:var(--text)">Episode 1</b>. Add more episodes below:</div>
+              <div id="plEpList"></div>
+              <button class="pl-add" onclick="addEp()">+ Add Episode</button>
+            </div>
+          </div>
+
           <div style="display:flex;gap:10px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
             <button class="btn btn-primary" id="submitBtn" onclick="submitPost()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
@@ -416,28 +523,51 @@ tr:hover td{background:rgba(255,255,255,.015)}
             <div class="post-preview" id="postPreview">// Fill form to preview...</div>
           </div>
         </div>
-
       </div>
     </div>
 
     <!-- PLAYLISTS PAGE -->
     <div class="page" id="page-playlists">
-      <div class="page-hd"><h2>Playlists</h2><p>Posts with multiple episodes</p></div>
-      <div class="tbl-wrap">
-        <div class="tbl-top"><div class="tbl-info" id="plTblInfo"></div></div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Title</th><th>Source</th><th>Episodes</th><th>Labels</th><th>Date</th><th>Actions</th></tr></thead>
-            <tbody id="plTbody"></tbody>
-          </table>
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <h2>Playlists</h2>
+          <p>Create, edit, and manage all your playlists — add or remove episodes easily</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(()=>{renderPlaylists();updateCounts()})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+          <button class="btn btn-purple btn-sm" onclick="openCreatePlaylist()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Playlist
+          </button>
         </div>
       </div>
+
+      <!-- Search & filter bar -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <div class="tbl-search" style="flex:1;min-width:200px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input placeholder="Search playlists..." oninput="filterPlaylists(this.value)" type="text" id="plSearch">
+        </div>
+        <select class="tbl-sel" id="plFilterSrc" onchange="filterPlaylists(document.getElementById('plSearch').value)">
+          <option value="">All Sources</option>
+          <option value="dm">Dailymotion</option>
+          <option value="rm">Rumble</option>
+        </select>
+        <div class="tbl-info" id="plTblInfo" style="align-self:center"></div>
+      </div>
+
+      <div class="pl-cards" id="plCards"></div>
     </div>
 
   </main>
 </div>
 
-<!-- EDIT MODAL -->
+<!-- ══════════════════════════════════════════════ -->
+<!-- EDIT POST MODAL -->
+<!-- ══════════════════════════════════════════════ -->
 <div class="modal-bg" id="editModal">
   <div class="modal">
     <div class="modal-hd">
@@ -487,13 +617,114 @@ tr:hover td{background:rgba(255,255,255,.015)}
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════ -->
+<!-- CREATE / EDIT PLAYLIST MODAL -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="modal-bg" id="plModal">
+  <div class="modal modal-lg">
+    <div class="modal-hd">
+      <div class="modal-title" id="plModalTitle">Create New Playlist</div>
+      <button class="modal-close" onclick="closePlModal()">✕</button>
+    </div>
+    <div class="form-grid" style="margin-bottom:16px">
+      <div class="form-group form-full">
+        <label class="form-lbl">Playlist Title *</label>
+        <input class="form-input" id="plFTitle" placeholder="e.g. My Drama Series Season 1">
+      </div>
+      <div class="form-group">
+        <label class="form-lbl">Labels / Categories</label>
+        <input class="form-input" id="plFLabels" placeholder="drama, series">
+      </div>
+      <div class="form-group">
+        <label class="form-lbl">Thumbnail URL</label>
+        <input class="form-input" id="plFThumb" placeholder="https://...">
+      </div>
+      <div class="form-group form-full">
+        <label class="form-lbl">Description</label>
+        <textarea class="form-textarea" id="plFDesc" placeholder="Short description..." style="min-height:56px"></textarea>
+      </div>
+    </div>
+
+    <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">Episodes</div><div class="section-div-line"></div></div>
+    <div class="pl-builder" style="margin-bottom:10px">
+      <div id="plModalEpList"></div>
+      <button class="pl-add" onclick="addModalEp()">+ Add Episode</button>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closePlModal()">Cancel</button>
+      <button class="btn btn-purple" id="plSaveBtn" onclick="savePl()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        <span id="plSaveBtnTxt">Create Playlist</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- ADD SINGLE VIDEO TO PLAYLIST MODAL -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="modal-bg" id="addToPlModal">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <div class="modal-title">Add to Playlist</div>
+      <button class="modal-close" onclick="closeAddToPl()">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px">
+      Adding: <b id="addToPlVideoTitle" style="color:var(--text)">—</b>
+    </div>
+
+    <!-- Existing episodes of this video if any -->
+    <div id="addToPlCurrentEps" style="display:none;margin-bottom:12px;background:rgba(255,214,10,.05);border:1px solid rgba(255,214,10,.15);border-radius:8px;padding:10px">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--gold);margin-bottom:6px">Current Episodes in This Post</div>
+      <div id="addToPlCurrentEpsList" class="quick-ep-list"></div>
+    </div>
+
+    <div class="add-to-pl-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input placeholder="Search playlists..." oninput="filterAddToPlList(this.value)" id="addToPlSearch">
+    </div>
+    <div class="pl-picker-list" id="addToPlList"></div>
+
+    <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">Or Create New</div><div class="section-div-line"></div></div>
+    <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-bottom:4px" onclick="toggleInlineCreatePl()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Create new playlist with this video
+    </button>
+    <div class="create-pl-inline" id="inlineCreatePl">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label class="form-lbl">New Playlist Name</label>
+          <input class="form-input" id="inlinePlName" placeholder="Series title...">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Labels</label>
+          <input class="form-input" id="inlinePlLabels" placeholder="drama, series">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Episode Title</label>
+          <input class="form-input" id="inlinePlEpTitle" placeholder="Episode 1">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closeAddToPl()">Cancel</button>
+      <button class="btn btn-primary" id="addToPlSaveBtn" onclick="confirmAddToPl()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        Add to Playlist
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- DELETE CONFIRM MODAL -->
 <div class="modal-bg" id="delModal">
   <div class="modal" style="max-width:380px;text-align:center">
     <div style="font-size:44px;margin-bottom:12px">🗑️</div>
-    <div class="modal-title" style="justify-content:center">Delete Post?</div>
+    <div class="modal-title" style="justify-content:center" id="delModalTitle">Delete Post?</div>
     <div style="font-size:13px;color:var(--text2);margin:10px 0 18px" id="delPostTitle"></div>
-    <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:20px">
+    <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:20px" id="delWarning">
       ⚠️ This permanently deletes the post from Blogger and removes it from your website
     </div>
     <div style="display:flex;gap:10px;justify-content:center">
@@ -527,7 +758,13 @@ let token = null;
 let allPosts = [];
 let editPostId = null;
 let delPostId = null;
+let delIsPlaylist = false;
 let plEps = [];
+let plModalEps = [];
+let plModalEditId = null; // postId if editing existing playlist
+let addToPlVideoId = null; // postId of video to add to playlist
+let addToPlSelectedPl = null; // postId of target playlist
+let currentPlMode = 'none'; // 'none'|'assign'|'new'
 
 // ══ OAUTH ══
 function signInGoogle() {
@@ -546,7 +783,6 @@ function signInGoogle() {
 }
 
 function parseToken() {
-  // From URL hash after redirect
   const hash = new URLSearchParams(window.location.hash.replace('#',''));
   const t = hash.get('access_token');
   if (t) {
@@ -555,7 +791,6 @@ function parseToken() {
     history.replaceState({}, '', window.location.pathname);
     return true;
   }
-  // From session
   const saved = sessionStorage.getItem('sv_tk');
   if (saved) { token = saved; return true; }
   return false;
@@ -577,7 +812,7 @@ async function api(path, method = 'GET', body = null) {
     body: body ? JSON.stringify(body) : null
   });
   if (r.status === 401) { signOut(); throw new Error('Session expired — please sign in again'); }
-  if (r.status === 204 || r.status === 200 && method === 'DELETE') return null;
+  if (r.status === 204 || (r.status === 200 && method === 'DELETE')) return null;
   const data = await r.json();
   if (!r.ok) throw new Error((data.error && data.error.message) || 'API Error ' + r.status);
   return data;
@@ -598,6 +833,7 @@ async function fetchPosts() {
     allPosts = posts.map(enrichPost);
     updateCounts();
     setStatus(true);
+    refreshAssignDropdowns();
     return allPosts;
   } catch(e) {
     setStatus(false, e.message);
@@ -606,14 +842,20 @@ async function fetchPosts() {
   } finally { hideLoad(); }
 }
 
-// Parse embed tags from post content
 function enrichPost(p) {
   const c = p.content || '';
   const dm = c.match(/<dm[^>]+id=["']([^"']+)["'][^>]*\/?>/i);
   const rm = c.match(/<rm[^>]+id=["']([^"']+)["'][^>]*\/?>/i);
   const pl = c.match(/<playlist[^>]*>([\s\S]*?)<\/playlist>/i);
+  // Also parse JSON-based playlist
+  const svEmbed = c.match(/data-sv-type="playlist"[^>]+data-sv-eps="([^"]+)"/i);
   let src = null, embedId = null, playlist = null;
-  if (pl) {
+  if (svEmbed) {
+    try {
+      const eps = JSON.parse(svEmbed[1].replace(/&quot;/g,'"').replace(/&amp;/g,'&'));
+      if (eps.length) { src = eps[0].src; embedId = eps[0].id; playlist = eps; }
+    } catch(e) {}
+  } else if (pl) {
     const eps = [], re = /<(dm|rm)[^>]+id=["']([^"']+)["'][^>]*(?:title=["']([^"']*)["'])?[^>]*(?:dur=["']([^"']*)["'])?[^>]*\/?>/gi;
     let m, n = 0;
     while ((m = re.exec(pl[1])) !== null) { n++; eps.push({src:m[1],id:m[2],title:m[3]||'Episode '+n,dur:m[4]||''}); }
@@ -621,10 +863,15 @@ function enrichPost(p) {
   } else if (dm) { src='dm'; embedId=dm[1]; }
   else if (rm) { src='rm'; embedId=rm[1]; }
   const labels = (p.labels||[]).map(l => typeof l === 'string' ? l : (l.name||''));
-  // Get thumbnail from content
   const tMatch = c.match(/src=["']([^"']*(?:bp\.blogspot|googleusercontent|picsum)[^"']*\.(jpg|jpeg|png|webp)[^"']*)["']/i);
   const thumb = (p.images&&p.images[0]&&p.images[0].url) || (tMatch&&tMatch[1]) || '';
-  return { ...p, src, embedId, playlist, labels, thumb };
+  // Extract description
+  const svType = c.match(/data-sv-type="([^"]+)"/i);
+  const plainDesc = c.replace(/<div[^>]*class="sv-embed"[^>]*>.*?<\/div>/gis,'')
+    .replace(/<div[^>]*class="sv-tags"[^>]*>[\s\S]*?<\/div>/gi,'')
+    .replace(/<div[^>]*style="display:none"[^>]*>[\s\S]*?<\/div>/gi,'')
+    .replace(/<[^>]+>/g,'').trim().substring(0,300);
+  return { ...p, src, embedId, playlist, labels, thumb, plainDesc };
 }
 
 // ══ FETCH USER ══
@@ -647,15 +894,11 @@ async function fetchUser() {
 // ══ BUILD POST CONTENT ══
 function buildContent(src, embedId, desc, eps, dur, thumb) {
   let b = '';
-  // Use a hidden div with data attributes — Blogger API preserves these perfectly
-  // The theme reads data-sv-src and data-sv-id to build the player
   if (thumb) b += `<div style="display:none"><img src="${escAtt(thumb)}" /></div>\n`;
   if (desc) b += `<p>${escTxt(desc)}</p>\n`;
   if (eps && eps.length) {
-    // Playlist: hidden div with JSON data
     const epJson = escAtt(JSON.stringify(eps));
     b += `<div class="sv-embed" data-sv-type="playlist" data-sv-eps="${epJson}" style="display:none"></div>\n`;
-    // Also write human-readable embed tags for fallback
     b += '<div class="sv-tags" style="display:none">\n';
     eps.forEach(ep => {
       b += `  &lt;${ep.src} id="${escAtt(ep.id)}" title="${escAtt(ep.title)}"${ep.dur?' dur="'+escAtt(ep.dur)+'"':''}/&gt;\n`;
@@ -669,8 +912,40 @@ function buildContent(src, embedId, desc, eps, dur, thumb) {
 
 function escAtt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
 function escTxt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ══ SUBMIT (CREATE / UPDATE) ══
+// ══ PLAYLIST MODE SWITCHER ══
+function setPlMode(mode, el) {
+  currentPlMode = mode;
+  document.querySelectorAll('.pl-mode-tab').forEach(t => t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  document.getElementById('plModeAssign').style.display = mode==='assign'?'block':'none';
+  document.getElementById('plModeNew').style.display    = mode==='new'?'block':'none';
+  if (mode==='assign') refreshAssignDropdown();
+  if (mode==='new') { plEps=[]; renderEps(); }
+  updatePreview();
+}
+
+function refreshAssignDropdown() {
+  const plPosts = allPosts.filter(p => p.playlist && p.playlist.length);
+  const sel = document.getElementById('fAssignPlaylist');
+  sel.innerHTML = '<option value="">— Select Playlist —</option>' +
+    plPosts.map(p => `<option value="${p.id}">${escH(p.title)} (${p.playlist.length} eps)</option>`).join('');
+  sel.onchange = function() {
+    const pl = allPosts.find(x=>x.id===this.value);
+    const prev = document.getElementById('assignPlPreview');
+    if (pl) {
+      prev.style.display='block';
+      prev.innerHTML = pl.playlist.map((ep,i)=>`<div style="padding:2px 0">${i+1}. ${escH(ep.title)}</div>`).join('') + `<div style="margin-top:4px;color:var(--text3)">New video will be Episode ${pl.playlist.length+1}</div>`;
+    } else { prev.style.display='none'; }
+  };
+}
+
+function refreshAssignDropdowns() {
+  refreshAssignDropdown();
+}
+
+// ══ SUBMIT POST ══
 async function submitPost() {
   const title   = document.getElementById('fTitle').value.trim();
   const src     = document.getElementById('fSource').value;
@@ -679,13 +954,27 @@ async function submitPost() {
   const desc    = document.getElementById('fDesc').value.trim();
   const thumb   = document.getElementById('fThumb').value.trim();
   const dur     = document.getElementById('fDuration').value.trim();
-  const eps     = plEps.filter(e => e.id.trim());
 
   if (!title) { showToast('Title is required','err'); return; }
-  if (!embedId && eps.length === 0) { showToast('Embed ID or playlist episodes required','err'); return; }
+  if (!embedId) { showToast('Embed ID is required','err'); return; }
+
+  // Handle assign-to-existing-playlist mode
+  if (currentPlMode === 'assign') {
+    const plId = document.getElementById('fAssignPlaylist').value;
+    if (!plId) { showToast('Please select a playlist','err'); return; }
+    await addVideoToPlaylist(plId, { src, id: embedId, title, dur });
+    clearForm();
+    return;
+  }
 
   const labels  = labelsR ? labelsR.split(',').map(l=>l.trim()).filter(Boolean) : [];
-  const content = buildContent(src, embedId, desc, eps.length ? eps : null, dur, thumb);
+  const eps     = (currentPlMode==='new') ? plEps.filter(e => e.id.trim()) : null;
+  // Prepend this video as episode 1 if new playlist mode
+  let finalEps = null;
+  if (currentPlMode==='new' && (eps && eps.length > 0 || true)) {
+    finalEps = [{src, id:embedId, title, dur}, ...(eps||[])];
+  }
+  const content = buildContent(src, embedId, desc, finalEps, dur, thumb);
   const payload = { kind:'blogger#post', title, content, labels };
 
   const btn = document.getElementById('submitBtn');
@@ -716,6 +1005,24 @@ async function submitPost() {
   }
 }
 
+// ══ Add single video to existing playlist ══
+async function addVideoToPlaylist(plPostId, newEp) {
+  showLoad('Adding video to playlist...');
+  try {
+    const plPost = allPosts.find(x=>x.id===plPostId);
+    if (!plPost || !plPost.playlist) throw new Error('Playlist not found');
+    const newEps = [...plPost.playlist, { src: newEp.src, id: newEp.id, title: newEp.title||`Episode ${plPost.playlist.length+1}`, dur: newEp.dur||'' }];
+    const content = buildContent(newEp.src, newEp.id, plPost.plainDesc||'', newEps, '', plPost.thumb);
+    await api(`/blogs/${CFG.BLOG_ID}/posts/${plPostId}?publish=true`, 'PUT', {
+      kind:'blogger#post', title:plPost.title, content, labels: plPost.labels
+    });
+    showToast(`✅ Video added to "${plPost.title}" as Episode ${newEps.length}`, 'ok');
+    await fetchPosts();
+    renderDash();
+  } catch(e) { showToast('❌ ' + e.message, 'err'); }
+  finally { hideLoad(); }
+}
+
 // ══ EDIT ══
 function openEdit(postId) {
   const p = allPosts.find(x => x.id === postId); if (!p) return;
@@ -726,12 +1033,9 @@ function openEdit(postId) {
   document.getElementById('eFLabels').value   = p.labels.join(', ');
   document.getElementById('eFThumb').value    = p.thumb || '';
   document.getElementById('eFDuration').value = '';
-  // Extract description from content (strip tags)
-  const plain = (p.content||'').replace(/<dm[^>]*\/?>/gi,'').replace(/<rm[^>]*\/?>/gi,'').replace(/<playlist[\s\S]*?<\/playlist>/gi,'').replace(/<[^>]+>/g,'').trim();
-  document.getElementById('eFDesc').value = plain.substring(0, 300);
+  document.getElementById('eFDesc').value = p.plainDesc || '';
   document.getElementById('editModal').classList.add('on');
 }
-
 function closeEditModal() { document.getElementById('editModal').classList.remove('on'); editPostId = null; }
 
 async function saveEdit() {
@@ -767,7 +1071,18 @@ async function saveEdit() {
 function openDel(postId) {
   const p = allPosts.find(x => x.id === postId);
   delPostId = postId;
+  delIsPlaylist = false;
+  document.getElementById('delModalTitle').textContent = 'Delete Post?';
   document.getElementById('delPostTitle').textContent = p ? '"' + p.title + '"' : '';
+  document.getElementById('delWarning').textContent = '⚠️ This permanently deletes the post from Blogger and removes it from your website';
+  document.getElementById('delModal').classList.add('on');
+}
+function openDelPlaylist(postId) {
+  const p = allPosts.find(x => x.id === postId);
+  delPostId = postId; delIsPlaylist = true;
+  document.getElementById('delModalTitle').textContent = 'Delete Playlist?';
+  document.getElementById('delPostTitle').textContent = p ? '"' + p.title + '"' : '';
+  document.getElementById('delWarning').innerHTML = `⚠️ This permanently deletes the <b>entire playlist post</b> and all its ${p&&p.playlist?p.playlist.length:0} episodes from Blogger`;
   document.getElementById('delModal').classList.add('on');
 }
 function closeDelModal() { document.getElementById('delModal').classList.remove('on'); delPostId = null; }
@@ -782,135 +1097,244 @@ async function confirmDelete() {
     closeDelModal();
     await fetchPosts();
     renderPosts(allPosts);
+    renderPlaylists();
     renderDash();
   } catch(e) { showToast('❌ ' + e.message, 'err'); }
   finally { btn.disabled = false; btn.innerHTML = 'Delete Forever'; }
 }
 
-// ══ RENDER DASHBOARD ══
-function renderDash() {
-  const p = allPosts;
-  const pls = p.filter(x => x.playlist && x.playlist.length).length;
-  const dm  = p.filter(x => x.src === 'dm').length;
-  const rm  = p.filter(x => x.src === 'rm').length;
-  const lbs = new Set(); p.forEach(x => x.labels.forEach(l => lbs.add(l)));
+// ══ REMOVE EPISODE FROM PLAYLIST ══
+async function removeEpisodeFromPlaylist(plPostId, epIndex) {
+  const plPost = allPosts.find(x=>x.id===plPostId);
+  if (!plPost || !plPost.playlist) return;
+  const eps = plPost.playlist.filter((_,i) => i !== epIndex);
+  if (eps.length === 0) {
+    // Convert to single video if no episodes left
+    if (!confirm('Removing the last episode will convert this to a single-video post. Continue?')) return;
+  }
+  showLoad('Removing episode...');
+  try {
+    const content = eps.length >= 1
+      ? buildContent(eps[0].src, eps[0].id, plPost.plainDesc||'', eps.length>1?eps:null, '', plPost.thumb)
+      : buildContent('dm','',plPost.plainDesc||'',null,'',plPost.thumb);
+    await api(`/blogs/${CFG.BLOG_ID}/posts/${plPostId}?publish=true`, 'PUT', {
+      kind:'blogger#post', title:plPost.title, content, labels:plPost.labels
+    });
+    showToast('Episode removed', 'ok');
+    await fetchPosts();
+    renderPlaylists();
+    renderDash();
+    // Reopen the edit modal if it was open
+    if (document.getElementById('plModal').classList.contains('on')) {
+      const updated = allPosts.find(x=>x.id===plPostId);
+      if (updated) openEditPlaylist(plPostId);
+    }
+  } catch(e) { showToast('❌ ' + e.message, 'err'); }
+  finally { hideLoad(); }
+}
 
-  document.getElementById('dashStats').innerHTML = [
-    ['rgba(230,57,70,.1)','#e63946','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',p.length,'Total Posts'],
-    ['rgba(59,130,246,.1)','#3b82f6','<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>',pls,'Playlists'],
-    ['rgba(16,185,129,.1)','#10b981','<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>',lbs.size,'Categories'],
-    ['rgba(255,214,10,.1)','#ffd60a','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',dm+' / '+rm,'DM / Rumble']
-  ].map(([bg,c,ico,v,l]) =>
-    `<div class="stat"><div class="stat-icon" style="background:${bg}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2">${ico}</svg></div><div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div></div>`
+// ══ PLAYLIST MODAL ══
+function openCreatePlaylist() {
+  plModalEditId = null;
+  plModalEps = [];
+  document.getElementById('plFTitle').value = '';
+  document.getElementById('plFLabels').value = '';
+  document.getElementById('plFThumb').value = '';
+  document.getElementById('plFDesc').value = '';
+  document.getElementById('plModalTitle').textContent = 'Create New Playlist';
+  document.getElementById('plSaveBtnTxt').textContent = 'Create Playlist';
+  renderModalEps();
+  document.getElementById('plModal').classList.add('on');
+}
+
+function openEditPlaylist(postId) {
+  const p = allPosts.find(x=>x.id===postId); if (!p) return;
+  plModalEditId = postId;
+  plModalEps = p.playlist ? JSON.parse(JSON.stringify(p.playlist)) : [];
+  document.getElementById('plFTitle').value = p.title || '';
+  document.getElementById('plFLabels').value = p.labels.join(', ');
+  document.getElementById('plFThumb').value = p.thumb || '';
+  document.getElementById('plFDesc').value = p.plainDesc || '';
+  document.getElementById('plModalTitle').textContent = 'Edit Playlist';
+  document.getElementById('plSaveBtnTxt').textContent = 'Save Changes';
+  renderModalEps();
+  document.getElementById('plModal').classList.add('on');
+}
+
+function closePlModal() { document.getElementById('plModal').classList.remove('on'); plModalEditId = null; }
+
+function renderModalEps() {
+  document.getElementById('plModalEpList').innerHTML = plModalEps.map((ep,i) => `
+    <div class="pl-ep">
+      <div class="pl-ep-n">${i+1}</div>
+      <div class="pl-ep-fields">
+        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.title)}" placeholder="Episode title" oninput="plModalEps[${i}].title=this.value">
+        <select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plModalEps[${i}].src=this.value">
+          <option value="dm"${ep.src==='dm'?' selected':''}>DM</option>
+          <option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option>
+        </select>
+        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.id)}" placeholder="Embed ID" oninput="plModalEps[${i}].id=this.value">
+        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="plModalEps[${i}].dur=this.value">
+      </div>
+      <button class="pl-ep-rm" onclick="plModalEps.splice(${i},1);renderModalEps()" title="Remove">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`
   ).join('');
-
-  // Labels chart
-  const lc = {}; p.forEach(x => x.labels.forEach(l => lc[l] = (lc[l]||0)+1));
-  const lcs = Object.entries(lc).sort((a,b) => b[1]-a[1]);
-  const maxL = Math.max(...lcs.map(x=>x[1]),1);
-  const colors = ['#e63946','#3b82f6','#10b981','#ffd60a','#8b5cf6','#06b6d4','#f59e0b','#ec4899'];
-  document.getElementById('chartLabels').innerHTML = lcs.length
-    ? lcs.map(([name,cnt],i) =>
-        `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxL*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val">${cnt}</div></div>`
-      ).join('')
-    : '<div class="empty">No labels yet</div>';
-
-  // Source chart
-  const tot = Math.max(p.length, 1);
-  document.getElementById('chartSrc').innerHTML = `
-    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px">
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dm)">${dm}</div><div style="font-size:11px;color:var(--text2)">Dailymotion</div></div>
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--rumble)">${rm}</div><div style="font-size:11px;color:var(--text2)">Rumble</div></div>
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--text3)">${p.length-dm-rm}</div><div style="font-size:11px;color:var(--text2)">No embed</div></div>
-    </div>
-    <div class="bar-track" style="height:10px;border-radius:5px"><div class="bar-fill" style="width:${(dm/tot*100).toFixed(0)}%;height:100%;background:linear-gradient(90deg,var(--dm),#60a5fa)"></div></div>`;
-
-  // Recent
-  document.getElementById('recentPosts').innerHTML = p.slice(0,8).map(x => {
-    const srcBadge = x.src==='dm' ? `<span style="color:var(--dm)">Dailymotion</span>` : x.src==='rm' ? `<span style="color:var(--rumble)">Rumble</span>` : `<span style="color:var(--text3)">No embed</span>`;
-    return `<div>• <b style="color:var(--text)">${x.title.substring(0,55)}</b> <span style="color:var(--text3)">— ${x.labels.join(', ')||'no labels'} · ${srcBadge}</span></div>`;
-  }).join('') || '<div class="empty">No posts yet</div>';
 }
 
-// ══ RENDER POSTS TABLE ══
-function renderPosts(posts) {
-  document.getElementById('postTblInfo').textContent = posts.length + ' posts';
-  // Rebuild label filter
-  const lbs = new Set(); allPosts.forEach(p => p.labels.forEach(l => lbs.add(l)));
-  const sel = document.getElementById('filterLbl');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">All Labels</option>' + [...lbs].map(l => `<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
+function addModalEp() {
+  plModalEps.push({src:'dm',id:'',title:'Episode '+(plModalEps.length+1),dur:''});
+  renderModalEps();
+}
 
-  document.getElementById('postsTbody').innerHTML = posts.length
-    ? posts.map(p => {
-        const thumb = p.thumb || 'https://picsum.photos/seed/'+p.id.slice(-6)+'/160/90';
-        const date  = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-        const live  = p.status !== 'DRAFT';
-        const hasPl = p.playlist && p.playlist.length;
-        return `<tr>
-          <td><div class="td-thumb"><img src="${thumb}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${Math.random().toFixed(6)}/160/90'"></div></td>
-          <td style="max-width:200px">
-            <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px" title="${escH(p.title)}">${p.title}</div>
-            <div style="font-size:11px;color:var(--text2);margin-top:2px">${p.labels.join(', ')||'—'}</div>
-          </td>
-          <td><span class="src-pill ${p.src==='dm'?'sp-dm':p.src==='rm'?'sp-rm':'sp-none'}">${p.src==='dm'?'DM':p.src==='rm'?'Rumble':'—'}</span></td>
-          <td>${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')||'—'}</td>
-          <td style="color:var(--text2);font-size:12px;white-space:nowrap">${date}</td>
-          <td>
-            ${live ? '<span class="badge badge-green">🟢 Live</span>' : '<span class="badge badge-gold">Draft</span>'}
-            ${hasPl ? `<span class="badge badge-gold" style="margin-left:3px">📋 ${p.playlist.length}ep</span>` : ''}
-          </td>
-          <td><div class="act-row">
-            <button class="btn btn-secondary btn-sm btn-icon" onclick="openEdit('${p.id}')" title="Edit">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            <button class="btn btn-secondary btn-sm btn-icon" onclick="window.open('${p.url}','_blank')" title="View live">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </button>
-            <button class="btn btn-danger btn-sm btn-icon" onclick="openDel('${p.id}')" title="Delete">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg>
-            </button>
-          </div></td>
-        </tr>`;
+async function savePl() {
+  const title  = document.getElementById('plFTitle').value.trim();
+  const labels = document.getElementById('plFLabels').value.split(',').map(l=>l.trim()).filter(Boolean);
+  const thumb  = document.getElementById('plFThumb').value.trim();
+  const desc   = document.getElementById('plFDesc').value.trim();
+  const eps    = plModalEps.filter(e=>e.id.trim());
+
+  if (!title) { showToast('Playlist title is required','err'); return; }
+
+  const content = buildContent(
+    eps.length?eps[0].src:'dm',
+    eps.length?eps[0].id:'',
+    desc, eps.length?eps:null, '', thumb
+  );
+  const payload = { kind:'blogger#post', title, content, labels };
+
+  const btn = document.getElementById('plSaveBtn');
+  btn.disabled=true; btn.innerHTML='<div class="inline-spin"></div> Saving...';
+  try {
+    if (plModalEditId) {
+      await api(`/blogs/${CFG.BLOG_ID}/posts/${plModalEditId}?publish=true`, 'PUT', payload);
+      showToast('✅ Playlist updated!', 'ok');
+    } else {
+      await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`, 'POST', payload);
+      showToast('🎉 Playlist created and live!', 'ok');
+    }
+    closePlModal();
+    await fetchPosts();
+    renderPlaylists();
+    renderDash();
+  } catch(e) { showToast('❌ ' + e.message, 'err'); }
+  finally {
+    btn.disabled=false;
+    btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> <span id="plSaveBtnTxt">${plModalEditId?'Save Changes':'Create Playlist'}</span>`;
+  }
+}
+
+// ══ ADD SINGLE VIDEO TO PLAYLIST MODAL ══
+function openAddToPl(videoPostId) {
+  const v = allPosts.find(x=>x.id===videoPostId); if (!v) return;
+  addToPlVideoId = videoPostId;
+  addToPlSelectedPl = null;
+  document.getElementById('addToPlVideoTitle').textContent = v.title;
+  document.getElementById('addToPlSearch').value = '';
+  document.getElementById('inlinePlName').value = v.title;
+  document.getElementById('inlinePlLabels').value = v.labels.join(', ');
+  document.getElementById('inlinePlEpTitle').value = 'Episode 1';
+  document.getElementById('inlineCreatePl').classList.remove('on');
+
+  // Show current episodes if this post is already a playlist
+  const curEps = document.getElementById('addToPlCurrentEps');
+  const curEpsList = document.getElementById('addToPlCurrentEpsList');
+  if (v.playlist && v.playlist.length) {
+    curEps.style.display = 'block';
+    curEpsList.innerHTML = v.playlist.map((ep,i)=>`
+      <div class="quick-ep-row">
+        <div class="quick-ep-num">${i+1}</div>
+        <div class="quick-ep-title">${escH(ep.title)}</div>
+        <div class="quick-ep-dur">${ep.dur||''}</div>
+        <button class="btn btn-danger btn-sm btn-icon" style="padding:3px 5px" onclick="removeEpisodeFromPlaylist('${videoPostId}',${i})" title="Remove ep">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`).join('');
+  } else { curEps.style.display='none'; }
+
+  renderAddToPlList('');
+  document.getElementById('addToPlModal').classList.add('on');
+}
+
+function closeAddToPl() { document.getElementById('addToPlModal').classList.remove('on'); addToPlVideoId=null; addToPlSelectedPl=null; }
+
+function filterAddToPlList(q) { renderAddToPlList(q); }
+
+function renderAddToPlList(q) {
+  const v = allPosts.find(x=>x.id===addToPlVideoId);
+  const plPosts = allPosts.filter(p => p.playlist && p.playlist.length && p.id !== addToPlVideoId);
+  const filtered = q ? plPosts.filter(p=>p.title.toLowerCase().includes(q.toLowerCase())) : plPosts;
+  document.getElementById('addToPlList').innerHTML = filtered.length
+    ? filtered.map(p=>{
+        const thumb = p.thumb || '';
+        const sel = addToPlSelectedPl===p.id;
+        return `<div class="pl-picker-item${sel?' selected':''}" onclick="selectAddToPl('${p.id}',this)">
+          <div class="pl-picker-thumb">${thumb?`<img src="${thumb}" onerror="this.style.display='none'">`:'📋'}</div>
+          <div class="pl-picker-info">
+            <div class="pl-picker-name">${escH(p.title)}</div>
+            <div class="pl-picker-cnt">📋 ${p.playlist.length} episodes · ${p.src==='dm'?'Dailymotion':'Rumble'}</div>
+          </div>
+          <div class="pl-picker-check">
+            ${sel?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>':''}
+          </div>
+        </div>`;
       }).join('')
-    : '<tr><td colspan="7"><div class="empty">No posts found</div></td></tr>';
+    : `<div class="empty" style="padding:20px">No playlists found. Create one below ↓</div>`;
 }
 
-function filterPosts(q) {
-  const lbl = document.getElementById('filterLbl').value;
-  let r = allPosts;
-  if (q) r = r.filter(p => p.title.toLowerCase().includes(q.toLowerCase()) || p.labels.some(l => l.toLowerCase().includes(q.toLowerCase())));
-  if (lbl) r = r.filter(p => p.labels.includes(lbl));
-  renderPosts(r);
+function selectAddToPl(plId, el) {
+  addToPlSelectedPl = (addToPlSelectedPl===plId) ? null : plId;
+  document.querySelectorAll('.pl-picker-item').forEach(i=>i.classList.remove('selected'));
+  if (addToPlSelectedPl) el.classList.add('selected');
+  renderAddToPlList(document.getElementById('addToPlSearch').value);
 }
 
-// ══ RENDER PLAYLISTS ══
-function renderPlaylists() {
-  const pls = allPosts.filter(p => p.playlist && p.playlist.length);
-  document.getElementById('plTblInfo').textContent = pls.length + ' playlists';
-  document.getElementById('plTbody').innerHTML = pls.length
-    ? pls.map(p => {
-        const date = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-        return `<tr>
-          <td style="font-weight:600">${p.title}</td>
-          <td><span class="src-pill ${p.src==='dm'?'sp-dm':'sp-rm'}">${p.src==='dm'?'DM':'Rumble'}</span></td>
-          <td><span class="badge badge-gold">📋 ${p.playlist.length} episodes</span></td>
-          <td>${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')||'—'}</td>
-          <td style="color:var(--text2);font-size:12px">${date}</td>
-          <td><div class="act-row">
-            <button class="btn btn-secondary btn-sm" onclick="openEdit('${p.id}')">✏️ Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="openDel('${p.id}')">🗑</button>
-          </div></td>
-        </tr>`;
-      }).join('')
-    : '<tr><td colspan="6"><div class="empty">No playlists yet. Add a video with playlist episodes.</div></td></tr>';
+function toggleInlineCreatePl() {
+  const box = document.getElementById('inlineCreatePl');
+  box.classList.toggle('on');
+  if (box.classList.contains('on')) addToPlSelectedPl = null;
+  renderAddToPlList(document.getElementById('addToPlSearch').value);
 }
 
-// ══ PLAYLIST BUILDER ══
+async function confirmAddToPl() {
+  const v = allPosts.find(x=>x.id===addToPlVideoId); if (!v) return;
+  const inlineOpen = document.getElementById('inlineCreatePl').classList.contains('on');
+
+  if (inlineOpen) {
+    // Create new playlist with this video
+    const newTitle = document.getElementById('inlinePlName').value.trim();
+    const newLabels = document.getElementById('inlinePlLabels').value.split(',').map(l=>l.trim()).filter(Boolean);
+    const epTitle = document.getElementById('inlinePlEpTitle').value.trim() || 'Episode 1';
+    if (!newTitle) { showToast('Please enter a playlist title','err'); return; }
+    const eps = [{src:v.src, id:v.embedId||'', title:epTitle, dur:''}];
+    const content = buildContent(v.src, v.embedId||'', v.plainDesc||'', eps, '', v.thumb);
+    const btn = document.getElementById('addToPlSaveBtn');
+    btn.disabled=true; btn.innerHTML='<div class="inline-spin"></div>';
+    try {
+      await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`, 'POST', {kind:'blogger#post',title:newTitle,content,labels:newLabels});
+      showToast(`🎉 Created playlist "${newTitle}" with this video!`, 'ok');
+      closeAddToPl();
+      await fetchPosts(); renderPlaylists(); renderDash();
+    } catch(e) { showToast('❌ '+e.message,'err'); }
+    finally { btn.disabled=false; btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Add to Playlist'; }
+    return;
+  }
+
+  if (!addToPlSelectedPl) { showToast('Select a playlist first','err'); return; }
+  const plPost = allPosts.find(x=>x.id===addToPlSelectedPl);
+  const newEpNum = (plPost.playlist||[]).length + 1;
+  const epInfo = { src: v.src, id: v.embedId||'', title: `${v.title} (Ep ${newEpNum})`, dur: '' };
+  closeAddToPl();
+  await addVideoToPlaylist(addToPlSelectedPl, epInfo);
+  renderPlaylists();
+}
+
+// ══ PLAYLIST BUILDER (Add Form) ══
 function renderEps() {
   document.getElementById('plEpList').innerHTML = plEps.map((ep,i) => `
     <div class="pl-ep">
-      <div class="pl-ep-n">${i+1}</div>
+      <div class="pl-ep-n">${i+2}</div>
       <div class="pl-ep-fields">
         <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.title)}" placeholder="Episode title" oninput="plEps[${i}].title=this.value;updatePreview()">
         <select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plEps[${i}].src=this.value;updatePreview()">
@@ -928,7 +1352,7 @@ function renderEps() {
 }
 
 function addEp() {
-  plEps.push({src:'dm',id:'',title:'Episode '+(plEps.length+1),dur:''});
+  plEps.push({src:'dm',id:'',title:'Episode '+(plEps.length+2),dur:''});
   renderEps(); updatePreview();
 }
 
@@ -948,7 +1372,6 @@ function updatePreview() {
   const thumb   = document.getElementById('fThumb').value.trim();
   const desc    = document.getElementById('fDesc').value.trim();
   const dur     = document.getElementById('fDuration').value.trim();
-  const eps     = plEps.filter(e => e.id.trim());
 
   document.getElementById('prevTitle').textContent = title;
   document.getElementById('prevTitle').style.color = document.getElementById('fTitle').value ? 'var(--text)' : 'var(--text3)';
@@ -959,8 +1382,13 @@ function updatePreview() {
   if (thumb) { img.src = thumb; img.style.display='block'; ph.style.display='none'; }
   else { img.style.display='none'; ph.style.display='flex'; }
 
-  const content = buildContent(src, embedId, desc, eps.length?eps:null, dur, thumb);
-  document.getElementById('postPreview').textContent = `Title: ${title}\nLabels: ${labels||'none'}\n\nPost content:\n${content}`;
+  let eps = null;
+  if (currentPlMode==='new') {
+    const allEps = [{src,id:embedId,title,dur},...plEps.filter(e=>e.id.trim())];
+    if (allEps.length > 1 || (allEps.length===1 && allEps[0].id)) eps = allEps;
+  }
+  const content = buildContent(src, embedId, desc, eps, dur, thumb);
+  document.getElementById('postPreview').textContent = `Title: ${title}\nLabels: ${labels||'none'}\nMode: ${currentPlMode}\n\nPost content:\n${content}`;
 }
 
 function clearForm() {
@@ -970,6 +1398,7 @@ function clearForm() {
   editPostId = null;
   document.getElementById('formPageTitle').textContent = 'Add New Video';
   document.getElementById('formStatus').textContent = '';
+  setPlMode('none', document.querySelector('.pl-mode-tab'));
 }
 
 // ══ NAV ══
@@ -1003,13 +1432,171 @@ function showToast(msg, type) {
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),3800);
 }
 
+// ══ RENDER DASHBOARD ══
+function renderDash() {
+  const p = allPosts;
+  const pls = p.filter(x => x.playlist && x.playlist.length).length;
+  const dm  = p.filter(x => x.src === 'dm').length;
+  const rm  = p.filter(x => x.src === 'rm').length;
+  const lbs = new Set(); p.forEach(x => x.labels.forEach(l => lbs.add(l)));
+  const totalEps = p.reduce((s,x)=>s+(x.playlist?x.playlist.length:0),0);
+
+  document.getElementById('dashStats').innerHTML = [
+    ['rgba(230,57,70,.1)','#e63946','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',p.length,'Total Posts'],
+    ['rgba(139,92,246,.1)','#8b5cf6','<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>',pls,'Playlists'],
+    ['rgba(255,214,10,.1)','#ffd60a','<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/>',totalEps,'Total Episodes'],
+    ['rgba(16,185,129,.1)','#10b981','<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>',lbs.size,'Categories'],
+    ['rgba(59,130,246,.1)','#3b82f6','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',dm+' / '+rm,'DM / Rumble']
+  ].map(([bg,c,ico,v,l]) =>
+    `<div class="stat"><div class="stat-icon" style="background:${bg}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2">${ico}</svg></div><div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div></div>`
+  ).join('');
+
+  const lc = {}; p.forEach(x => x.labels.forEach(l => lc[l] = (lc[l]||0)+1));
+  const lcs = Object.entries(lc).sort((a,b) => b[1]-a[1]);
+  const maxL = Math.max(...lcs.map(x=>x[1]),1);
+  const colors = ['#e63946','#3b82f6','#10b981','#ffd60a','#8b5cf6','#06b6d4','#f59e0b','#ec4899'];
+  document.getElementById('chartLabels').innerHTML = lcs.length
+    ? lcs.map(([name,cnt],i) =>
+        `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxL*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val">${cnt}</div></div>`
+      ).join('')
+    : '<div class="empty">No labels yet</div>';
+
+  const tot = Math.max(p.length, 1);
+  document.getElementById('chartSrc').innerHTML = `
+    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px">
+      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dm)">${dm}</div><div style="font-size:11px;color:var(--text2)">Dailymotion</div></div>
+      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--rumble)">${rm}</div><div style="font-size:11px;color:var(--text2)">Rumble</div></div>
+      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--text3)">${p.length-dm-rm}</div><div style="font-size:11px;color:var(--text2)">No embed</div></div>
+    </div>
+    <div class="bar-track" style="height:10px;border-radius:5px"><div class="bar-fill" style="width:${(dm/tot*100).toFixed(0)}%;height:100%;background:linear-gradient(90deg,var(--dm),#60a5fa)"></div></div>`;
+
+  document.getElementById('recentPosts').innerHTML = p.slice(0,8).map(x => {
+    const srcBadge = x.src==='dm' ? `<span style="color:var(--dm)">Dailymotion</span>` : x.src==='rm' ? `<span style="color:var(--rumble)">Rumble</span>` : `<span style="color:var(--text3)">No embed</span>`;
+    const plBadge = x.playlist&&x.playlist.length ? `<span style="color:var(--purple)"> · 📋 ${x.playlist.length}ep</span>` : '';
+    return `<div>• <b style="color:var(--text)">${x.title.substring(0,55)}</b> <span style="color:var(--text3)">— ${x.labels.join(', ')||'no labels'} · ${srcBadge}${plBadge}</span></div>`;
+  }).join('') || '<div class="empty">No posts yet</div>';
+}
+
+// ══ RENDER POSTS TABLE ══
+function renderPosts(posts) {
+  document.getElementById('postTblInfo').textContent = posts.length + ' posts';
+  const lbs = new Set(); allPosts.forEach(p => p.labels.forEach(l => lbs.add(l)));
+  const sel = document.getElementById('filterLbl');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All Labels</option>' + [...lbs].map(l => `<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
+
+  document.getElementById('postsTbody').innerHTML = posts.length
+    ? posts.map(p => {
+        const thumb = p.thumb || 'https://picsum.photos/seed/'+p.id.slice(-6)+'/160/90';
+        const date  = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+        const live  = p.status !== 'DRAFT';
+        const hasPl = p.playlist && p.playlist.length;
+        return `<tr>
+          <td><div class="td-thumb"><img src="${thumb}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${Math.random().toFixed(6)}/160/90'"></div></td>
+          <td style="max-width:200px">
+            <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px" title="${escH(p.title)}">${p.title}</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:2px">${p.labels.join(', ')||'—'}</div>
+          </td>
+          <td><span class="src-pill ${p.src==='dm'?'sp-dm':p.src==='rm'?'sp-rm':'sp-none'}">${p.src==='dm'?'DM':p.src==='rm'?'Rumble':'—'}</span></td>
+          <td>${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')||'—'}</td>
+          <td style="color:var(--text2);font-size:12px;white-space:nowrap">${date}</td>
+          <td>
+            ${live ? '<span class="badge badge-green">🟢 Live</span>' : '<span class="badge badge-gold">Draft</span>'}
+            ${hasPl ? `<span class="badge badge-purple" style="margin-left:3px">📋 ${p.playlist.length}ep</span>` : ''}
+          </td>
+          <td><div class="act-row">
+            <button class="btn btn-secondary btn-sm btn-icon" onclick="openEdit('${p.id}')" title="Edit post">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn btn-purple btn-sm btn-icon" onclick="openAddToPl('${p.id}')" title="Add to playlist / manage playlist">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <button class="btn btn-secondary btn-sm btn-icon" onclick="window.open('${p.url}','_blank')" title="View live">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </button>
+            <button class="btn btn-danger btn-sm btn-icon" onclick="openDel('${p.id}')" title="Delete">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg>
+            </button>
+          </div></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="7"><div class="empty">No posts found</div></td></tr>';
+}
+
+function filterPosts(q) {
+  const lbl  = document.getElementById('filterLbl').value;
+  const type = document.getElementById('filterType').value;
+  let r = allPosts;
+  if (q) r = r.filter(p => p.title.toLowerCase().includes(q.toLowerCase()) || p.labels.some(l => l.toLowerCase().includes(q.toLowerCase())));
+  if (lbl) r = r.filter(p => p.labels.includes(lbl));
+  if (type==='playlist') r = r.filter(p=>p.playlist&&p.playlist.length);
+  if (type==='single')   r = r.filter(p=>!p.playlist||!p.playlist.length);
+  renderPosts(r);
+}
+
+// ══ RENDER PLAYLISTS (Card View) ══
+function renderPlaylists() {
+  const q   = document.getElementById('plSearch')?.value || '';
+  const src = document.getElementById('plFilterSrc')?.value || '';
+  let pls = allPosts.filter(p => p.playlist && p.playlist.length);
+  if (q)   pls = pls.filter(p=>p.title.toLowerCase().includes(q.toLowerCase()));
+  if (src) pls = pls.filter(p=>p.src===src);
+  document.getElementById('plTblInfo').textContent = pls.length + ' playlist' + (pls.length!==1?'s':'');
+  document.getElementById('plCards').innerHTML = pls.length
+    ? pls.map(p=>{
+        const thumb = p.thumb || '';
+        const date  = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+        return `<div class="pl-card">
+          <div class="pl-card-thumb">
+            ${thumb?`<img src="${thumb}" onerror="this.style.display='none'">`:``}
+            <div class="pl-card-thumb-ph" ${thumb?'style="display:none"':''}>📋</div>
+            <div class="pl-ep-count">📋 ${p.playlist.length} eps</div>
+          </div>
+          <div class="pl-card-body">
+            <div class="pl-card-title" title="${escH(p.title)}">${p.title}</div>
+            <div class="pl-card-meta">
+              <span class="src-pill ${p.src==='dm'?'sp-dm':'sp-rm'}" style="font-size:9px">${p.src==='dm'?'DM':'Rumble'}</span>
+              ${p.labels.map(l=>`<span class="cat-chip" style="font-size:10px;padding:2px 6px">${l}</span>`).join('')}
+              <span style="color:var(--text3)"> · ${date}</span>
+            </div>
+            <div class="pl-card-eps">
+              ${p.playlist.map((ep,i)=>`<div class="pl-ep-row">
+                <div class="pl-ep-num">${i+1}</div>
+                <div class="pl-ep-name">${escH(ep.title)}</div>
+                <div class="pl-ep-dur">${ep.dur||''}</div>
+              </div>`).join('')}
+            </div>
+            <div class="pl-card-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1" onclick="openEditPlaylist('${p.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Edit
+              </button>
+              <button class="btn btn-purple btn-sm" style="flex:1" onclick="openAddToPl('${p.id}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Ep
+              </button>
+              <button class="btn btn-ghost btn-sm btn-icon" onclick="window.open('${p.url}','_blank')" title="View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </button>
+              <button class="btn btn-danger btn-sm btn-icon" onclick="openDelPlaylist('${p.id}')" title="Delete playlist">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="empty" style="grid-column:1/-1">No playlists yet. Click "New Playlist" to create one, or add episodes when uploading a video.</div>';
+}
+
+function filterPlaylists(q) { renderPlaylists(); }
+
 // ══ BOOT ══
 window.addEventListener('load', async () => {
   if (parseToken()) {
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     await fetchUser();
-    const posts = await fetchPosts();
+    await fetchPosts();
     renderDash();
     renderEps();
     updatePreview();
