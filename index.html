@@ -647,21 +647,28 @@ async function fetchUser() {
 // ══ BUILD POST CONTENT ══
 function buildContent(src, embedId, desc, eps, dur, thumb) {
   let b = '';
-  if (thumb) b += `<div style="display:none"><img src="${escH(thumb)}" /></div>\n`;
-  if (desc) b += `<p>${escH(desc)}</p>\n`;
+  // Use a hidden div with data attributes — Blogger API preserves these perfectly
+  // The theme reads data-sv-src and data-sv-id to build the player
+  if (thumb) b += `<div style="display:none"><img src="${escAtt(thumb)}" /></div>\n`;
+  if (desc) b += `<p>${escTxt(desc)}</p>\n`;
   if (eps && eps.length) {
-    b += '<playlist>\n';
+    // Playlist: hidden div with JSON data
+    const epJson = escAtt(JSON.stringify(eps));
+    b += `<div class="sv-embed" data-sv-type="playlist" data-sv-eps="${epJson}" style="display:none"></div>\n`;
+    // Also write human-readable embed tags for fallback
+    b += '<div class="sv-tags" style="display:none">\n';
     eps.forEach(ep => {
-      b += `  <${ep.src} id="${escH(ep.id)}" title="${escH(ep.title)}"${ep.dur?' dur="'+escH(ep.dur)+'"':''}/>\n`;
+      b += `  &lt;${ep.src} id="${escAtt(ep.id)}" title="${escAtt(ep.title)}"${ep.dur?' dur="'+escAtt(ep.dur)+'"':''}/&gt;\n`;
     });
-    b += '</playlist>';
+    b += '</div>';
   } else if (embedId) {
-    b += `<${src} id="${escH(embedId)}"${dur?' dur="'+escH(dur)+'"':''}/>`;
+    b += `<div class="sv-embed" data-sv-type="${escAtt(src)}" data-sv-id="${escAtt(embedId)}"${dur?' data-sv-dur="'+escAtt(dur)+'"':''} style="display:none"></div>`;
   }
   return b;
 }
 
-function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAtt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+function escTxt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ══ SUBMIT (CREATE / UPDATE) ══
 async function submitPost() {
