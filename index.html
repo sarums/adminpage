@@ -4,1604 +4,638 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StreamVault Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#07070e;--bg2:#0d0d1a;--bg3:#131320;--card:#0f0f1e;
-  --border:#1a1a32;--border2:#252545;
-  --accent:#e63946;--gold:#ffd60a;--blue:#3b82f6;--green:#10b981;--purple:#8b5cf6;
-  --dm:#2563eb;--rumble:#65a30d;
-  --text:#eeeeff;--text2:#6868a0;--text3:#32325a;
-  --sidebar:230px;--r:10px;--t:.2s cubic-bezier(.4,0,.2,1)
-}
+:root{--bg:#07070e;--bg2:#0d0d1a;--bg3:#131320;--card:#0f0f1e;--border:#1a1a32;--border2:#252545;--accent:#e63946;--gold:#ffd60a;--blue:#3b82f6;--green:#10b981;--purple:#8b5cf6;--dm:#2563eb;--rumble:#65a30d;--text:#eeeeff;--text2:#6868a0;--text3:#32325a;--sidebar:224px;--r:10px;--t:.18s cubic-bezier(.4,0,.2,1)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-
-/* AUTH */
+body{font-family:'DM Sans','Kantumruy Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:inherit}
 #authScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
 .auth-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(230,57,70,.13),transparent),radial-gradient(ellipse 50% 40% at 80% 90%,rgba(59,130,246,.09),transparent);pointer-events:none}
 .auth-box{position:relative;background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:52px 44px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 40px 100px rgba(0,0,0,.85);animation:fadeUp .4s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 .auth-logo{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.auth-logo b{color:var(--text);font-weight:400}
 .auth-sub{font-size:13px;color:var(--text2);margin-bottom:38px;line-height:1.65}
-.auth-sub b{color:var(--text)}
 .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;color:#1f1f1f;border:none;border-radius:11px;padding:14px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:var(--t);font-family:'DM Sans',sans-serif;box-shadow:0 2px 16px rgba(0,0,0,.35)}
-.google-btn:hover{background:#f5f5f5;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45)}
-.auth-note{font-size:11px;color:var(--text3);text-align:center;margin-top:18px;line-height:1.7}
-.auth-err{background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);color:var(--accent);padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none;text-align:center}
-
-/* LAYOUT */
-#app{display:none;min-height:100vh}
-.sidebar{width:var(--sidebar);position:fixed;left:0;top:0;bottom:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
-.sb-logo{padding:19px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.sb-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:21px;color:var(--accent)}
-.sb-logo-txt b{color:var(--text);font-weight:400}
-.sb-badge{background:linear-gradient(135deg,var(--accent),#ff6b35);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:3px;letter-spacing:.6px}
-.sb-nav{padding:8px 0;flex:1;overflow-y:auto;scrollbar-width:none}
-.sb-nav::-webkit-scrollbar{display:none}
-.sb-grp{padding:10px 16px 4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text3)}
-.sb-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:var(--t);border-left:3px solid transparent}
-.sb-item:hover{background:rgba(255,255,255,.03);color:var(--text)}
-.sb-item.on{background:rgba(230,57,70,.07);color:var(--accent);border-left-color:var(--accent)}
-.sb-cnt{margin-left:auto;background:var(--bg3);border:1px solid var(--border);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;color:var(--text3)}
-.sb-item.on .sb-cnt{background:rgba(230,57,70,.15);border-color:rgba(230,57,70,.3);color:var(--accent)}
-.sb-user{padding:14px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.sb-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border2)}
-.sb-avatar-ph{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#ff6b35);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;display:none}
-.sb-uname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:115px}
-.sb-uemail{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:115px}
-.sb-logout{margin-left:auto;background:none;border:1px solid var(--border);color:var(--text3);border-radius:7px;padding:5px 7px;cursor:pointer;transition:var(--t);display:flex;align-items:center;flex-shrink:0}
-.sb-logout:hover{border-color:var(--accent);color:var(--accent)}
-
-/* MAIN */
-.main{margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(7,7,14,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:58px;padding:0 22px;display:flex;align-items:center;gap:12px}
-.tb-title{font-family:'Bebas Neue',sans-serif;font-size:20px}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.api-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px}
+.google-btn:hover{background:#f1f1f1;transform:translateY(-1px)}
+#app{display:none;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh}
+.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:20px 18px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
+.sb-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);letter-spacing:1px}
+.sb-grp{padding:18px 18px 6px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;color:var(--text2);cursor:pointer;transition:var(--t);position:relative}
+.sb-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.sb-item.on{background:rgba(230,57,70,.12);color:var(--accent)}
+.sb-item.on::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.sb-cnt{margin-left:auto;background:var(--border2);border-radius:10px;padding:1px 7px;font-size:11px;font-weight:600;color:var(--text2)}
+.sb-cnt.hi{background:rgba(139,92,246,.2);color:var(--purple)}
+.sb-user{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.sb-avatar-ph{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.sb-uname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.sb-uemail{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.sb-logout{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;border-radius:6px;transition:var(--t);flex-shrink:0}
+.sb-logout:hover{color:var(--accent)}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(7,7,14,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 22px;height:56px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.tb-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;flex:1}
+.tb-right{display:flex;align-items:center;gap:8px}
+.api-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
 .api-dot{width:7px;height:7px;border-radius:50%;background:var(--text3)}
 .api-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
 .api-dot.err{background:var(--accent)}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:var(--t);border:none;text-decoration:none}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:#c1121f;transform:translateY(-1px)}
-.btn-secondary{background:var(--bg3);border:1px solid var(--border2);color:var(--text)}
-.btn-secondary:hover{background:var(--border)}
-.btn-success{background:var(--green);color:#fff}
-.btn-success:hover{background:#059669}
-.btn-purple{background:var(--purple);color:#fff}
-.btn-purple:hover{background:#7c3aed;transform:translateY(-1px)}
-.btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2)}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-.btn-danger{background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);color:var(--accent)}
-.btn-danger:hover{background:var(--accent);color:#fff}
-.btn-sm{padding:6px 13px;font-size:12px}
-.btn-icon{padding:7px}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
-
-/* PAGES */
-.page{display:none;padding:22px;flex:1;animation:fadeUp .2s ease}
+.page{display:none;padding:22px;animation:fadeUp .2s ease}
 .page.on{display:block}
-.page-hd{margin-bottom:22px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.page-hd-left h2{font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:4px}
-.page-hd-left p{font-size:13px;color:var(--text2)}
-.page-hd h2{font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:4px}
+.page-hd{margin-bottom:20px}
+.page-hd h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.5px;margin-bottom:4px}
 .page-hd p{font-size:13px;color:var(--text2)}
-
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;align-items:flex-start;gap:12px;transition:var(--t)}
-.stat:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;margin-bottom:3px}
-.stat-lbl{font-size:11px;color:var(--text2)}
-
-/* TABLE */
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.tbl-top{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tbl-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0 12px}
-.tbl-search input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 0;width:200px}
-.tbl-search input::placeholder{color:var(--text3)}
-.tbl-sel{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer}
-.tbl-sel option{background:var(--bg3)}
-.tbl-info{margin-left:auto;font-size:12px;color:var(--text2)}
-table{width:100%;border-collapse:collapse}
-th{text-align:left;padding:10px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
-td{padding:11px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.015)}
-.td-thumb{width:72px;aspect-ratio:16/9;border-radius:5px;overflow:hidden;background:var(--bg3);flex-shrink:0}
-.td-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.src-pill{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase}
-.sp-dm{background:var(--dm);color:#fff}
-.sp-rm{background:var(--rumble);color:#fff}
-.sp-none{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
-.cat-chip{padding:3px 9px;border-radius:10px;font-size:11px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);margin-right:3px;display:inline-block}
-.badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700}
-.badge-green{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
-.badge-gold{background:rgba(255,214,10,.08);color:var(--gold);border:1px solid rgba(255,214,10,.2)}
-.badge-blue{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
-.badge-purple{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.25)}
-.act-row{display:flex;gap:5px}
-
-/* CHARTS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--t);white-space:nowrap}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:white}.btn-primary:hover:not(:disabled){background:#d62f3c}
+.btn-secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}.btn-secondary:hover:not(:disabled){color:var(--text)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-danger{background:rgba(230,57,70,.15);color:var(--accent);border:1px solid rgba(230,57,70,.25)}.btn-danger:hover:not(:disabled){background:var(--accent);color:white}
+.btn-purple{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.25)}.btn-purple:hover{background:var(--purple);color:white}
+.btn-blue{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.25)}.btn-blue:hover{background:var(--blue);color:white}
+.btn-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.25)}.btn-green:hover{background:var(--green);color:white}
+.btn-sm{padding:6px 11px;font-size:12px}.btn-icon{padding:6px 8px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:14px}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
-.chart-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:14px}
-.bar-list{display:flex;flex-direction:column;gap:9px}
-.bar-row{display:flex;align-items:center;gap:9px;font-size:12px}
-.bar-name{width:120px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
-.bar-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-.bar-val{width:40px;text-align:right;color:var(--text2);font-variant-numeric:tabular-nums}
-
-/* FORM */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.chart-lbl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:14px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.bar-name{font-size:12px;color:var(--text2);width:80px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;background:var(--border);border-radius:4px;height:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.bar-val{font-size:11px;color:var(--text3);width:24px;text-align:right}
+.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tbl-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tbl-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0 12px;flex:1;min-width:160px}
+.tbl-search input{background:none;border:none;outline:none;color:var(--text);font-size:13px;padding:8px 0;flex:1}
+.tbl-sel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--text2);outline:none;cursor:pointer}
+.tbl-info{font-size:12px;color:var(--text3);margin-left:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg3)}
+th{padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--text3);text-transform:uppercase;text-align:left;white-space:nowrap}
+td{padding:11px 14px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.td-thumb{width:68px;height:40px;border-radius:6px;overflow:hidden;background:var(--bg3)}
+.td-thumb img{width:100%;height:100%;object-fit:cover}
+.act-row{display:flex;gap:5px;align-items:center}
+.src-pill{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.sp-dm{background:rgba(37,99,235,.2);color:#60a5fa}
+.sp-rm{background:rgba(101,163,13,.2);color:#86efac}
+.sp-none{background:var(--bg3);color:var(--text3)}
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green)}
+.badge-gold{background:rgba(255,214,10,.12);color:var(--gold)}
+.badge-purple{background:rgba(139,92,246,.15);color:var(--purple)}
+.cat-chip{display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:10px;color:var(--text2);margin:1px 2px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-full{grid-column:1/-1}
 .form-group{display:flex;flex-direction:column;gap:5px}
-.form-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2)}
-.form-input,.form-select,.form-textarea{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:var(--t);width:100%}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);background:var(--bg2)}
-.form-textarea{resize:vertical;min-height:76px}
-.form-select option{background:var(--bg3)}
-.form-hint{font-size:11px;color:var(--text3);margin-top:2px}
-
-/* PLAYLIST BUILDER */
-.pl-builder{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px}
-.pl-ep{display:flex;align-items:center;gap:7px;background:var(--bg2);border-radius:7px;padding:8px 10px;margin-bottom:7px;border:1px solid var(--border);cursor:grab;transition:var(--t)}
-.pl-ep:hover{border-color:var(--border2)}
-.pl-ep-n{font-size:11px;color:var(--text3);width:16px;text-align:center;flex-shrink:0}
-.pl-ep-fields{flex:1;display:grid;grid-template-columns:1fr 64px 110px 80px;gap:6px}
-.pl-ep-rm{background:none;border:none;color:var(--text3);cursor:pointer;padding:3px;border-radius:4px;transition:var(--t);display:flex;align-items:center}
+.form-lbl{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--text3);text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);outline:none;transition:var(--t);width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text3)}
+.form-textarea{resize:vertical;min-height:78px}
+.form-hint{font-size:11px;color:var(--text3)}
+.form-footer{display:flex;gap:10px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:18px}
+.tab-btn{padding:9px 18px;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:var(--t);margin-bottom:-1px}
+.tab-btn.on{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover:not(.on){color:var(--text)}
+.pl-builder{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.pl-builder-hd{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pl-builder-title{font-size:12px;font-weight:600;color:var(--text2)}
+.pl-ep{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border)}
+.pl-ep:last-child{border-bottom:none}
+.pl-ep-n{width:22px;height:22px;border-radius:50%;background:var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text3);flex-shrink:0}
+.pl-ep-fields{display:grid;grid-template-columns:1fr 68px 120px 68px;gap:5px}
+.pl-ep-rm{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;border-radius:5px;transition:var(--t)}
 .pl-ep-rm:hover{color:var(--accent)}
-.pl-add{width:100%;padding:8px;background:none;border:1px dashed var(--border2);color:var(--text3);border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:var(--t);margin-top:4px}
-.pl-add:hover{border-color:var(--accent);color:var(--accent)}
-
-/* PLAYLIST ASSIGN */
-.pl-assign-box{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.pl-assign-row{display:flex;gap:8px;align-items:center}
-.pl-assign-row select{flex:1}
-
-/* PLAYLIST PAGE CARDS */
-.pl-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.pl-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:var(--t)}
-.pl-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.pl-card-thumb{width:100%;aspect-ratio:16/9;background:var(--bg3);position:relative;overflow:hidden}
+.pl-add{width:100%;padding:9px;background:none;border:none;border-top:1px solid var(--border);cursor:pointer;color:var(--text3);font-size:12px;transition:var(--t);display:flex;align-items:center;justify-content:center;gap:5px}
+.pl-add:hover{color:var(--accent)}
+.pl-empty{padding:18px;text-align:center;color:var(--text3);font-size:13px}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.pl-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:var(--t)}
+.pl-card:hover{border-color:var(--border2)}
+.pl-card-hd{padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--border)}
+.pl-card-thumb{width:64px;height:40px;border-radius:6px;overflow:hidden;background:var(--bg3);flex-shrink:0}
 .pl-card-thumb img{width:100%;height:100%;object-fit:cover}
-.pl-card-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,var(--bg2),var(--bg3))}
-.pl-ep-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.8);color:var(--gold);font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;backdrop-filter:blur(4px)}
-.pl-card-body{padding:14px}
-.pl-card-title{font-weight:700;font-size:14px;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl-card-meta{font-size:11px;color:var(--text2);margin-bottom:10px}
-.pl-card-eps{display:flex;flex-direction:column;gap:3px;max-height:90px;overflow:auto;margin-bottom:10px;scrollbar-width:none}
-.pl-card-eps::-webkit-scrollbar{display:none}
-.pl-ep-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.pl-ep-row:last-child{border-bottom:none}
-.pl-ep-num{width:16px;color:var(--text3);flex-shrink:0}
-.pl-ep-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pl-ep-dur{color:var(--text3);flex-shrink:0}
-.pl-card-actions{display:flex;gap:6px}
-
-/* ADD TO PLAYLIST MODAL */
-.add-to-pl-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:0 12px;margin-bottom:12px}
-.add-to-pl-search input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 0;flex:1}
-.add-to-pl-search input::placeholder{color:var(--text3)}
-.pl-picker-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;scrollbar-width:thin}
-.pl-picker-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--t);background:var(--bg3)}
-.pl-picker-item:hover{border-color:var(--accent);background:rgba(230,57,70,.05)}
-.pl-picker-item.selected{border-color:var(--accent);background:rgba(230,57,70,.08)}
-.pl-picker-thumb{width:48px;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background:var(--bg2);flex-shrink:0}
-.pl-picker-thumb img{width:100%;height:100%;object-fit:cover}
-.pl-picker-info{flex:1;min-width:0}
-.pl-picker-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl-picker-cnt{font-size:11px;color:var(--text2);margin-top:2px}
-.pl-picker-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--t)}
-.pl-picker-item.selected .pl-picker-check{background:var(--accent);border-color:var(--accent)}
-
-/* CREATE PLAYLIST MINI FORM */
-.create-pl-inline{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:12px;display:none}
-.create-pl-inline.on{display:block}
-.create-pl-inline .form-grid{grid-template-columns:1fr 1fr;gap:8px}
-
-/* QUICK ADD EP MODAL */
-.quick-ep-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;max-height:200px;overflow-y:auto;scrollbar-width:thin}
-.quick-ep-row{display:flex;align-items:center;gap:7px;background:var(--bg2);border-radius:6px;padding:7px 9px;border:1px solid var(--border);font-size:12px}
-.quick-ep-num{color:var(--text3);width:16px;flex-shrink:0}
-.quick-ep-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.quick-ep-dur{color:var(--text3);font-size:11px}
-
-/* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.pl-card-title{font-weight:600;font-size:14px;line-height:1.3;flex:1}
+.ep-list{padding:0 14px 10px}
+.ep-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.ep-row:last-child{border:none}
+.ep-num{width:20px;height:20px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text3);flex-shrink:0}
+.ep-title{flex:1;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ep-dur{font-size:10px;color:var(--text3)}
+.ep-del{background:none;border:none;cursor:pointer;color:var(--text3);padding:3px;transition:var(--t);border-radius:4px;flex-shrink:0}
+.ep-del:hover{color:var(--accent)}
+.pl-select-list{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--bg3)}
+.pl-select-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--t)}
+.pl-select-item:last-child{border:none}
+.pl-select-item:hover{background:rgba(255,255,255,.03)}
+.pl-select-item.selected{background:rgba(230,57,70,.08);border-left:3px solid var(--accent)}
+.pl-select-thumb{width:44px;height:28px;border-radius:4px;overflow:hidden;background:var(--bg);flex-shrink:0}
+.pl-select-thumb img{width:100%;height:100%;object-fit:cover}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
 .modal-bg.on{display:flex}
-.modal{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:26px;width:680px;max-width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp .2s ease;scrollbar-width:thin}
-.modal-sm{width:480px}
-.modal-lg{width:780px}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:fadeUp .2s ease}
+.modal-wide{max-width:760px}
 .modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px}
-.modal-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t);font-size:16px}
-.modal-close:hover{background:var(--accent);border-color:var(--accent);color:#fff}
-.form-footer{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
-
-/* PREVIEW */
-.post-preview{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:14px;font-family:monospace;font-size:12px;color:var(--green);max-height:160px;overflow:auto;white-space:pre-wrap;line-height:1.6;margin-top:6px}
-
-/* SECTION DIVIDER */
-.section-div{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
-.section-div-line{flex:1;height:1px;background:var(--border)}
-.section-div-txt{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
-
-/* LOADING */
-.loading-ov{position:fixed;inset:0;background:rgba(7,7,14,.88);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
-.loading-ov.on{display:flex}
-.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;transition:var(--t);padding:2px 6px;border-radius:6px}
+.modal-close:hover{color:var(--text)}
+.post-preview{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;color:var(--text3);font-family:monospace;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:160px;overflow-y:auto}
+.tip-box{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#93c5fd;line-height:1.6}
+.empty{padding:30px;text-align:center;color:var(--text3);font-size:13px}
+.inline-spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner{width:40px;height:40px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.inline-spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle}
-.loading-txt{font-size:13px;color:var(--text2)}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;transform:translateY(80px);opacity:0;transition:.3s;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);max-width:340px}
-.toast.on{transform:translateY(0);opacity:1}
-.toast.ok{border-color:var(--green)}
-.toast.err{border-color:var(--accent)}
-
-/* MISC */
-.sep{height:1px;background:var(--border);margin:14px 0}
-.empty{text-align:center;padding:50px;color:var(--text2);font-size:13px}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* PLAYLIST ASSIGN TOGGLE */
-.pl-mode-tabs{display:flex;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:10px}
-.pl-mode-tab{flex:1;padding:8px 10px;font-size:12px;font-weight:600;text-align:center;cursor:pointer;background:var(--bg3);color:var(--text2);transition:var(--t);border:none;font-family:'DM Sans',sans-serif}
-.pl-mode-tab.on{background:var(--accent);color:#fff}
-
-@media(max-width:768px){
-  .sidebar{width:54px}
-  .sb-logo-txt,.sb-grp,.sb-item span,.sb-cnt,.sb-uname,.sb-uemail{display:none}
-  .sb-item{justify-content:center;padding:10px}
-  .sb-logo{justify-content:center}
-  .main{margin-left:54px}
-  .charts-row,.form-grid{grid-template-columns:1fr}
-  .pl-ep-fields{grid-template-columns:1fr 80px}
-  .pl-cards{grid-template-columns:1fr}
-}
+.loading-ov{position:fixed;inset:0;background:rgba(7,7,14,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:300}
+.loading-ov.on{display:flex}
+.loading-txt{font-size:14px;color:var(--text2)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;z-index:400;transform:translateY(120%);transition:transform .3s;max-width:340px}
+.toast.on{transform:translateY(0)}
+.toast.ok{border-color:rgba(16,185,129,.4);color:var(--green)}
+.toast.err{border-color:rgba(230,57,70,.4);color:var(--accent)}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="authScreen">
   <div class="auth-glow"></div>
   <div class="auth-box">
-    <div class="auth-logo">⬡ <b>Stream</b>Vault</div>
-    <div class="auth-sub">
-      Admin Control Panel<br>
-      Sign in with the Google account that owns<br>
-      <b>rongkunkmeanmnus.blogspot.com</b>
-    </div>
+    <div class="auth-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> StreamVault <b style="color:var(--text);font-weight:400">Admin</b></div>
+    <div class="auth-sub">Manage <b>rongkunkmeanmnus.blogspot.com</b><br>Sign in with the Google account that owns the blog.</div>
     <button class="google-btn" onclick="signInGoogle()">
-      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.5 19 12 24 12c3.1 0 5.8 1.1 7.9 2.9l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-      Sign in with Google
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
     </button>
-    <div class="auth-err" id="authErr"></div>
-    <div class="auth-note">🔒 Google OAuth 2.0 · Only blog owner can access · No passwords stored</div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <!-- SIDEBAR -->
+<div class="layout">
   <aside class="sidebar">
     <div class="sb-logo">
-      <span style="font-size:22px;color:var(--accent)">⬡</span>
-      <div class="sb-logo-txt"><b>Stream</b>Vault <span class="sb-badge">ADMIN</span></div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <div class="sb-logo-txt">StreamVault</div>
     </div>
-    <nav class="sb-nav">
-      <div class="sb-grp">Overview</div>
-      <div class="sb-item on" onclick="goPage('dashboard',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span>Dashboard</span>
-      </div>
-      <div class="sb-grp">Content</div>
-      <div class="sb-item" onclick="goPage('posts',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-        <span>All Posts</span>
-        <span class="sb-cnt" id="sbPostCnt">0</span>
-      </div>
-      <div class="sb-item" onclick="goPage('new',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <span>Add New Video</span>
-      </div>
-      <div class="sb-item" onclick="goPage('playlists',this)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        <span>Playlists</span>
-        <span class="sb-cnt" id="sbPlCnt">0</span>
-      </div>
-      <div class="sb-grp">Blog</div>
-      <div class="sb-item" onclick="window.open('https://rongkunkmeanmnus.blogspot.com','_blank')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        <span>View Website</span>
-      </div>
-      <div class="sb-item" onclick="window.open('https://www.blogger.com/blog/posts/5259700319432470617','_blank')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        <span>Blogger Dashboard</span>
-      </div>
-    </nav>
+    <div class="sb-grp">Content</div>
+    <div class="sb-item on" onclick="goPage('dashboard',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="sb-item" id="sbAll" onclick="goPage('posts',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <span>All Videos</span>
+      <span class="sb-cnt" id="sbPostCnt">0</span>
+    </div>
+    <div class="sb-item" id="sbNew" onclick="goPage('new',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Add Video</span>
+    </div>
+    <div class="sb-grp">Playlists</div>
+    <div class="sb-item" id="sbPl" onclick="goPage('playlists',this)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>Manage Playlists</span>
+      <span class="sb-cnt" id="sbPlCnt">0</span>
+    </div>
+    <div class="sb-item" onclick="openCreatePl()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>New Playlist</span>
+    </div>
+    <div class="sb-grp">Blog</div>
+    <div class="sb-item" onclick="window.open('https://rongkunkmeanmnus.blogspot.com','_blank')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <span>View Website</span>
+    </div>
+    <div class="sb-item" onclick="window.open('https://www.blogger.com/blog/posts/5259700319432470617','_blank')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>Blogger Dashboard</span>
+    </div>
     <div class="sb-user">
       <img class="sb-avatar" id="sbAvatar" src="" alt="" style="display:none">
       <div class="sb-avatar-ph" id="sbAvatarPh">A</div>
-      <div style="overflow:hidden;flex:1;min-width:0">
-        <div class="sb-uname" id="sbUname">Admin</div>
-        <div class="sb-uemail" id="sbUemail"></div>
-      </div>
-      <button class="sb-logout" onclick="signOut()" title="Sign out">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      </button>
+      <div style="overflow:hidden;flex:1;min-width:0"><div class="sb-uname" id="sbUname">Admin</div><div class="sb-uemail" id="sbUemail"></div></div>
+      <button class="sb-logout" onclick="signOut()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="tb-title" id="tbTitle">Dashboard</div>
       <div class="tb-right">
-        <div class="api-status">
-          <div class="api-dot" id="apiDot"></div>
-          <span id="apiTxt">Connecting...</span>
-        </div>
-        <button class="btn btn-purple btn-sm" onclick="openCreatePlaylist()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          New Playlist
-        </button>
-        <button class="btn btn-primary btn-sm" onclick="goPage('new',null)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          New Video
-        </button>
+        <div class="api-status"><div class="api-dot" id="apiDot"></div><span id="apiTxt">Connecting...</span></div>
+        <button class="btn btn-purple btn-sm" onclick="openCreatePl()">📋 New Playlist</button>
+        <button class="btn btn-primary btn-sm" onclick="goPage('new',document.getElementById('sbNew'))">+ Add Video</button>
       </div>
     </div>
 
-    <!-- DASHBOARD PAGE -->
+    <!-- DASHBOARD -->
     <div class="page on" id="page-dashboard">
-      <div class="page-hd"><h2>Dashboard</h2><p>Your StreamVault blog overview — all data is live from Blogger</p></div>
+      <div class="page-hd"><h2>Dashboard</h2><p>Your StreamVault overview — live from Blogger</p></div>
       <div class="stats-row" id="dashStats"></div>
       <div class="charts-row">
-        <div class="chart-card"><div class="chart-lbl">Posts by Category / Label</div><div class="bar-list" id="chartLabels"></div></div>
-        <div class="chart-card"><div class="chart-lbl">Video Sources</div><div id="chartSrc" style="padding:8px 0"></div></div>
+        <div class="chart-card"><div class="chart-lbl">Posts by Label</div><div id="chartLabels"></div></div>
+        <div class="chart-card"><div class="chart-lbl">Sources &amp; Playlists</div><div id="chartSrc"></div></div>
       </div>
-      <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-lbl">Recent Posts</div>
-        <div id="recentPosts" style="font-size:13px;color:var(--text2);line-height:2.4"></div>
-      </div>
+      <div class="chart-card"><div class="chart-lbl">Recent Posts</div><div id="recentPosts" style="font-size:13px;color:var(--text2);line-height:2.4"></div></div>
     </div>
 
-    <!-- ALL POSTS PAGE -->
+    <!-- ALL VIDEOS -->
     <div class="page" id="page-posts">
-      <div class="page-hd">
-        <div class="page-hd-left">
-          <h2>All Posts</h2>
-          <p>✅ Edit or delete here = instantly updates your website at <b style="color:var(--text)">rongkunkmeanmnus.blogspot.com</b></p>
-        </div>
-      </div>
+      <div class="page-hd"><h2>All Videos</h2><p>Edit or delete instantly updates your website</p></div>
       <div class="tbl-wrap">
         <div class="tbl-top">
-          <div class="tbl-search">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input placeholder="Search posts..." oninput="filterPosts(this.value)" type="text">
-          </div>
-          <select class="tbl-sel" id="filterLbl" onchange="filterPosts(document.querySelector('.tbl-search input').value)">
-            <option value="">All Labels</option>
-          </select>
-          <select class="tbl-sel" id="filterType" onchange="filterPosts(document.querySelector('.tbl-search input').value)">
-            <option value="">All Types</option>
-            <option value="playlist">Playlists only</option>
-            <option value="single">Single videos</option>
-          </select>
-          <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(()=>{renderPosts(allPosts);renderDash()})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            Refresh
-          </button>
+          <div class="tbl-search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Search videos..." oninput="filterPosts(this.value)"></div>
+          <select class="tbl-sel" id="filterLbl" onchange="filterPosts('')"><option value="">All Labels</option></select>
+          <select class="tbl-sel" id="filterSrc" onchange="filterPosts('')"><option value="">All Sources</option><option value="dm">Dailymotion</option><option value="rm">Rumble</option></select>
+          <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(()=>{renderPosts(allPosts);renderDash()})">↺ Refresh</button>
           <div class="tbl-info" id="postTblInfo"></div>
         </div>
         <div style="overflow-x:auto">
-          <table>
-            <thead><tr>
-              <th>Thumb</th><th>Title</th><th>Source</th><th>Labels</th><th>Date</th><th>Status</th><th>Actions</th>
-            </tr></thead>
-            <tbody id="postsTbody"></tbody>
-          </table>
+          <table><thead><tr><th>Thumb</th><th>Title</th><th>Source</th><th>Labels</th><th>Date</th><th>Type</th><th>Actions</th></tr></thead><tbody id="postsTbody"></tbody></table>
         </div>
       </div>
     </div>
 
-    <!-- ADD NEW VIDEO PAGE -->
+    <!-- ADD VIDEO -->
     <div class="page" id="page-new">
-      <div class="page-hd">
-        <div class="page-hd-left">
-          <h2 id="formPageTitle">Add New Video</h2>
-          <p>Fill in the form → click Publish → your video appears on the website <b style="color:var(--green)">instantly</b></p>
-        </div>
+      <div class="page-hd"><h2 id="formPageTitle">Add New Video</h2><p>Fill in → Publish → appears on your website <b style="color:var(--green)">instantly</b></p></div>
+      <div class="tab-row">
+        <button class="tab-btn on" id="tabSingle" onclick="setMode('single')">📹 Single Video</button>
+        <button class="tab-btn" id="tabPl" onclick="setMode('playlist')">📋 Playlist</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start">
-
-        <!-- FORM -->
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px">
-          <div class="form-grid">
-            <div class="form-group form-full">
-              <label class="form-lbl">Video Title *</label>
-              <input class="form-input" id="fTitle" placeholder="Enter video title..." oninput="updatePreview()">
-            </div>
-            <div class="form-group">
-              <label class="form-lbl">Video Source *</label>
-              <select class="form-select" id="fSource" onchange="updateEmbedHint();updatePreview()">
-                <option value="dm">📺 Dailymotion</option>
-                <option value="rm">🟢 Rumble</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-lbl">Embed ID *</label>
-              <input class="form-input" id="fEmbedId" placeholder="e.g. x8l7kmf" oninput="updatePreview()">
-              <div class="form-hint" id="embedHint">From: dailymotion.com/video/<b>x8l7kmf</b></div>
-            </div>
-            <div class="form-group">
-              <label class="form-lbl">Labels / Categories</label>
-              <input class="form-input" id="fLabels" placeholder="drama, movie, series" oninput="updatePreview()">
-              <div class="form-hint">Comma separated — become your site category filters</div>
-            </div>
-            <div class="form-group">
-              <label class="form-lbl">Thumbnail URL</label>
-              <input class="form-input" id="fThumb" placeholder="https://... (optional)" oninput="updatePreview()">
-            </div>
-            <div class="form-group">
-              <label class="form-lbl">Duration</label>
-              <input class="form-input" id="fDuration" placeholder="22:10">
-            </div>
-            <div class="form-group form-full">
-              <label class="form-lbl">Description</label>
-              <textarea class="form-textarea" id="fDesc" placeholder="Short description for the video page..."></textarea>
+      <div style="display:grid;grid-template-columns:1fr 290px;gap:16px;align-items:start">
+        <div>
+          <div class="section-card">
+            <div class="chart-lbl" style="margin-bottom:14px">Video Info</div>
+            <div class="form-grid">
+              <div class="form-group form-full"><label class="form-lbl">Title *</label><input class="form-input" id="fTitle" placeholder="Video title..." oninput="updatePreview()"></div>
+              <div class="form-group"><label class="form-lbl">Labels</label><input class="form-input" id="fLabels" placeholder="drama, movie, series" oninput="updatePreview()"><div class="form-hint">Comma separated</div></div>
+              <div class="form-group"><label class="form-lbl">Thumbnail URL</label><input class="form-input" id="fThumb" placeholder="https://..." oninput="updatePreview()"></div>
+              <div class="form-group form-full"><label class="form-lbl">Description</label><textarea class="form-textarea" id="fDesc" placeholder="Short description..."></textarea></div>
             </div>
           </div>
 
-          <!-- PLAYLIST SECTION IN ADD FORM -->
-          <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">📋 Playlist Options</div><div class="section-div-line"></div></div>
-          
-          <div class="pl-mode-tabs">
-            <button class="pl-mode-tab on" onclick="setPlMode('none',this)">Single Video (No Playlist)</button>
-            <button class="pl-mode-tab" onclick="setPlMode('assign',this)">Assign to Existing Playlist</button>
-            <button class="pl-mode-tab" onclick="setPlMode('new',this)">Create New Playlist</button>
+          <div class="section-card" id="singleSec">
+            <div class="chart-lbl" style="margin-bottom:14px">Single Video Embed</div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-lbl">Source *</label><select class="form-select" id="fSource" onchange="updateHint();updatePreview()"><option value="dm">📺 Dailymotion</option><option value="rm">🟢 Rumble</option></select></div>
+              <div class="form-group"><label class="form-lbl">Embed ID *</label><input class="form-input" id="fEmbedId" placeholder="e.g. x8l7kmf" oninput="updatePreview()"><div class="form-hint" id="embedHint">From: dailymotion.com/video/<b>x8l7kmf</b></div></div>
+              <div class="form-group"><label class="form-lbl">Duration</label><input class="form-input" id="fDuration" placeholder="22:10"></div>
+            </div>
           </div>
 
-          <!-- Mode: assign to existing -->
-          <div id="plModeAssign" style="display:none">
-            <div class="pl-assign-box">
-              <div style="font-size:12px;color:var(--text2);margin-bottom:4px">Select a playlist to add this video as an episode:</div>
-              <div class="pl-assign-row">
-                <select class="form-select" id="fAssignPlaylist" style="flex:1">
-                  <option value="">— Select Playlist —</option>
-                </select>
+          <div class="section-card" id="plSec" style="display:none">
+            <div class="chart-lbl" style="margin-bottom:8px">Playlist</div>
+            <div class="tip-box" style="margin-bottom:14px">📋 Add to an existing playlist <b>or</b> create a new one with the episodes below.</div>
+            <div class="form-group" style="margin-bottom:14px">
+              <label class="form-lbl">Add to Existing Playlist</label>
+              <select class="form-select" id="fExPl" onchange="onExPlChange()"><option value="">— Build new playlist below —</option></select>
+            </div>
+            <div id="newPlBuilder">
+              <div class="pl-builder">
+                <div class="pl-builder-hd">
+                  <span class="pl-builder-title">Episodes</span>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm" onclick="addCurAsEp()" style="padding:4px 10px;font-size:11px;color:var(--green);border-color:rgba(16,185,129,.3)">+ This Video as Ep</button>
+                    <button class="btn btn-ghost btn-sm" onclick="addEp()" style="padding:4px 10px;font-size:11px">+ Add Episode</button>
+                  </div>
+                </div>
+                <div id="plEpList"><div class="pl-empty">No episodes. Click "Add Episode" or "This Video as Ep".</div></div>
+                <button class="pl-add" onclick="addEp()">+ Add Episode</button>
               </div>
-              <div id="assignPlPreview" style="display:none;margin-top:8px;background:var(--bg2);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text2)"></div>
             </div>
           </div>
 
-          <!-- Mode: build new playlist -->
-          <div id="plModeNew" style="display:none">
-            <div class="pl-builder">
-              <div style="font-size:12px;color:var(--text2);margin-bottom:8px">This video will be <b style="color:var(--text)">Episode 1</b>. Add more episodes below:</div>
-              <div id="plEpList"></div>
-              <button class="pl-add" onclick="addEp()">+ Add Episode</button>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:10px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
-            <button class="btn btn-primary" id="submitBtn" onclick="submitPost()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
-              Publish to Blogger
-            </button>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="btn btn-primary" id="submitBtn" onclick="submitPost()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger</button>
             <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
             <span style="font-size:12px;color:var(--text2);margin-left:auto" id="formStatus"></span>
           </div>
         </div>
 
-        <!-- PREVIEW PANEL -->
         <div style="position:sticky;top:70px;display:flex;flex-direction:column;gap:12px">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px">
-            <div class="chart-lbl" style="margin-bottom:10px">Card Preview</div>
-            <div style="background:var(--bg3);border-radius:7px;overflow:hidden;aspect-ratio:16/9;margin-bottom:10px;display:flex;align-items:center;justify-content:center;position:relative">
-              <img id="prevThumb" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none';document.getElementById('prevThumbPh').style.display='flex'">
-              <div id="prevThumbPh" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px;position:absolute;inset:0">No thumbnail</div>
+          <div class="section-card" style="padding:14px">
+            <div class="chart-lbl" style="margin-bottom:10px">Preview</div>
+            <div style="background:var(--bg3);border-radius:7px;overflow:hidden;aspect-ratio:16/9;margin-bottom:10px;position:relative">
+              <img id="prevThumb" src="" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none';document.getElementById('prevPh').style.display='flex'">
+              <div id="prevPh" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">No thumbnail</div>
             </div>
-            <div id="prevTitle" style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text3)">Title here</div>
+            <div id="prevTitle" style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text3)">Title here</div>
             <div id="prevMeta" style="font-size:11px;color:var(--text3)">Source · Labels</div>
           </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px">
-            <div class="chart-lbl" style="margin-bottom:8px">Post Content Preview</div>
+          <div class="section-card" style="padding:14px">
+            <div class="chart-lbl" style="margin-bottom:8px">Post Content</div>
             <div class="post-preview" id="postPreview">// Fill form to preview...</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PLAYLISTS PAGE -->
+    <!-- PLAYLISTS -->
     <div class="page" id="page-playlists">
-      <div class="page-hd">
-        <div class="page-hd-left">
-          <h2>Playlists</h2>
-          <p>Create, edit, and manage all your playlists — add or remove episodes easily</p>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(()=>{renderPlaylists();updateCounts()})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            Refresh
-          </button>
-          <button class="btn btn-purple btn-sm" onclick="openCreatePlaylist()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New Playlist
-          </button>
-        </div>
+      <div class="page-hd"><h2>Manage Playlists</h2><p>Create, edit, reorder episodes, delete playlists</p></div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-primary" onclick="openCreatePl()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create New Playlist</button>
+        <button class="btn btn-ghost btn-sm" onclick="fetchPosts().then(renderPlaylists)">↺ Refresh</button>
+        <input class="form-input" style="width:220px;padding:7px 12px;font-size:12px" placeholder="Search playlists..." oninput="filterPl(this.value)">
+        <div class="tbl-info" id="plTblInfo"></div>
       </div>
-
-      <!-- Search & filter bar -->
-      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-        <div class="tbl-search" style="flex:1;min-width:200px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input placeholder="Search playlists..." oninput="filterPlaylists(this.value)" type="text" id="plSearch">
-        </div>
-        <select class="tbl-sel" id="plFilterSrc" onchange="filterPlaylists(document.getElementById('plSearch').value)">
-          <option value="">All Sources</option>
-          <option value="dm">Dailymotion</option>
-          <option value="rm">Rumble</option>
-        </select>
-        <div class="tbl-info" id="plTblInfo" style="align-self:center"></div>
-      </div>
-
-      <div class="pl-cards" id="plCards"></div>
+      <div class="pl-grid" id="plGrid"></div>
     </div>
-
   </main>
 </div>
+</div>
 
-<!-- ══════════════════════════════════════════════ -->
-<!-- EDIT POST MODAL -->
-<!-- ══════════════════════════════════════════════ -->
+<!-- EDIT VIDEO MODAL -->
 <div class="modal-bg" id="editModal">
-  <div class="modal">
-    <div class="modal-hd">
-      <div class="modal-title">Edit Post → Live on Website</div>
-      <button class="modal-close" onclick="closeEditModal()">✕</button>
-    </div>
+  <div class="modal modal-wide">
+    <div class="modal-hd"><div class="modal-title">✏️ Edit Video</div><button class="modal-close" onclick="closeEdit()">✕</button></div>
     <div class="form-grid">
+      <div class="form-group form-full"><label class="form-lbl">Title</label><input class="form-input" id="eFTitle"></div>
+      <div class="form-group"><label class="form-lbl">Source</label><select class="form-select" id="eFSource"><option value="dm">📺 Dailymotion</option><option value="rm">🟢 Rumble</option></select></div>
+      <div class="form-group"><label class="form-lbl">Embed ID</label><input class="form-input" id="eFEmbedId"></div>
+      <div class="form-group"><label class="form-lbl">Labels</label><input class="form-input" id="eFLabels" placeholder="drama, movie, series"></div>
+      <div class="form-group"><label class="form-lbl">Thumbnail URL</label><input class="form-input" id="eFThumb"></div>
+      <div class="form-group"><label class="form-lbl">Duration</label><input class="form-input" id="eFDur" placeholder="22:10"></div>
+      <div class="form-group form-full"><label class="form-lbl">Description</label><textarea class="form-textarea" id="eFDesc"></textarea></div>
       <div class="form-group form-full">
-        <label class="form-lbl">Title</label>
-        <input class="form-input" id="eFTitle">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Source</label>
-        <select class="form-select" id="eFSource">
-          <option value="dm">📺 Dailymotion</option>
-          <option value="rm">🟢 Rumble</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Embed ID</label>
-        <input class="form-input" id="eFEmbedId">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Labels</label>
-        <input class="form-input" id="eFLabels" placeholder="drama, movie, series">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Thumbnail URL</label>
-        <input class="form-input" id="eFThumb">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Duration</label>
-        <input class="form-input" id="eFDuration">
-      </div>
-      <div class="form-group form-full">
-        <label class="form-lbl">Description</label>
-        <textarea class="form-textarea" id="eFDesc"></textarea>
+        <label class="form-lbl" style="margin-bottom:8px">Playlist Episodes <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--text3)"> — edits update your site</span></label>
+        <div class="pl-builder">
+          <div class="pl-builder-hd"><span class="pl-builder-title">Episodes</span><button class="btn btn-ghost btn-sm" onclick="addEditEp()" style="padding:4px 10px;font-size:11px">+ Add Episode</button></div>
+          <div id="editEpList"></div>
+          <button class="pl-add" onclick="addEditEp()">+ Add Episode</button>
+        </div>
       </div>
     </div>
     <div class="form-footer">
-      <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
-      <button class="btn btn-primary" id="editSaveBtn" onclick="saveEdit()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
-        Save → Updates Website Now
-      </button>
+      <button class="btn btn-ghost" onclick="closeEdit()">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="openDel(editPostId);closeEdit()" style="margin-left:auto">🗑 Delete</button>
+      <button class="btn btn-primary" id="editSaveBtn" onclick="saveEdit()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Save & Update Website</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════ -->
 <!-- CREATE / EDIT PLAYLIST MODAL -->
-<!-- ══════════════════════════════════════════════ -->
 <div class="modal-bg" id="plModal">
-  <div class="modal modal-lg">
-    <div class="modal-hd">
-      <div class="modal-title" id="plModalTitle">Create New Playlist</div>
-      <button class="modal-close" onclick="closePlModal()">✕</button>
-    </div>
+  <div class="modal modal-wide">
+    <div class="modal-hd"><div class="modal-title" id="plModalTitle">📋 Create Playlist</div><button class="modal-close" onclick="closePlModal()">✕</button></div>
     <div class="form-grid" style="margin-bottom:16px">
-      <div class="form-group form-full">
-        <label class="form-lbl">Playlist Title *</label>
-        <input class="form-input" id="plFTitle" placeholder="e.g. My Drama Series Season 1">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Labels / Categories</label>
-        <input class="form-input" id="plFLabels" placeholder="drama, series">
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Thumbnail URL</label>
-        <input class="form-input" id="plFThumb" placeholder="https://...">
-      </div>
-      <div class="form-group form-full">
-        <label class="form-lbl">Description</label>
-        <textarea class="form-textarea" id="plFDesc" placeholder="Short description..." style="min-height:56px"></textarea>
-      </div>
+      <div class="form-group form-full"><label class="form-lbl">Playlist Title *</label><input class="form-input" id="plTitle" placeholder="e.g. Ever Night Season 1"></div>
+      <div class="form-group"><label class="form-lbl">Labels</label><input class="form-input" id="plLabels" placeholder="drama, series"></div>
+      <div class="form-group"><label class="form-lbl">Thumbnail URL</label><input class="form-input" id="plThumb" placeholder="https://..."></div>
+      <div class="form-group form-full"><label class="form-lbl">Description</label><textarea class="form-textarea" id="plDesc" placeholder="Describe this playlist..."></textarea></div>
     </div>
-
-    <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">Episodes</div><div class="section-div-line"></div></div>
-    <div class="pl-builder" style="margin-bottom:10px">
-      <div id="plModalEpList"></div>
-      <button class="pl-add" onclick="addModalEp()">+ Add Episode</button>
+    <div class="chart-lbl" style="margin-bottom:10px">Episodes</div>
+    <div class="tip-box" style="margin-bottom:12px">💡 Add episodes manually, or pick from your existing single videos using "From Library".</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-blue btn-sm" onclick="openLibrary(null)">📚 Add from Library</button>
+      <button class="btn btn-ghost btn-sm" onclick="addPlEp()">+ Add Manually</button>
     </div>
-
+    <div class="pl-builder">
+      <div id="plModalEpList"><div class="pl-empty">No episodes yet.</div></div>
+      <button class="pl-add" onclick="addPlEp()">+ Add Episode</button>
+    </div>
     <div class="form-footer">
       <button class="btn btn-ghost" onclick="closePlModal()">Cancel</button>
-      <button class="btn btn-purple" id="plSaveBtn" onclick="savePl()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
-        <span id="plSaveBtnTxt">Create Playlist</span>
-      </button>
+      <button class="btn btn-primary" id="plSaveBtn" onclick="savePl()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish Playlist</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════ -->
-<!-- ADD SINGLE VIDEO TO PLAYLIST MODAL -->
-<!-- ══════════════════════════════════════════════ -->
+<!-- LIBRARY MODAL -->
+<div class="modal-bg" id="libModal">
+  <div class="modal modal-wide">
+    <div class="modal-hd"><div class="modal-title">📚 Add from Library</div><button class="modal-close" onclick="closeLib()">✕</button></div>
+    <div class="tip-box" style="margin-bottom:12px">Select videos to add as episodes.</div>
+    <input class="form-input" style="margin-bottom:12px;max-width:280px" placeholder="Search..." oninput="filterLib(this.value)">
+    <div class="pl-select-list" id="libList"></div>
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closeLib()">Cancel</button>
+      <span style="font-size:12px;color:var(--text2)" id="libSelCount">0 selected</span>
+      <button class="btn btn-primary" onclick="confirmLib()">Add Selected</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TO PLAYLIST MODAL -->
 <div class="modal-bg" id="addToPlModal">
-  <div class="modal modal-sm">
-    <div class="modal-hd">
-      <div class="modal-title">Add to Playlist</div>
-      <button class="modal-close" onclick="closeAddToPl()">✕</button>
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">➕ Add to Playlist</div><button class="modal-close" onclick="closeAddToPl()">✕</button></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px" id="addToPlTitle"></div>
+    <div class="tip-box" style="margin-bottom:14px">Select a playlist to add this video to as an episode.</div>
+    <div class="pl-select-list" id="addToPlList"></div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <button class="btn btn-purple btn-sm" onclick="createPlFromVideo()" style="width:100%">+ Create New Playlist with This Video</button>
     </div>
-    <div style="font-size:12px;color:var(--text2);margin-bottom:12px">
-      Adding: <b id="addToPlVideoTitle" style="color:var(--text)">—</b>
-    </div>
-
-    <!-- Existing episodes of this video if any -->
-    <div id="addToPlCurrentEps" style="display:none;margin-bottom:12px;background:rgba(255,214,10,.05);border:1px solid rgba(255,214,10,.15);border-radius:8px;padding:10px">
-      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--gold);margin-bottom:6px">Current Episodes in This Post</div>
-      <div id="addToPlCurrentEpsList" class="quick-ep-list"></div>
-    </div>
-
-    <div class="add-to-pl-search">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input placeholder="Search playlists..." oninput="filterAddToPlList(this.value)" id="addToPlSearch">
-    </div>
-    <div class="pl-picker-list" id="addToPlList"></div>
-
-    <div class="section-div"><div class="section-div-line"></div><div class="section-div-txt">Or Create New</div><div class="section-div-line"></div></div>
-    <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-bottom:4px" onclick="toggleInlineCreatePl()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Create new playlist with this video
-    </button>
-    <div class="create-pl-inline" id="inlineCreatePl">
-      <div class="form-grid">
-        <div class="form-group form-full">
-          <label class="form-lbl">New Playlist Name</label>
-          <input class="form-input" id="inlinePlName" placeholder="Series title...">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Labels</label>
-          <input class="form-input" id="inlinePlLabels" placeholder="drama, series">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Episode Title</label>
-          <input class="form-input" id="inlinePlEpTitle" placeholder="Episode 1">
-        </div>
-      </div>
-    </div>
-
     <div class="form-footer">
       <button class="btn btn-ghost" onclick="closeAddToPl()">Cancel</button>
-      <button class="btn btn-primary" id="addToPlSaveBtn" onclick="confirmAddToPl()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
-        Add to Playlist
-      </button>
+      <button class="btn btn-primary" onclick="confirmAddToPl()">Add to Playlist</button>
     </div>
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
+<!-- DELETE MODAL -->
 <div class="modal-bg" id="delModal">
   <div class="modal" style="max-width:380px;text-align:center">
     <div style="font-size:44px;margin-bottom:12px">🗑️</div>
-    <div class="modal-title" style="justify-content:center" id="delModalTitle">Delete Post?</div>
-    <div style="font-size:13px;color:var(--text2);margin:10px 0 18px" id="delPostTitle"></div>
-    <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:20px" id="delWarning">
-      ⚠️ This permanently deletes the post from Blogger and removes it from your website
-    </div>
+    <div class="modal-title" style="justify-content:center">Delete Post?</div>
+    <div style="font-size:13px;color:var(--text2);margin:10px 0 18px" id="delTitle"></div>
+    <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:20px">⚠️ Permanently deletes from Blogger — removes from website</div>
     <div style="display:flex;gap:10px;justify-content:center">
-      <button class="btn btn-ghost" onclick="closeDelModal()">Cancel</button>
-      <button class="btn btn-danger" id="delConfirmBtn" onclick="confirmDelete()">Delete Forever</button>
+      <button class="btn btn-ghost" onclick="closeDel()">Cancel</button>
+      <button class="btn btn-danger" id="delConfirmBtn" onclick="confirmDel()">Delete Forever</button>
     </div>
   </div>
 </div>
 
-<div class="loading-ov" id="loadingOv">
-  <div class="spinner"></div>
-  <div class="loading-txt" id="loadingTxt">Loading posts from Blogger...</div>
-</div>
+<div class="loading-ov" id="loadingOv"><div class="spinner"></div><div class="loading-txt" id="loadingTxt">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  STREAMVAULT ADMIN — Blogger API v3
-//  Connected to: rongkunkmeanmnus.blogspot.com
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════
+//  STREAMVAULT ADMIN v3
+// ═══════════════════════════════════
+const CFG={CLIENT_ID:'838740452552-8l67pun1m654fsjk6m2lcbukm1oh4peo.apps.googleusercontent.com',BLOG_ID:'5259700319432470617',BLOG_URL:'https://rongkunkmeanmnus.blogspot.com',API:'https://www.googleapis.com/blogger/v3',REDIRECT:'https://sarums.github.io/adminpage/'};
+let token=null,allPosts=[],editPostId=null,delPostId=null;
+let plEps=[],editEps=[],plModalEps=[],plModalEditId=null;
+let libForPlId=null,libSelected=[];
+let addToPlVideoId=null,selectedPl=null;
+let videoMode='single';
 
-const CFG = {
-  CLIENT_ID: '838740452552-8l67pun1m654fsjk6m2lcbukm1oh4peo.apps.googleusercontent.com',
-  BLOG_ID:   '5259700319432470617',
-  BLOG_URL:  'https://rongkunkmeanmnus.blogspot.com',
-  API:       'https://www.googleapis.com/blogger/v3',
-  REDIRECT:  'https://sarums.github.io/adminpage/'
-};
+// OAUTH
+function signInGoogle(){const p=new URLSearchParams({client_id:CFG.CLIENT_ID,redirect_uri:CFG.REDIRECT,response_type:'token',scope:'https://www.googleapis.com/auth/blogger https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',prompt:'select_account'});window.location.href='https://accounts.google.com/o/oauth2/auth?'+p;}
+function parseToken(){const h=new URLSearchParams(window.location.hash.replace('#',''));const t=h.get('access_token');if(t){token=t;sessionStorage.setItem('sv_tk',t);history.replaceState({},'',window.location.pathname);return true;}const s=sessionStorage.getItem('sv_tk');if(s){token=s;return true;}return false;}
+function signOut(){sessionStorage.removeItem('sv_tk');token=null;allPosts=[];document.getElementById('app').style.display='none';document.getElementById('authScreen').style.display='flex';}
 
-let token = null;
-let allPosts = [];
-let editPostId = null;
-let delPostId = null;
-let delIsPlaylist = false;
-let plEps = [];
-let plModalEps = [];
-let plModalEditId = null; // postId if editing existing playlist
-let addToPlVideoId = null; // postId of video to add to playlist
-let addToPlSelectedPl = null; // postId of target playlist
-let currentPlMode = 'none'; // 'none'|'assign'|'new'
+// API
+async function api(path,method='GET',body=null){const url=path.startsWith('http')?path:CFG.API+path;const r=await fetch(url,{method,headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:body?JSON.stringify(body):null});if(r.status===401){signOut();throw new Error('Session expired');}if(r.status===204||(r.status===200&&method==='DELETE'))return null;const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||'API Error '+r.status);return d;}
 
-// ══ OAUTH ══
-function signInGoogle() {
-  const p = new URLSearchParams({
-    client_id: CFG.CLIENT_ID,
-    redirect_uri: CFG.REDIRECT,
-    response_type: 'token',
-    scope: [
-      'https://www.googleapis.com/auth/blogger',
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ].join(' '),
-    prompt: 'select_account'
-  });
-  window.location.href = 'https://accounts.google.com/o/oauth2/auth?' + p;
+// FETCH
+async function fetchPosts(){showLoad('Loading posts...');try{let posts=[],pt='';do{let url=`${CFG.API}/blogs/${CFG.BLOG_ID}/posts?maxResults=20&fetchBodies=true&status=live&status=draft`;if(pt)url+='&pageToken='+pt;const d=await api(url);if(d&&d.items)posts=posts.concat(d.items);pt=(d&&d.nextPageToken)||'';}while(pt);allPosts=posts.map(enrich);updateCounts();setStatus(true);return allPosts;}catch(e){setStatus(false,e.message);toast('❌ '+e.message,'err');return[];}finally{hideLoad();}}
+
+// ENRICH
+function enrich(p){const c=p.content||'';const svType=c.match(/data-sv-type=["']([^"']+)["']/i);const svId=c.match(/data-sv-id=["']([^"']+)["']/i);const svEps=c.match(/data-sv-eps=["']([^"']*?)["']/i);let src=null,embedId=null,playlist=null;
+if(svType&&svId){src=svType[1];embedId=svId[1];if(src==='playlist'&&svEps){try{playlist=JSON.parse(svEps[1]);if(playlist.length){src=playlist[0].src;embedId=playlist[0].id;}}catch(e){}}}
+if(!embedId){const dm=c.match(/<dm[^>]+id=["']([^"']+)["']/i);const rm=c.match(/<rm[^>]+id=["']([^"']+)["']/i);if(dm){src='dm';embedId=dm[1];}else if(rm){src='rm';embedId=rm[1];}}
+const labels=(p.labels||[]).map(l=>typeof l==='string'?l:(l.name||''));
+const tm=c.match(/src=["']([^"']*(?:bp\.blogspot|googleusercontent|picsum)[^"']*\.(jpg|jpeg|png|webp)[^"']*)["']/i);
+const thumb=(p.images&&p.images[0]&&p.images[0].url)||(tm&&tm[1])||'';
+return{...p,src,embedId,playlist,labels,thumb};}
+
+// BUILD CONTENT
+function buildContent(src,embedId,desc,eps,dur,thumb){let b='';if(thumb)b+=`<div style="display:none"><img src="${ea(thumb)}" /></div>\n`;if(desc)b+=`<p>${et(desc)}</p>\n`;if(eps&&eps.length){b+=`<div class="sv-embed" data-sv-type="playlist" data-sv-eps="${ea(JSON.stringify(eps))}" style="display:none"></div>`;}else if(embedId){b+=`<div class="sv-embed" data-sv-type="${ea(src)}" data-sv-id="${ea(embedId)}"${dur?` data-sv-dur="${ea(dur)}"`:''} style="display:none"></div>`;}return b;}
+function ea(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function et(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function eh(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// FETCH USER
+async function fetchUser(){try{const u=await api('https://www.googleapis.com/oauth2/v2/userinfo');document.getElementById('sbUname').textContent=u.name||'Admin';document.getElementById('sbUemail').textContent=u.email||'';document.getElementById('sbAvatarPh').textContent=(u.name||'A')[0];if(u.picture){const img=document.getElementById('sbAvatar');img.src=u.picture;img.style.display='block';document.getElementById('sbAvatarPh').style.display='none';}}catch(e){}}
+
+// SUBMIT
+async function submitPost(){
+  const title=document.getElementById('fTitle').value.trim();
+  const src=document.getElementById('fSource').value;
+  const embedId=document.getElementById('fEmbedId').value.trim();
+  const labelsR=document.getElementById('fLabels').value.trim();
+  const desc=document.getElementById('fDesc').value.trim();
+  const thumb=document.getElementById('fThumb').value.trim();
+  const dur=document.getElementById('fDuration').value.trim();
+  const eps=plEps.filter(e=>e.id.trim());
+  const exPlId=document.getElementById('fExPl').value;
+  if(!title){toast('Title required','err');return;}
+  if(videoMode==='playlist'&&exPlId){await addEpToExisting(exPlId,{src,id:embedId,title,dur});return;}
+  if(videoMode==='single'&&!embedId){toast('Embed ID required','err');return;}
+  if(videoMode==='playlist'&&!eps.length){toast('Add at least 1 episode','err');return;}
+  const labels=labelsR?labelsR.split(',').map(l=>l.trim()).filter(Boolean):[];
+  const content=buildContent(src,embedId,desc,videoMode==='playlist'?eps:null,dur,thumb);
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<div class="inline-spin"></div> Publishing...';
+  try{
+    if(editPostId){await api(`/blogs/${CFG.BLOG_ID}/posts/${editPostId}?publish=true`,'PUT',{kind:'blogger#post',title,content,labels});toast('✅ Updated!','ok');editPostId=null;document.getElementById('formPageTitle').textContent='Add New Video';}
+    else{await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`,'POST',{kind:'blogger#post',title,content,labels});toast('🎉 Published!','ok');}
+    clearForm();await fetchPosts();renderDash();goPage('posts',document.getElementById('sbAll'));
+  }catch(e){toast('❌ '+e.message,'err');document.getElementById('formStatus').textContent='❌ '+e.message;}
+  finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger';}
 }
 
-function parseToken() {
-  const hash = new URLSearchParams(window.location.hash.replace('#',''));
-  const t = hash.get('access_token');
-  if (t) {
-    token = t;
-    sessionStorage.setItem('sv_tk', t);
-    history.replaceState({}, '', window.location.pathname);
-    return true;
-  }
-  const saved = sessionStorage.getItem('sv_tk');
-  if (saved) { token = saved; return true; }
-  return false;
+// ADD EP TO EXISTING PLAYLIST
+async function addEpToExisting(plId,ep){
+  const pl=allPosts.find(p=>p.id===plId);if(!pl){toast('Playlist not found','err');return;}
+  const eps=[...(pl.playlist||[]),{src:ep.src,id:ep.id,title:ep.title,dur:ep.dur||''}];
+  const content=buildContent(eps[0].src,eps[0].id,'',eps,'',pl.thumb||'');
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<div class="inline-spin"></div> Adding...';
+  try{await api(`/blogs/${CFG.BLOG_ID}/posts/${plId}?publish=true`,'PUT',{kind:'blogger#post',title:pl.title,content,labels:pl.labels});toast(`✅ Added to "${pl.title}"!`,'ok');clearForm();await fetchPosts();renderDash();goPage('playlists',document.getElementById('sbPl'));}
+  catch(e){toast('❌ '+e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger';}
 }
 
-function signOut() {
-  sessionStorage.removeItem('sv_tk');
-  token = null; allPosts = [];
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('authScreen').style.display = 'flex';
-}
-
-// ══ API ══
-async function api(path, method = 'GET', body = null) {
-  const url = path.startsWith('http') ? path : CFG.API + path;
-  const r = await fetch(url, {
-    method,
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : null
-  });
-  if (r.status === 401) { signOut(); throw new Error('Session expired — please sign in again'); }
-  if (r.status === 204 || (r.status === 200 && method === 'DELETE')) return null;
-  const data = await r.json();
-  if (!r.ok) throw new Error((data.error && data.error.message) || 'API Error ' + r.status);
-  return data;
-}
-
-// ══ FETCH ALL POSTS ══
-async function fetchPosts() {
-  showLoad('Loading posts from Blogger...');
-  try {
-    let posts = [], pageToken = '';
-    do {
-      let url = `${CFG.API}/blogs/${CFG.BLOG_ID}/posts?maxResults=20&fetchBodies=true&status=live&status=draft`;
-      if (pageToken) url += '&pageToken=' + pageToken;
-      const d = await api(url);
-      if (d && d.items) posts = posts.concat(d.items);
-      pageToken = d && d.nextPageToken ? d.nextPageToken : '';
-    } while (pageToken);
-    allPosts = posts.map(enrichPost);
-    updateCounts();
-    setStatus(true);
-    refreshAssignDropdowns();
-    return allPosts;
-  } catch(e) {
-    setStatus(false, e.message);
-    showToast('❌ ' + e.message, 'err');
-    return [];
-  } finally { hideLoad(); }
-}
-
-function enrichPost(p) {
-  const c = p.content || '';
-  const dm = c.match(/<dm[^>]+id=["']([^"']+)["'][^>]*\/?>/i);
-  const rm = c.match(/<rm[^>]+id=["']([^"']+)["'][^>]*\/?>/i);
-  const pl = c.match(/<playlist[^>]*>([\s\S]*?)<\/playlist>/i);
-  // Also parse JSON-based playlist
-  const svEmbed = c.match(/data-sv-type="playlist"[^>]+data-sv-eps="([^"]+)"/i);
-  let src = null, embedId = null, playlist = null;
-  if (svEmbed) {
-    try {
-      const eps = JSON.parse(svEmbed[1].replace(/&quot;/g,'"').replace(/&amp;/g,'&'));
-      if (eps.length) { src = eps[0].src; embedId = eps[0].id; playlist = eps; }
-    } catch(e) {}
-  } else if (pl) {
-    const eps = [], re = /<(dm|rm)[^>]+id=["']([^"']+)["'][^>]*(?:title=["']([^"']*)["'])?[^>]*(?:dur=["']([^"']*)["'])?[^>]*\/?>/gi;
-    let m, n = 0;
-    while ((m = re.exec(pl[1])) !== null) { n++; eps.push({src:m[1],id:m[2],title:m[3]||'Episode '+n,dur:m[4]||''}); }
-    if (eps.length) { src = eps[0].src; embedId = eps[0].id; playlist = eps; }
-  } else if (dm) { src='dm'; embedId=dm[1]; }
-  else if (rm) { src='rm'; embedId=rm[1]; }
-  const labels = (p.labels||[]).map(l => typeof l === 'string' ? l : (l.name||''));
-  const tMatch = c.match(/src=["']([^"']*(?:bp\.blogspot|googleusercontent|picsum)[^"']*\.(jpg|jpeg|png|webp)[^"']*)["']/i);
-  const thumb = (p.images&&p.images[0]&&p.images[0].url) || (tMatch&&tMatch[1]) || '';
-  // Extract description
-  const svType = c.match(/data-sv-type="([^"]+)"/i);
-  const plainDesc = c.replace(/<div[^>]*class="sv-embed"[^>]*>.*?<\/div>/gis,'')
-    .replace(/<div[^>]*class="sv-tags"[^>]*>[\s\S]*?<\/div>/gi,'')
-    .replace(/<div[^>]*style="display:none"[^>]*>[\s\S]*?<\/div>/gi,'')
-    .replace(/<[^>]+>/g,'').trim().substring(0,300);
-  return { ...p, src, embedId, playlist, labels, thumb, plainDesc };
-}
-
-// ══ FETCH USER ══
-async function fetchUser() {
-  try {
-    const u = await api('https://www.googleapis.com/oauth2/v2/userinfo');
-    document.getElementById('sbUname').textContent = u.name || 'Admin';
-    document.getElementById('sbUemail').textContent = u.email || '';
-    document.getElementById('sbAvatarPh').textContent = (u.name||'A')[0];
-    if (u.picture) {
-      const img = document.getElementById('sbAvatar');
-      img.src = u.picture; img.style.display='block';
-      document.getElementById('sbAvatarPh').style.display='none';
-    } else {
-      document.getElementById('sbAvatarPh').style.display='flex';
-    }
-  } catch(e) {}
-}
-
-// ══ BUILD POST CONTENT ══
-function buildContent(src, embedId, desc, eps, dur, thumb) {
-  let b = '';
-  if (thumb) b += `<div style="display:none"><img src="${escAtt(thumb)}" /></div>\n`;
-  if (desc) b += `<p>${escTxt(desc)}</p>\n`;
-  if (eps && eps.length) {
-    const epJson = escAtt(JSON.stringify(eps));
-    b += `<div class="sv-embed" data-sv-type="playlist" data-sv-eps="${epJson}" style="display:none"></div>\n`;
-    b += '<div class="sv-tags" style="display:none">\n';
-    eps.forEach(ep => {
-      b += `  &lt;${ep.src} id="${escAtt(ep.id)}" title="${escAtt(ep.title)}"${ep.dur?' dur="'+escAtt(ep.dur)+'"':''}/&gt;\n`;
-    });
-    b += '</div>';
-  } else if (embedId) {
-    b += `<div class="sv-embed" data-sv-type="${escAtt(src)}" data-sv-id="${escAtt(embedId)}"${dur?' data-sv-dur="'+escAtt(dur)+'"':''} style="display:none"></div>`;
-  }
-  return b;
-}
-
-function escAtt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
-function escTxt(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-// ══ PLAYLIST MODE SWITCHER ══
-function setPlMode(mode, el) {
-  currentPlMode = mode;
-  document.querySelectorAll('.pl-mode-tab').forEach(t => t.classList.remove('on'));
-  if (el) el.classList.add('on');
-  document.getElementById('plModeAssign').style.display = mode==='assign'?'block':'none';
-  document.getElementById('plModeNew').style.display    = mode==='new'?'block':'none';
-  if (mode==='assign') refreshAssignDropdown();
-  if (mode==='new') { plEps=[]; renderEps(); }
-  updatePreview();
-}
-
-function refreshAssignDropdown() {
-  const plPosts = allPosts.filter(p => p.playlist && p.playlist.length);
-  const sel = document.getElementById('fAssignPlaylist');
-  sel.innerHTML = '<option value="">— Select Playlist —</option>' +
-    plPosts.map(p => `<option value="${p.id}">${escH(p.title)} (${p.playlist.length} eps)</option>`).join('');
-  sel.onchange = function() {
-    const pl = allPosts.find(x=>x.id===this.value);
-    const prev = document.getElementById('assignPlPreview');
-    if (pl) {
-      prev.style.display='block';
-      prev.innerHTML = pl.playlist.map((ep,i)=>`<div style="padding:2px 0">${i+1}. ${escH(ep.title)}</div>`).join('') + `<div style="margin-top:4px;color:var(--text3)">New video will be Episode ${pl.playlist.length+1}</div>`;
-    } else { prev.style.display='none'; }
-  };
-}
-
-function refreshAssignDropdowns() {
-  refreshAssignDropdown();
-}
-
-// ══ SUBMIT POST ══
-async function submitPost() {
-  const title   = document.getElementById('fTitle').value.trim();
-  const src     = document.getElementById('fSource').value;
-  const embedId = document.getElementById('fEmbedId').value.trim();
-  const labelsR = document.getElementById('fLabels').value.trim();
-  const desc    = document.getElementById('fDesc').value.trim();
-  const thumb   = document.getElementById('fThumb').value.trim();
-  const dur     = document.getElementById('fDuration').value.trim();
-
-  if (!title) { showToast('Title is required','err'); return; }
-  if (!embedId) { showToast('Embed ID is required','err'); return; }
-
-  // Handle assign-to-existing-playlist mode
-  if (currentPlMode === 'assign') {
-    const plId = document.getElementById('fAssignPlaylist').value;
-    if (!plId) { showToast('Please select a playlist','err'); return; }
-    await addVideoToPlaylist(plId, { src, id: embedId, title, dur });
-    clearForm();
-    return;
-  }
-
-  const labels  = labelsR ? labelsR.split(',').map(l=>l.trim()).filter(Boolean) : [];
-  const eps     = (currentPlMode==='new') ? plEps.filter(e => e.id.trim()) : null;
-  // Prepend this video as episode 1 if new playlist mode
-  let finalEps = null;
-  if (currentPlMode==='new' && (eps && eps.length > 0 || true)) {
-    finalEps = [{src, id:embedId, title, dur}, ...(eps||[])];
-  }
-  const content = buildContent(src, embedId, desc, finalEps, dur, thumb);
-  const payload = { kind:'blogger#post', title, content, labels };
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="inline-spin"></div> Publishing...';
-  document.getElementById('formStatus').textContent = '';
-
-  try {
-    if (editPostId) {
-      await api(`/blogs/${CFG.BLOG_ID}/posts/${editPostId}?publish=true`, 'PUT', payload);
-      showToast('✅ Post updated! Live on your website now.', 'ok');
-      editPostId = null;
-      document.getElementById('formPageTitle').textContent = 'Add New Video';
-    } else {
-      await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`, 'POST', payload);
-      showToast('🎉 Published! Video is live on your website now.', 'ok');
-    }
-    clearForm();
-    await fetchPosts();
-    renderDash();
-    goPage('posts', document.querySelectorAll('.sb-item')[2]);
-  } catch(e) {
-    showToast('❌ ' + e.message, 'err');
-    document.getElementById('formStatus').textContent = '❌ ' + e.message;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger';
-  }
-}
-
-// ══ Add single video to existing playlist ══
-async function addVideoToPlaylist(plPostId, newEp) {
-  showLoad('Adding video to playlist...');
-  try {
-    const plPost = allPosts.find(x=>x.id===plPostId);
-    if (!plPost || !plPost.playlist) throw new Error('Playlist not found');
-    const newEps = [...plPost.playlist, { src: newEp.src, id: newEp.id, title: newEp.title||`Episode ${plPost.playlist.length+1}`, dur: newEp.dur||'' }];
-    const content = buildContent(newEp.src, newEp.id, plPost.plainDesc||'', newEps, '', plPost.thumb);
-    await api(`/blogs/${CFG.BLOG_ID}/posts/${plPostId}?publish=true`, 'PUT', {
-      kind:'blogger#post', title:plPost.title, content, labels: plPost.labels
-    });
-    showToast(`✅ Video added to "${plPost.title}" as Episode ${newEps.length}`, 'ok');
-    await fetchPosts();
-    renderDash();
-  } catch(e) { showToast('❌ ' + e.message, 'err'); }
-  finally { hideLoad(); }
-}
-
-// ══ EDIT ══
-function openEdit(postId) {
-  const p = allPosts.find(x => x.id === postId); if (!p) return;
-  editPostId = postId;
-  document.getElementById('eFTitle').value    = p.title || '';
-  document.getElementById('eFSource').value   = p.src || 'dm';
-  document.getElementById('eFEmbedId').value  = p.embedId || '';
-  document.getElementById('eFLabels').value   = p.labels.join(', ');
-  document.getElementById('eFThumb').value    = p.thumb || '';
-  document.getElementById('eFDuration').value = '';
-  document.getElementById('eFDesc').value = p.plainDesc || '';
-  document.getElementById('editModal').classList.add('on');
-}
-function closeEditModal() { document.getElementById('editModal').classList.remove('on'); editPostId = null; }
-
-async function saveEdit() {
-  const p = allPosts.find(x => x.id === editPostId); if (!p) return;
-  const title   = document.getElementById('eFTitle').value.trim();
-  const src     = document.getElementById('eFSource').value;
-  const embedId = document.getElementById('eFEmbedId').value.trim();
-  const labelsR = document.getElementById('eFLabels').value;
-  const desc    = document.getElementById('eFDesc').value.trim();
-  const thumb   = document.getElementById('eFThumb').value.trim();
-  const dur     = document.getElementById('eFDuration').value.trim();
-  const labels  = labelsR.split(',').map(l=>l.trim()).filter(Boolean);
-  const content = buildContent(src, embedId, desc, p.playlist, dur, thumb);
-
-  const btn = document.getElementById('editSaveBtn');
-  btn.disabled = true; btn.innerHTML = '<div class="inline-spin"></div> Saving...';
-
-  try {
-    await api(`/blogs/${CFG.BLOG_ID}/posts/${editPostId}?publish=true`, 'PUT', { kind:'blogger#post', title, content, labels });
-    showToast('✅ Updated! Live on your website.', 'ok');
-    closeEditModal();
-    await fetchPosts();
-    renderPosts(allPosts);
-    renderDash();
-  } catch(e) { showToast('❌ ' + e.message, 'err'); }
-  finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Save → Updates Website Now';
-  }
-}
-
-// ══ DELETE ══
-function openDel(postId) {
-  const p = allPosts.find(x => x.id === postId);
-  delPostId = postId;
-  delIsPlaylist = false;
-  document.getElementById('delModalTitle').textContent = 'Delete Post?';
-  document.getElementById('delPostTitle').textContent = p ? '"' + p.title + '"' : '';
-  document.getElementById('delWarning').textContent = '⚠️ This permanently deletes the post from Blogger and removes it from your website';
-  document.getElementById('delModal').classList.add('on');
-}
-function openDelPlaylist(postId) {
-  const p = allPosts.find(x => x.id === postId);
-  delPostId = postId; delIsPlaylist = true;
-  document.getElementById('delModalTitle').textContent = 'Delete Playlist?';
-  document.getElementById('delPostTitle').textContent = p ? '"' + p.title + '"' : '';
-  document.getElementById('delWarning').innerHTML = `⚠️ This permanently deletes the <b>entire playlist post</b> and all its ${p&&p.playlist?p.playlist.length:0} episodes from Blogger`;
-  document.getElementById('delModal').classList.add('on');
-}
-function closeDelModal() { document.getElementById('delModal').classList.remove('on'); delPostId = null; }
-
-async function confirmDelete() {
-  if (!delPostId) return;
-  const btn = document.getElementById('delConfirmBtn');
-  btn.disabled = true; btn.innerHTML = '<div class="inline-spin"></div> Deleting...';
-  try {
-    await api(`/blogs/${CFG.BLOG_ID}/posts/${delPostId}`, 'DELETE');
-    showToast('Post deleted from Blogger', 'ok');
-    closeDelModal();
-    await fetchPosts();
-    renderPosts(allPosts);
-    renderPlaylists();
-    renderDash();
-  } catch(e) { showToast('❌ ' + e.message, 'err'); }
-  finally { btn.disabled = false; btn.innerHTML = 'Delete Forever'; }
-}
-
-// ══ REMOVE EPISODE FROM PLAYLIST ══
-async function removeEpisodeFromPlaylist(plPostId, epIndex) {
-  const plPost = allPosts.find(x=>x.id===plPostId);
-  if (!plPost || !plPost.playlist) return;
-  const eps = plPost.playlist.filter((_,i) => i !== epIndex);
-  if (eps.length === 0) {
-    // Convert to single video if no episodes left
-    if (!confirm('Removing the last episode will convert this to a single-video post. Continue?')) return;
-  }
-  showLoad('Removing episode...');
-  try {
-    const content = eps.length >= 1
-      ? buildContent(eps[0].src, eps[0].id, plPost.plainDesc||'', eps.length>1?eps:null, '', plPost.thumb)
-      : buildContent('dm','',plPost.plainDesc||'',null,'',plPost.thumb);
-    await api(`/blogs/${CFG.BLOG_ID}/posts/${plPostId}?publish=true`, 'PUT', {
-      kind:'blogger#post', title:plPost.title, content, labels:plPost.labels
-    });
-    showToast('Episode removed', 'ok');
-    await fetchPosts();
-    renderPlaylists();
-    renderDash();
-    // Reopen the edit modal if it was open
-    if (document.getElementById('plModal').classList.contains('on')) {
-      const updated = allPosts.find(x=>x.id===plPostId);
-      if (updated) openEditPlaylist(plPostId);
-    }
-  } catch(e) { showToast('❌ ' + e.message, 'err'); }
-  finally { hideLoad(); }
-}
-
-// ══ PLAYLIST MODAL ══
-function openCreatePlaylist() {
-  plModalEditId = null;
-  plModalEps = [];
-  document.getElementById('plFTitle').value = '';
-  document.getElementById('plFLabels').value = '';
-  document.getElementById('plFThumb').value = '';
-  document.getElementById('plFDesc').value = '';
-  document.getElementById('plModalTitle').textContent = 'Create New Playlist';
-  document.getElementById('plSaveBtnTxt').textContent = 'Create Playlist';
-  renderModalEps();
-  document.getElementById('plModal').classList.add('on');
-}
-
-function openEditPlaylist(postId) {
-  const p = allPosts.find(x=>x.id===postId); if (!p) return;
-  plModalEditId = postId;
-  plModalEps = p.playlist ? JSON.parse(JSON.stringify(p.playlist)) : [];
-  document.getElementById('plFTitle').value = p.title || '';
-  document.getElementById('plFLabels').value = p.labels.join(', ');
-  document.getElementById('plFThumb').value = p.thumb || '';
-  document.getElementById('plFDesc').value = p.plainDesc || '';
-  document.getElementById('plModalTitle').textContent = 'Edit Playlist';
-  document.getElementById('plSaveBtnTxt').textContent = 'Save Changes';
-  renderModalEps();
-  document.getElementById('plModal').classList.add('on');
-}
-
-function closePlModal() { document.getElementById('plModal').classList.remove('on'); plModalEditId = null; }
-
-function renderModalEps() {
-  document.getElementById('plModalEpList').innerHTML = plModalEps.map((ep,i) => `
-    <div class="pl-ep">
-      <div class="pl-ep-n">${i+1}</div>
-      <div class="pl-ep-fields">
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.title)}" placeholder="Episode title" oninput="plModalEps[${i}].title=this.value">
-        <select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plModalEps[${i}].src=this.value">
-          <option value="dm"${ep.src==='dm'?' selected':''}>DM</option>
-          <option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option>
-        </select>
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.id)}" placeholder="Embed ID" oninput="plModalEps[${i}].id=this.value">
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="plModalEps[${i}].dur=this.value">
-      </div>
-      <button class="pl-ep-rm" onclick="plModalEps.splice(${i},1);renderModalEps()" title="Remove">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>`
-  ).join('');
-}
-
-function addModalEp() {
-  plModalEps.push({src:'dm',id:'',title:'Episode '+(plModalEps.length+1),dur:''});
-  renderModalEps();
-}
-
-async function savePl() {
-  const title  = document.getElementById('plFTitle').value.trim();
-  const labels = document.getElementById('plFLabels').value.split(',').map(l=>l.trim()).filter(Boolean);
-  const thumb  = document.getElementById('plFThumb').value.trim();
-  const desc   = document.getElementById('plFDesc').value.trim();
-  const eps    = plModalEps.filter(e=>e.id.trim());
-
-  if (!title) { showToast('Playlist title is required','err'); return; }
-
-  const content = buildContent(
-    eps.length?eps[0].src:'dm',
-    eps.length?eps[0].id:'',
-    desc, eps.length?eps:null, '', thumb
-  );
-  const payload = { kind:'blogger#post', title, content, labels };
-
-  const btn = document.getElementById('plSaveBtn');
-  btn.disabled=true; btn.innerHTML='<div class="inline-spin"></div> Saving...';
-  try {
-    if (plModalEditId) {
-      await api(`/blogs/${CFG.BLOG_ID}/posts/${plModalEditId}?publish=true`, 'PUT', payload);
-      showToast('✅ Playlist updated!', 'ok');
-    } else {
-      await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`, 'POST', payload);
-      showToast('🎉 Playlist created and live!', 'ok');
-    }
-    closePlModal();
-    await fetchPosts();
-    renderPlaylists();
-    renderDash();
-  } catch(e) { showToast('❌ ' + e.message, 'err'); }
-  finally {
-    btn.disabled=false;
-    btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> <span id="plSaveBtnTxt">${plModalEditId?'Save Changes':'Create Playlist'}</span>`;
-  }
-}
-
-// ══ ADD SINGLE VIDEO TO PLAYLIST MODAL ══
-function openAddToPl(videoPostId) {
-  const v = allPosts.find(x=>x.id===videoPostId); if (!v) return;
-  addToPlVideoId = videoPostId;
-  addToPlSelectedPl = null;
-  document.getElementById('addToPlVideoTitle').textContent = v.title;
-  document.getElementById('addToPlSearch').value = '';
-  document.getElementById('inlinePlName').value = v.title;
-  document.getElementById('inlinePlLabels').value = v.labels.join(', ');
-  document.getElementById('inlinePlEpTitle').value = 'Episode 1';
-  document.getElementById('inlineCreatePl').classList.remove('on');
-
-  // Show current episodes if this post is already a playlist
-  const curEps = document.getElementById('addToPlCurrentEps');
-  const curEpsList = document.getElementById('addToPlCurrentEpsList');
-  if (v.playlist && v.playlist.length) {
-    curEps.style.display = 'block';
-    curEpsList.innerHTML = v.playlist.map((ep,i)=>`
-      <div class="quick-ep-row">
-        <div class="quick-ep-num">${i+1}</div>
-        <div class="quick-ep-title">${escH(ep.title)}</div>
-        <div class="quick-ep-dur">${ep.dur||''}</div>
-        <button class="btn btn-danger btn-sm btn-icon" style="padding:3px 5px" onclick="removeEpisodeFromPlaylist('${videoPostId}',${i})" title="Remove ep">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>`).join('');
-  } else { curEps.style.display='none'; }
-
-  renderAddToPlList('');
-  document.getElementById('addToPlModal').classList.add('on');
-}
-
-function closeAddToPl() { document.getElementById('addToPlModal').classList.remove('on'); addToPlVideoId=null; addToPlSelectedPl=null; }
-
-function filterAddToPlList(q) { renderAddToPlList(q); }
-
-function renderAddToPlList(q) {
-  const v = allPosts.find(x=>x.id===addToPlVideoId);
-  const plPosts = allPosts.filter(p => p.playlist && p.playlist.length && p.id !== addToPlVideoId);
-  const filtered = q ? plPosts.filter(p=>p.title.toLowerCase().includes(q.toLowerCase())) : plPosts;
-  document.getElementById('addToPlList').innerHTML = filtered.length
-    ? filtered.map(p=>{
-        const thumb = p.thumb || '';
-        const sel = addToPlSelectedPl===p.id;
-        return `<div class="pl-picker-item${sel?' selected':''}" onclick="selectAddToPl('${p.id}',this)">
-          <div class="pl-picker-thumb">${thumb?`<img src="${thumb}" onerror="this.style.display='none'">`:'📋'}</div>
-          <div class="pl-picker-info">
-            <div class="pl-picker-name">${escH(p.title)}</div>
-            <div class="pl-picker-cnt">📋 ${p.playlist.length} episodes · ${p.src==='dm'?'Dailymotion':'Rumble'}</div>
-          </div>
-          <div class="pl-picker-check">
-            ${sel?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>':''}
-          </div>
-        </div>`;
-      }).join('')
-    : `<div class="empty" style="padding:20px">No playlists found. Create one below ↓</div>`;
-}
-
-function selectAddToPl(plId, el) {
-  addToPlSelectedPl = (addToPlSelectedPl===plId) ? null : plId;
-  document.querySelectorAll('.pl-picker-item').forEach(i=>i.classList.remove('selected'));
-  if (addToPlSelectedPl) el.classList.add('selected');
-  renderAddToPlList(document.getElementById('addToPlSearch').value);
-}
-
-function toggleInlineCreatePl() {
-  const box = document.getElementById('inlineCreatePl');
-  box.classList.toggle('on');
-  if (box.classList.contains('on')) addToPlSelectedPl = null;
-  renderAddToPlList(document.getElementById('addToPlSearch').value);
-}
-
-async function confirmAddToPl() {
-  const v = allPosts.find(x=>x.id===addToPlVideoId); if (!v) return;
-  const inlineOpen = document.getElementById('inlineCreatePl').classList.contains('on');
-
-  if (inlineOpen) {
-    // Create new playlist with this video
-    const newTitle = document.getElementById('inlinePlName').value.trim();
-    const newLabels = document.getElementById('inlinePlLabels').value.split(',').map(l=>l.trim()).filter(Boolean);
-    const epTitle = document.getElementById('inlinePlEpTitle').value.trim() || 'Episode 1';
-    if (!newTitle) { showToast('Please enter a playlist title','err'); return; }
-    const eps = [{src:v.src, id:v.embedId||'', title:epTitle, dur:''}];
-    const content = buildContent(v.src, v.embedId||'', v.plainDesc||'', eps, '', v.thumb);
-    const btn = document.getElementById('addToPlSaveBtn');
-    btn.disabled=true; btn.innerHTML='<div class="inline-spin"></div>';
-    try {
-      await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`, 'POST', {kind:'blogger#post',title:newTitle,content,labels:newLabels});
-      showToast(`🎉 Created playlist "${newTitle}" with this video!`, 'ok');
-      closeAddToPl();
-      await fetchPosts(); renderPlaylists(); renderDash();
-    } catch(e) { showToast('❌ '+e.message,'err'); }
-    finally { btn.disabled=false; btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Add to Playlist'; }
-    return;
-  }
-
-  if (!addToPlSelectedPl) { showToast('Select a playlist first','err'); return; }
-  const plPost = allPosts.find(x=>x.id===addToPlSelectedPl);
-  const newEpNum = (plPost.playlist||[]).length + 1;
-  const epInfo = { src: v.src, id: v.embedId||'', title: `${v.title} (Ep ${newEpNum})`, dur: '' };
-  closeAddToPl();
-  await addVideoToPlaylist(addToPlSelectedPl, epInfo);
-  renderPlaylists();
-}
-
-// ══ PLAYLIST BUILDER (Add Form) ══
-function renderEps() {
-  document.getElementById('plEpList').innerHTML = plEps.map((ep,i) => `
-    <div class="pl-ep">
-      <div class="pl-ep-n">${i+2}</div>
-      <div class="pl-ep-fields">
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.title)}" placeholder="Episode title" oninput="plEps[${i}].title=this.value;updatePreview()">
-        <select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plEps[${i}].src=this.value;updatePreview()">
-          <option value="dm"${ep.src==='dm'?' selected':''}>DM</option>
-          <option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option>
-        </select>
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${escH(ep.id)}" placeholder="Embed ID" oninput="plEps[${i}].id=this.value;updatePreview()">
-        <input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="plEps[${i}].dur=this.value">
-      </div>
-      <button class="pl-ep-rm" onclick="plEps.splice(${i},1);renderEps();updatePreview()" title="Remove">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>`
-  ).join('');
-}
-
-function addEp() {
-  plEps.push({src:'dm',id:'',title:'Episode '+(plEps.length+2),dur:''});
-  renderEps(); updatePreview();
-}
-
-// ══ PREVIEW ══
-function updateEmbedHint() {
-  const s = document.getElementById('fSource').value;
-  document.getElementById('embedHint').innerHTML = s === 'dm'
-    ? 'From: dailymotion.com/video/<b>x8l7kmf</b>'
-    : 'From: rumble.com/embed/<b>v4p2xkj</b>';
-}
-
-function updatePreview() {
-  const title   = document.getElementById('fTitle').value || 'Title here';
-  const src     = document.getElementById('fSource').value;
-  const embedId = document.getElementById('fEmbedId').value.trim();
-  const labels  = document.getElementById('fLabels').value;
-  const thumb   = document.getElementById('fThumb').value.trim();
-  const desc    = document.getElementById('fDesc').value.trim();
-  const dur     = document.getElementById('fDuration').value.trim();
-
-  document.getElementById('prevTitle').textContent = title;
-  document.getElementById('prevTitle').style.color = document.getElementById('fTitle').value ? 'var(--text)' : 'var(--text3)';
-  document.getElementById('prevMeta').textContent = (src==='dm'?'Dailymotion':'Rumble') + (labels?' · '+labels:'');
-
-  const img = document.getElementById('prevThumb');
-  const ph  = document.getElementById('prevThumbPh');
-  if (thumb) { img.src = thumb; img.style.display='block'; ph.style.display='none'; }
-  else { img.style.display='none'; ph.style.display='flex'; }
-
-  let eps = null;
-  if (currentPlMode==='new') {
-    const allEps = [{src,id:embedId,title,dur},...plEps.filter(e=>e.id.trim())];
-    if (allEps.length > 1 || (allEps.length===1 && allEps[0].id)) eps = allEps;
-  }
-  const content = buildContent(src, embedId, desc, eps, dur, thumb);
-  document.getElementById('postPreview').textContent = `Title: ${title}\nLabels: ${labels||'none'}\nMode: ${currentPlMode}\n\nPost content:\n${content}`;
-}
-
-function clearForm() {
-  ['fTitle','fEmbedId','fLabels','fThumb','fDuration','fDesc'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('fSource').value = 'dm';
-  plEps=[]; renderEps(); updatePreview();
-  editPostId = null;
-  document.getElementById('formPageTitle').textContent = 'Add New Video';
-  document.getElementById('formStatus').textContent = '';
-  setPlMode('none', document.querySelector('.pl-mode-tab'));
-}
-
-// ══ NAV ══
-function goPage(page, el) {
-  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
-  if (el) el.classList.add('on');
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.getElementById('page-'+page).classList.add('on');
-  const t = {dashboard:'Dashboard',posts:'All Posts',new:'Add New Video',playlists:'Playlists'};
-  document.getElementById('tbTitle').textContent = t[page]||page;
-  if (page==='posts') renderPosts(allPosts);
-  if (page==='playlists') renderPlaylists();
-  if (page==='new') { clearForm(); renderEps(); }
-}
-
-function updateCounts() {
-  document.getElementById('sbPostCnt').textContent = allPosts.length;
-  document.getElementById('sbPlCnt').textContent = allPosts.filter(p=>p.playlist&&p.playlist.length).length;
-}
-
-// ══ UI ══
-function showLoad(msg) { document.getElementById('loadingTxt').textContent=msg||'Loading...'; document.getElementById('loadingOv').classList.add('on'); }
-function hideLoad() { document.getElementById('loadingOv').classList.remove('on'); }
-function setStatus(ok, msg) {
-  document.getElementById('apiDot').className = 'api-dot ' + (ok?'ok':'err');
-  document.getElementById('apiTxt').textContent = ok ? 'Connected to Blogger' : (msg||'Error');
-}
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.className='toast on '+(type||'');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),3800);
-}
-
-// ══ RENDER DASHBOARD ══
-function renderDash() {
-  const p = allPosts;
-  const pls = p.filter(x => x.playlist && x.playlist.length).length;
-  const dm  = p.filter(x => x.src === 'dm').length;
-  const rm  = p.filter(x => x.src === 'rm').length;
-  const lbs = new Set(); p.forEach(x => x.labels.forEach(l => lbs.add(l)));
-  const totalEps = p.reduce((s,x)=>s+(x.playlist?x.playlist.length:0),0);
-
-  document.getElementById('dashStats').innerHTML = [
-    ['rgba(230,57,70,.1)','#e63946','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',p.length,'Total Posts'],
-    ['rgba(139,92,246,.1)','#8b5cf6','<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>',pls,'Playlists'],
-    ['rgba(255,214,10,.1)','#ffd60a','<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/>',totalEps,'Total Episodes'],
-    ['rgba(16,185,129,.1)','#10b981','<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>',lbs.size,'Categories'],
-    ['rgba(59,130,246,.1)','#3b82f6','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',dm+' / '+rm,'DM / Rumble']
-  ].map(([bg,c,ico,v,l]) =>
-    `<div class="stat"><div class="stat-icon" style="background:${bg}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2">${ico}</svg></div><div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div></div>`
-  ).join('');
-
-  const lc = {}; p.forEach(x => x.labels.forEach(l => lc[l] = (lc[l]||0)+1));
-  const lcs = Object.entries(lc).sort((a,b) => b[1]-a[1]);
-  const maxL = Math.max(...lcs.map(x=>x[1]),1);
-  const colors = ['#e63946','#3b82f6','#10b981','#ffd60a','#8b5cf6','#06b6d4','#f59e0b','#ec4899'];
-  document.getElementById('chartLabels').innerHTML = lcs.length
-    ? lcs.map(([name,cnt],i) =>
-        `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxL*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val">${cnt}</div></div>`
-      ).join('')
-    : '<div class="empty">No labels yet</div>';
-
-  const tot = Math.max(p.length, 1);
-  document.getElementById('chartSrc').innerHTML = `
-    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px">
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dm)">${dm}</div><div style="font-size:11px;color:var(--text2)">Dailymotion</div></div>
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--rumble)">${rm}</div><div style="font-size:11px;color:var(--text2)">Rumble</div></div>
-      <div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--text3)">${p.length-dm-rm}</div><div style="font-size:11px;color:var(--text2)">No embed</div></div>
-    </div>
-    <div class="bar-track" style="height:10px;border-radius:5px"><div class="bar-fill" style="width:${(dm/tot*100).toFixed(0)}%;height:100%;background:linear-gradient(90deg,var(--dm),#60a5fa)"></div></div>`;
-
-  document.getElementById('recentPosts').innerHTML = p.slice(0,8).map(x => {
-    const srcBadge = x.src==='dm' ? `<span style="color:var(--dm)">Dailymotion</span>` : x.src==='rm' ? `<span style="color:var(--rumble)">Rumble</span>` : `<span style="color:var(--text3)">No embed</span>`;
-    const plBadge = x.playlist&&x.playlist.length ? `<span style="color:var(--purple)"> · 📋 ${x.playlist.length}ep</span>` : '';
-    return `<div>• <b style="color:var(--text)">${x.title.substring(0,55)}</b> <span style="color:var(--text3)">— ${x.labels.join(', ')||'no labels'} · ${srcBadge}${plBadge}</span></div>`;
-  }).join('') || '<div class="empty">No posts yet</div>';
-}
-
-// ══ RENDER POSTS TABLE ══
-function renderPosts(posts) {
-  document.getElementById('postTblInfo').textContent = posts.length + ' posts';
-  const lbs = new Set(); allPosts.forEach(p => p.labels.forEach(l => lbs.add(l)));
-  const sel = document.getElementById('filterLbl');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">All Labels</option>' + [...lbs].map(l => `<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
-
-  document.getElementById('postsTbody').innerHTML = posts.length
-    ? posts.map(p => {
-        const thumb = p.thumb || 'https://picsum.photos/seed/'+p.id.slice(-6)+'/160/90';
-        const date  = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-        const live  = p.status !== 'DRAFT';
-        const hasPl = p.playlist && p.playlist.length;
-        return `<tr>
-          <td><div class="td-thumb"><img src="${thumb}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${Math.random().toFixed(6)}/160/90'"></div></td>
-          <td style="max-width:200px">
-            <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px" title="${escH(p.title)}">${p.title}</div>
-            <div style="font-size:11px;color:var(--text2);margin-top:2px">${p.labels.join(', ')||'—'}</div>
-          </td>
-          <td><span class="src-pill ${p.src==='dm'?'sp-dm':p.src==='rm'?'sp-rm':'sp-none'}">${p.src==='dm'?'DM':p.src==='rm'?'Rumble':'—'}</span></td>
-          <td>${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')||'—'}</td>
-          <td style="color:var(--text2);font-size:12px;white-space:nowrap">${date}</td>
-          <td>
-            ${live ? '<span class="badge badge-green">🟢 Live</span>' : '<span class="badge badge-gold">Draft</span>'}
-            ${hasPl ? `<span class="badge badge-purple" style="margin-left:3px">📋 ${p.playlist.length}ep</span>` : ''}
-          </td>
-          <td><div class="act-row">
-            <button class="btn btn-secondary btn-sm btn-icon" onclick="openEdit('${p.id}')" title="Edit post">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            <button class="btn btn-purple btn-sm btn-icon" onclick="openAddToPl('${p.id}')" title="Add to playlist / manage playlist">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <button class="btn btn-secondary btn-sm btn-icon" onclick="window.open('${p.url}','_blank')" title="View live">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </button>
-            <button class="btn btn-danger btn-sm btn-icon" onclick="openDel('${p.id}')" title="Delete">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg>
-            </button>
-          </div></td>
-        </tr>`;
-      }).join('')
-    : '<tr><td colspan="7"><div class="empty">No posts found</div></td></tr>';
-}
-
-function filterPosts(q) {
-  const lbl  = document.getElementById('filterLbl').value;
-  const type = document.getElementById('filterType').value;
-  let r = allPosts;
-  if (q) r = r.filter(p => p.title.toLowerCase().includes(q.toLowerCase()) || p.labels.some(l => l.toLowerCase().includes(q.toLowerCase())));
-  if (lbl) r = r.filter(p => p.labels.includes(lbl));
-  if (type==='playlist') r = r.filter(p=>p.playlist&&p.playlist.length);
-  if (type==='single')   r = r.filter(p=>!p.playlist||!p.playlist.length);
-  renderPosts(r);
-}
-
-// ══ RENDER PLAYLISTS (Card View) ══
-function renderPlaylists() {
-  const q   = document.getElementById('plSearch')?.value || '';
-  const src = document.getElementById('plFilterSrc')?.value || '';
-  let pls = allPosts.filter(p => p.playlist && p.playlist.length);
-  if (q)   pls = pls.filter(p=>p.title.toLowerCase().includes(q.toLowerCase()));
-  if (src) pls = pls.filter(p=>p.src===src);
-  document.getElementById('plTblInfo').textContent = pls.length + ' playlist' + (pls.length!==1?'s':'');
-  document.getElementById('plCards').innerHTML = pls.length
-    ? pls.map(p=>{
-        const thumb = p.thumb || '';
-        const date  = p.published ? new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-        return `<div class="pl-card">
-          <div class="pl-card-thumb">
-            ${thumb?`<img src="${thumb}" onerror="this.style.display='none'">`:``}
-            <div class="pl-card-thumb-ph" ${thumb?'style="display:none"':''}>📋</div>
-            <div class="pl-ep-count">📋 ${p.playlist.length} eps</div>
-          </div>
-          <div class="pl-card-body">
-            <div class="pl-card-title" title="${escH(p.title)}">${p.title}</div>
-            <div class="pl-card-meta">
-              <span class="src-pill ${p.src==='dm'?'sp-dm':'sp-rm'}" style="font-size:9px">${p.src==='dm'?'DM':'Rumble'}</span>
-              ${p.labels.map(l=>`<span class="cat-chip" style="font-size:10px;padding:2px 6px">${l}</span>`).join('')}
-              <span style="color:var(--text3)"> · ${date}</span>
-            </div>
-            <div class="pl-card-eps">
-              ${p.playlist.map((ep,i)=>`<div class="pl-ep-row">
-                <div class="pl-ep-num">${i+1}</div>
-                <div class="pl-ep-name">${escH(ep.title)}</div>
-                <div class="pl-ep-dur">${ep.dur||''}</div>
-              </div>`).join('')}
-            </div>
-            <div class="pl-card-actions">
-              <button class="btn btn-secondary btn-sm" style="flex:1" onclick="openEditPlaylist('${p.id}')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                Edit
-              </button>
-              <button class="btn btn-purple btn-sm" style="flex:1" onclick="openAddToPl('${p.id}')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Ep
-              </button>
-              <button class="btn btn-ghost btn-sm btn-icon" onclick="window.open('${p.url}','_blank')" title="View">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              </button>
-              <button class="btn btn-danger btn-sm btn-icon" onclick="openDelPlaylist('${p.id}')" title="Delete playlist">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>`;
-      }).join('')
-    : '<div class="empty" style="grid-column:1/-1">No playlists yet. Click "New Playlist" to create one, or add episodes when uploading a video.</div>';
-}
-
-function filterPlaylists(q) { renderPlaylists(); }
-
-// ══ BOOT ══
-window.addEventListener('load', async () => {
-  if (parseToken()) {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    await fetchUser();
-    await fetchPosts();
-    renderDash();
-    renderEps();
-    updatePreview();
-  }
-});
+// EDIT MODAL
+function openEdit(postId){const p=allPosts.find(x=>x.id===postId);if(!p)return;editPostId=postId;document.getElementById('eFTitle').value=p.title||'';document.getElementById('eFSource').value=p.src||'dm';document.getElementById('eFEmbedId').value=p.embedId||'';document.getElementById('eFLabels').value=p.labels.join(', ');document.getElementById('eFThumb').value=p.thumb||'';document.getElementById('eFDur').value='';document.getElementById('eFDesc').value=(p.content||'').replace(/data-sv-[^"]*="[^"]*"/g,'').replace(/<[^>]+>/g,'').trim().substring(0,300);editEps=p.playlist?p.playlist.map(e=>({...e})):[];renderEditEps();document.getElementById('editModal').classList.add('on');}
+function closeEdit(){document.getElementById('editModal').classList.remove('on');editPostId=null;}
+
+function renderEditEps(){const list=document.getElementById('editEpList');if(!editEps.length){list.innerHTML='<div class="pl-empty">No episodes — this is a single video.</div>';return;}list.innerHTML=editEps.map((ep,i)=>`<div class="pl-ep"><div class="pl-ep-n">${i+1}</div><div class="pl-ep-fields"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.title)}" placeholder="Episode title" oninput="editEps[${i}].title=this.value"><select class="form-select" style="padding:7px 9px;font-size:12px" onchange="editEps[${i}].src=this.value"><option value="dm"${ep.src==='dm'?' selected':''}>DM</option><option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option></select><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.id)}" placeholder="Embed ID" oninput="editEps[${i}].id=this.value"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="editEps[${i}].dur=this.value"></div><button class="pl-ep-rm" onclick="editEps.splice(${i},1);renderEditEps()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('');}
+function addEditEp(){editEps.push({src:'dm',id:'',title:'Episode '+(editEps.length+1),dur:''});renderEditEps();}
+
+async function saveEdit(){const p=allPosts.find(x=>x.id===editPostId);if(!p)return;const title=document.getElementById('eFTitle').value.trim();const src=document.getElementById('eFSource').value;const embedId=document.getElementById('eFEmbedId').value.trim();const labels=document.getElementById('eFLabels').value.split(',').map(l=>l.trim()).filter(Boolean);const desc=document.getElementById('eFDesc').value.trim();const thumb=document.getElementById('eFThumb').value.trim();const dur=document.getElementById('eFDur').value.trim();const eps=editEps.filter(e=>e.id.trim());const content=buildContent(src,embedId,desc,eps.length?eps:null,dur,thumb);
+const btn=document.getElementById('editSaveBtn');btn.disabled=true;btn.innerHTML='<div class="inline-spin"></div> Saving...';
+try{await api(`/blogs/${CFG.BLOG_ID}/posts/${editPostId}?publish=true`,'PUT',{kind:'blogger#post',title,content,labels});toast('✅ Updated!','ok');closeEdit();await fetchPosts();renderPosts(allPosts);renderDash();if(document.getElementById('page-playlists').classList.contains('on'))renderPlaylists();}
+catch(e){toast('❌ '+e.message,'err');}finally{btn.disabled=false;btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Save & Update Website';}}
+
+// DELETE
+function openDel(id){const p=allPosts.find(x=>x.id===id);delPostId=id;document.getElementById('delTitle').textContent=p?'"'+p.title+'"':'';document.getElementById('delModal').classList.add('on');}
+function closeDel(){document.getElementById('delModal').classList.remove('on');delPostId=null;}
+async function confirmDel(){if(!delPostId)return;const btn=document.getElementById('delConfirmBtn');btn.disabled=true;btn.innerHTML='<div class="inline-spin"></div>';try{await api(`/blogs/${CFG.BLOG_ID}/posts/${delPostId}`,'DELETE');toast('Deleted','ok');closeDel();await fetchPosts();renderPosts(allPosts);renderDash();if(document.getElementById('page-playlists').classList.contains('on'))renderPlaylists();}catch(e){toast('❌ '+e.message,'err');}finally{btn.disabled=false;btn.innerHTML='Delete Forever';}}
+
+// PLAYLIST MANAGER
+function renderPlaylists(){const q=(document.getElementById('plSearch')||{value:''}).value.toLowerCase();const pls=allPosts.filter(p=>p.playlist&&p.playlist.length).filter(p=>!q||p.title.toLowerCase().includes(q));document.getElementById('plTblInfo').textContent=pls.length+' playlists';
+document.getElementById('plGrid').innerHTML=pls.length?pls.map(p=>{const thumb=p.thumb||`https://picsum.photos/seed/${p.id.slice(-5)}/160/90`;const date=p.published?new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';return`<div class="pl-card"><div class="pl-card-hd"><div class="pl-card-thumb"><img src="${eh(thumb)}" loading="lazy" onerror="this.src='https://picsum.photos/seed/x${Math.random().toFixed(4)}/160/90'"></div><div style="flex:1;min-width:0"><div class="pl-card-title">${eh(p.title)}</div><div style="margin-top:4px;font-size:11px;color:var(--text2)">${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')} <span class="badge badge-purple">📋 ${p.playlist.length} eps</span> <span style="color:var(--text3)">${date}</span></div></div><div style="display:flex;gap:4px;flex-shrink:0"><button class="btn btn-blue btn-sm btn-icon" onclick="openEditPl('${p.id}')" title="Edit playlist"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-ghost btn-sm btn-icon" onclick="window.open('${p.url||'#'}','_blank')" title="View"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button><button class="btn btn-danger btn-sm btn-icon" onclick="openDel('${p.id}')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></div><div class="ep-list">${p.playlist.map((ep,i)=>`<div class="ep-row"><div class="ep-num">${i+1}</div><div class="ep-title">${eh(ep.title||'Episode '+(i+1))}</div><span class="src-pill ${ep.src==='dm'?'sp-dm':'sp-rm'}" style="font-size:9px">${ep.src==='dm'?'DM':'RM'}</span><span class="ep-dur">${ep.dur||''}</span><button class="ep-del" onclick="delEpFromPl('${p.id}',${i})" title="Remove"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('')}<div style="padding:8px 0;display:flex;gap:6px"><button class="btn btn-ghost btn-sm" onclick="openEditPl('${p.id}')" style="font-size:11px;padding:5px 10px">✏️ Edit Episodes</button><button class="btn btn-blue btn-sm" onclick="openLibrary('${p.id}')" style="font-size:11px;padding:5px 10px">📚 From Library</button></div></div></div>`;}).join(''):'<div class="empty" style="grid-column:1/-1">No playlists yet. Click "Create New Playlist".</div>';}
+
+function filterPl(q){renderPlaylists();}
+
+// DELETE EPISODE
+async function delEpFromPl(plId,idx){const pl=allPosts.find(p=>p.id===plId);if(!pl||!pl.playlist)return;if(!confirm(`Remove episode ${idx+1} from "${pl.title}"?`))return;const eps=pl.playlist.filter((_,i)=>i!==idx);if(!eps.length){if(confirm('Last episode — delete the whole playlist post?'))await deleteById(plId);return;}const content=buildContent(eps[0].src,eps[0].id,'',eps,'',pl.thumb||'');try{await api(`/blogs/${CFG.BLOG_ID}/posts/${plId}?publish=true`,'PUT',{kind:'blogger#post',title:pl.title,content,labels:pl.labels});toast('✅ Episode removed','ok');await fetchPosts();renderPlaylists();}catch(e){toast('❌ '+e.message,'err');}}
+async function deleteById(id){try{await api(`/blogs/${CFG.BLOG_ID}/posts/${id}`,'DELETE');toast('Deleted','ok');await fetchPosts();renderPlaylists();renderDash();}catch(e){toast('❌ '+e.message,'err');}}
+
+// CREATE / EDIT PLAYLIST MODAL
+function openCreatePl(){plModalEditId=null;plModalEps=[];document.getElementById('plModalTitle').textContent='📋 Create Playlist';document.getElementById('plSaveBtn').innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish Playlist';['plTitle','plLabels','plThumb','plDesc'].forEach(id=>document.getElementById(id).value='');renderPlEps();document.getElementById('plModal').classList.add('on');}
+function openEditPl(id){const p=allPosts.find(x=>x.id===id);if(!p)return;plModalEditId=id;plModalEps=p.playlist?p.playlist.map(e=>({...e})):[];document.getElementById('plModalTitle').textContent='✏️ Edit Playlist';document.getElementById('plSaveBtn').innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Save Playlist';document.getElementById('plTitle').value=p.title||'';document.getElementById('plLabels').value=p.labels.join(', ');document.getElementById('plThumb').value=p.thumb||'';document.getElementById('plDesc').value='';renderPlEps();document.getElementById('plModal').classList.add('on');}
+function closePlModal(){document.getElementById('plModal').classList.remove('on');plModalEditId=null;plModalEps=[];}
+
+function renderPlEps(){const l=document.getElementById('plModalEpList');if(!plModalEps.length){l.innerHTML='<div class="pl-empty">No episodes yet.</div>';return;}l.innerHTML=plModalEps.map((ep,i)=>`<div class="pl-ep"><div class="pl-ep-n">${i+1}</div><div class="pl-ep-fields"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.title||'')}" placeholder="Title" oninput="plModalEps[${i}].title=this.value"><select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plModalEps[${i}].src=this.value"><option value="dm"${ep.src==='dm'?' selected':''}>DM</option><option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option></select><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.id||'')}" placeholder="Embed ID" oninput="plModalEps[${i}].id=this.value"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="plModalEps[${i}].dur=this.value"></div><button class="pl-ep-rm" onclick="plModalEps.splice(${i},1);renderPlEps()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('');}
+function addPlEp(){plModalEps.push({src:'dm',id:'',title:'Episode '+(plModalEps.length+1),dur:''});renderPlEps();}
+
+async function savePl(){const title=document.getElementById('plTitle').value.trim();const labelsR=document.getElementById('plLabels').value.trim();const thumb=document.getElementById('plThumb').value.trim();const desc=document.getElementById('plDesc').value.trim();if(!title){toast('Title required','err');return;}const eps=plModalEps.filter(e=>e.id.trim());if(!eps.length){toast('Add at least 1 episode with embed ID','err');return;}const labels=labelsR?labelsR.split(',').map(l=>l.trim()).filter(Boolean):[];const content=buildContent(eps[0].src,eps[0].id,desc,eps,'',thumb);const btn=document.getElementById('plSaveBtn');btn.disabled=true;btn.innerHTML='<div class="inline-spin"></div> Publishing...';
+try{if(plModalEditId){await api(`/blogs/${CFG.BLOG_ID}/posts/${plModalEditId}?publish=true`,'PUT',{kind:'blogger#post',title,content,labels});toast('✅ Playlist updated!','ok');}else{await api(`/blogs/${CFG.BLOG_ID}/posts/?isDraft=false`,'POST',{kind:'blogger#post',title,content,labels});toast('🎉 Playlist published!','ok');}closePlModal();await fetchPosts();renderPlaylists();renderDash();}catch(e){toast('❌ '+e.message,'err');}finally{btn.disabled=false;btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish Playlist';}}
+
+// LIBRARY MODAL
+function openLibrary(forPlId){libForPlId=forPlId;libSelected=[];const singles=allPosts.filter(p=>!p.playlist||!p.playlist.length);renderLib(singles);document.getElementById('libModal').classList.add('on');}
+function closeLib(){document.getElementById('libModal').classList.remove('on');libSelected=[];libForPlId=null;}
+function renderLib(posts){document.getElementById('libList').innerHTML=posts.length?posts.map(p=>{const th=p.thumb||`https://picsum.photos/seed/${p.id.slice(-5)}/160/90`;const sel=libSelected.includes(p.id);return`<div class="pl-select-item${sel?' selected':''}" onclick="toggleLib('${p.id}',this)"><div class="pl-select-thumb"><img src="${eh(th)}" loading="lazy" onerror="this.style.display='none'"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${eh(p.title)}</div><div style="font-size:11px;color:var(--text3)">${p.src==='dm'?'Dailymotion':'Rumble'} · ${p.labels.join(', ')||'no labels'}</div></div><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;${sel?'background:var(--accent);border-color:var(--accent)':''}">${sel?'<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>':''}</div></div>`}).join(''):'<div class="empty">No single videos found</div>';}
+function filterLib(q){const posts=allPosts.filter(p=>!p.playlist||!p.playlist.length).filter(p=>!q||p.title.toLowerCase().includes(q.toLowerCase()));renderLib(posts);}
+function toggleLib(id,el){const idx=libSelected.indexOf(id);if(idx>-1)libSelected.splice(idx,1);else libSelected.push(id);el.classList.toggle('selected');const dot=el.querySelector('div:last-child');if(libSelected.includes(id)){dot.style.background='var(--accent)';dot.style.borderColor='var(--accent)';dot.innerHTML='<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>';}else{dot.style.background='';dot.style.borderColor='var(--border2)';dot.innerHTML='';}document.getElementById('libSelCount').textContent=libSelected.length+' selected';}
+async function confirmLib(){if(!libSelected.length){toast('Select at least one video','err');return;}const newEps=libSelected.map(id=>{const p=allPosts.find(x=>x.id===id);return p?{src:p.src||'dm',id:p.embedId||'',title:p.title,dur:''}:null;}).filter(Boolean);
+if(libForPlId){const pl=allPosts.find(p=>p.id===libForPlId);if(!pl){closeLib();return;}const eps=[...(pl.playlist||[]),...newEps];const content=buildContent(eps[0].src,eps[0].id,'',eps,'',pl.thumb||'');try{await api(`/blogs/${CFG.BLOG_ID}/posts/${libForPlId}?publish=true`,'PUT',{kind:'blogger#post',title:pl.title,content,labels:pl.labels});toast(`✅ ${newEps.length} episode(s) added!`,'ok');closeLib();await fetchPosts();renderPlaylists();}catch(e){toast('❌ '+e.message,'err');}
+}else{plModalEps=[...plModalEps,...newEps];renderPlEps();closeLib();toast(`✅ ${newEps.length} video(s) added`,'ok');}}
+
+// ADD SINGLE VIDEO TO PLAYLIST
+function openAddToPl(id){addToPlVideoId=id;const v=allPosts.find(p=>p.id===id);document.getElementById('addToPlTitle').textContent=v?`"${v.title}"`:'';selectedPl=null;const pls=allPosts.filter(p=>p.playlist&&p.playlist.length);document.getElementById('addToPlList').innerHTML=pls.length?pls.map(pl=>{const th=pl.thumb||`https://picsum.photos/seed/${pl.id.slice(-5)}/160/90`;return`<div class="pl-select-item" onclick="pickPl('${pl.id}',this)"><div class="pl-select-thumb"><img src="${eh(th)}" loading="lazy" onerror="this.style.display='none'"></div><div style="flex:1"><div style="font-size:13px;font-weight:500">${eh(pl.title)}</div><div style="font-size:11px;color:var(--text3)">📋 ${pl.playlist.length} eps</div></div></div>`;}).join(''):'<div class="empty">No playlists yet</div>';document.getElementById('addToPlModal').classList.add('on');}
+function closeAddToPl(){document.getElementById('addToPlModal').classList.remove('on');addToPlVideoId=null;selectedPl=null;}
+function pickPl(id,el){document.querySelectorAll('#addToPlList .pl-select-item').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');selectedPl=id;}
+async function confirmAddToPl(){if(!selectedPl||!addToPlVideoId){toast('Select a playlist','err');return;}const v=allPosts.find(p=>p.id===addToPlVideoId);const pl=allPosts.find(p=>p.id===selectedPl);if(!v||!pl)return;const eps=[...(pl.playlist||[]),{src:v.src||'dm',id:v.embedId||'',title:v.title,dur:''}];const content=buildContent(eps[0].src,eps[0].id,'',eps,'',pl.thumb||'');try{await api(`/blogs/${CFG.BLOG_ID}/posts/${selectedPl}?publish=true`,'PUT',{kind:'blogger#post',title:pl.title,content,labels:pl.labels});toast(`✅ Added to "${pl.title}"!`,'ok');closeAddToPl();await fetchPosts();renderPosts(allPosts);}catch(e){toast('❌ '+e.message,'err');}}
+function createPlFromVideo(){const v=allPosts.find(p=>p.id===addToPlVideoId);closeAddToPl();openCreatePl();if(v){document.getElementById('plTitle').value=v.title;document.getElementById('plLabels').value=v.labels.join(', ');document.getElementById('plThumb').value=v.thumb||'';plModalEps=[{src:v.src||'dm',id:v.embedId||'',title:v.title,dur:''}];renderPlEps();}}
+
+// VIDEO MODE TABS
+function setMode(m){videoMode=m;document.getElementById('tabSingle').classList.toggle('on',m==='single');document.getElementById('tabPl').classList.toggle('on',m==='playlist');document.getElementById('singleSec').style.display=m==='single'?'block':'none';document.getElementById('plSec').style.display=m==='playlist'?'block':'none';updatePreview();}
+function onExPlChange(){const id=document.getElementById('fExPl').value;document.getElementById('newPlBuilder').style.display=id?'none':'block';document.getElementById('submitBtn').innerHTML=id?'<div class="inline-spin" style="display:none"></div>➕ Add to Playlist':'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger';}
+function popExPl(){const pls=allPosts.filter(p=>p.playlist&&p.playlist.length);document.getElementById('fExPl').innerHTML='<option value="">— Build new playlist below —</option>'+pls.map(p=>`<option value="${p.id}">${eh(p.title)} (${p.playlist.length} eps)</option>`).join('');}
+
+// EP BUILDER
+function renderEps(){const l=document.getElementById('plEpList');if(!plEps.length){l.innerHTML='<div class="pl-empty">No episodes. Click "Add Episode" or "This Video as Ep".</div>';return;}l.innerHTML=plEps.map((ep,i)=>`<div class="pl-ep"><div class="pl-ep-n">${i+1}</div><div class="pl-ep-fields"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.title)}" placeholder="Title" oninput="plEps[${i}].title=this.value;updatePreview()"><select class="form-select" style="padding:7px 9px;font-size:12px" onchange="plEps[${i}].src=this.value"><option value="dm"${ep.src==='dm'?' selected':''}>DM</option><option value="rm"${ep.src==='rm'?' selected':''}>Rumble</option></select><input class="form-input" style="padding:7px 9px;font-size:12px" value="${eh(ep.id)}" placeholder="Embed ID" oninput="plEps[${i}].id=this.value;updatePreview()"><input class="form-input" style="padding:7px 9px;font-size:12px" value="${ep.dur||''}" placeholder="12:34" oninput="plEps[${i}].dur=this.value"></div><button class="pl-ep-rm" onclick="plEps.splice(${i},1);renderEps();updatePreview()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('');}
+function addEp(){plEps.push({src:'dm',id:'',title:'Episode '+(plEps.length+1),dur:''});renderEps();updatePreview();}
+function addCurAsEp(){const title=document.getElementById('fTitle').value.trim()||'Episode '+(plEps.length+1);const src=document.getElementById('fSource').value;const id=document.getElementById('fEmbedId').value.trim();const dur=document.getElementById('fDuration').value.trim();plEps.push({src,id,title,dur});renderEps();updatePreview();document.getElementById('fEmbedId').value='';document.getElementById('fDuration').value='';}
+
+// PREVIEW
+function updateHint(){const s=document.getElementById('fSource').value;document.getElementById('embedHint').innerHTML=s==='dm'?'From: dailymotion.com/video/<b>x8l7kmf</b>':'From: rumble.com/embed/<b>v4p2xkj</b>';}
+function updatePreview(){const title=document.getElementById('fTitle').value||'Title here';const src=document.getElementById('fSource').value;const embedId=document.getElementById('fEmbedId').value.trim();const labels=document.getElementById('fLabels').value;const thumb=document.getElementById('fThumb').value.trim();const desc=document.getElementById('fDesc').value.trim();const dur=document.getElementById('fDuration').value.trim();const eps=plEps.filter(e=>e.id.trim());document.getElementById('prevTitle').textContent=title;document.getElementById('prevTitle').style.color=document.getElementById('fTitle').value?'var(--text)':'var(--text3)';document.getElementById('prevMeta').textContent=(src==='dm'?'Dailymotion':'Rumble')+(labels?' · '+labels:'')+(eps.length?' · 📋 '+eps.length+' eps':'');const img=document.getElementById('prevThumb'),ph=document.getElementById('prevPh');if(thumb){img.src=thumb;img.style.display='block';ph.style.display='none';}else{img.style.display='none';ph.style.display='flex';}const content=buildContent(src,embedId,desc,videoMode==='playlist'?eps:null,dur,thumb);document.getElementById('postPreview').textContent=`Title: ${title}\nLabels: ${labels||'none'}\n\n${content}`;}
+function clearForm(){['fTitle','fEmbedId','fLabels','fThumb','fDuration','fDesc'].forEach(id=>document.getElementById(id).value='');document.getElementById('fSource').value='dm';plEps=[];renderEps();updatePreview();updateHint();editPostId=null;document.getElementById('formPageTitle').textContent='Add New Video';document.getElementById('formStatus').textContent='';setMode('single');document.getElementById('fExPl').value='';document.getElementById('newPlBuilder').style.display='block';document.getElementById('submitBtn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Publish to Blogger';}
+
+// DASHBOARD
+function renderDash(){const p=allPosts,pls=p.filter(x=>x.playlist&&x.playlist.length).length,dm=p.filter(x=>x.src==='dm').length,rm=p.filter(x=>x.src==='rm').length;const lbs=new Set();p.forEach(x=>x.labels.forEach(l=>lbs.add(l)));
+document.getElementById('dashStats').innerHTML=[['rgba(230,57,70,.1)','#e63946','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',p.length,'Total Videos'],['rgba(139,92,246,.1)','#8b5cf6','<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>',pls,'Playlists'],['rgba(16,185,129,.1)','#10b981','<circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/>',lbs.size,'Categories'],['rgba(255,214,10,.1)','#ffd60a','<polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/>',dm+'/'+rm,'DM/Rumble']].map(([bg,c,ico,v,l])=>`<div class="stat"><div class="stat-icon" style="background:${bg}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2">${ico}</svg></div><div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div></div>`).join('');
+const lc={};p.forEach(x=>x.labels.forEach(l=>lc[l]=(lc[l]||0)+1));const lcs=Object.entries(lc).sort((a,b)=>b[1]-a[1]);const maxL=Math.max(...lcs.map(x=>x[1]),1);const clrs=['#e63946','#8b5cf6','#10b981','#ffd60a','#3b82f6','#06b6d4','#f59e0b','#ec4899'];
+document.getElementById('chartLabels').innerHTML=lcs.length?lcs.map(([n,cnt],i)=>`<div class="bar-row"><div class="bar-name">${n}</div><div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxL*100).toFixed(0)}%;background:${clrs[i%clrs.length]}"></div></div><div class="bar-val">${cnt}</div></div>`).join(''):'<div class="empty">No labels</div>';
+const tot=Math.max(p.length,1);document.getElementById('chartSrc').innerHTML=`<div style="display:flex;gap:16px;justify-content:center;margin-bottom:12px"><div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--dm)">${dm}</div><div style="font-size:11px;color:var(--text2)">Dailymotion</div></div><div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--rumble)">${rm}</div><div style="font-size:11px;color:var(--text2)">Rumble</div></div><div style="text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--purple)">${pls}</div><div style="font-size:11px;color:var(--text2)">Playlists</div></div></div><div class="bar-track" style="height:8px;border-radius:4px"><div class="bar-fill" style="width:${(dm/tot*100).toFixed(0)}%;height:100%;background:linear-gradient(90deg,var(--dm),#60a5fa)"></div></div>`;
+document.getElementById('recentPosts').innerHTML=p.slice(0,8).map(x=>`<div>• ${x.playlist?'📋':'📹'} <b style="color:var(--text)">${x.title.substring(0,55)}</b> <span style="color:var(--text3)">· ${x.labels.join(',')||'no labels'} · <span style="color:${x.src==='dm'?'var(--dm)':x.src==='rm'?'var(--rumble)':'var(--text3)'}">${x.src==='dm'?'Dailymotion':x.src==='rm'?'Rumble':'—'}</span></span></div>`).join('')||'<div class="empty">No posts</div>';}
+
+// RENDER POSTS TABLE
+function renderPosts(posts){document.getElementById('postTblInfo').textContent=posts.length+' videos';const lbs=new Set();allPosts.forEach(p=>p.labels.forEach(l=>lbs.add(l)));const sel=document.getElementById('filterLbl'),cur=sel.value;sel.innerHTML='<option value="">All Labels</option>'+[...lbs].map(l=>`<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
+document.getElementById('postsTbody').innerHTML=posts.length?posts.map(p=>{const th=p.thumb||`https://picsum.photos/seed/${p.id.slice(-5)}/160/90`;const date=p.published?new Date(p.published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';const hasPl=p.playlist&&p.playlist.length;return`<tr><td><div class="td-thumb"><img src="${eh(th)}" loading="lazy" onerror="this.src='https://picsum.photos/seed/r${Math.random().toFixed(4)}/160/90'"></div></td><td style="max-width:200px"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px">${eh(p.title)}</div></td><td><span class="src-pill ${p.src==='dm'?'sp-dm':p.src==='rm'?'sp-rm':'sp-none'}">${p.src==='dm'?'DM':p.src==='rm'?'Rumble':'—'}</span></td><td>${p.labels.map(l=>`<span class="cat-chip">${l}</span>`).join('')||'—'}</td><td style="color:var(--text2);font-size:12px;white-space:nowrap">${date}</td><td>${p.status!=='DRAFT'?'<span class="badge badge-green">🟢 Live</span>':'<span class="badge badge-gold">Draft</span>'}${hasPl?` <span class="badge badge-purple">📋 ${p.playlist.length}ep</span>`:''}</td><td><div class="act-row"><button class="btn btn-secondary btn-sm btn-icon" onclick="openEdit('${p.id}')" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-blue btn-sm btn-icon" onclick="openAddToPl('${p.id}')" title="Add to playlist"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="12" y1="3" x2="12" y2="9"/></svg></button><button class="btn btn-ghost btn-sm btn-icon" onclick="window.open('${p.url||'#'}','_blank')" title="View"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button><button class="btn btn-danger btn-sm btn-icon" onclick="openDel('${p.id}')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>`;}).join(''):'<tr><td colspan="7"><div class="empty">No videos found</div></td></tr>';}
+function filterPosts(q){const lbl=document.getElementById('filterLbl').value;const src=document.getElementById('filterSrc').value;let r=allPosts;if(q)r=r.filter(p=>p.title.toLowerCase().includes(q.toLowerCase())||p.labels.some(l=>l.toLowerCase().includes(q.toLowerCase())));if(lbl)r=r.filter(p=>p.labels.includes(lbl));if(src)r=r.filter(p=>p.src===src);renderPosts(r);}
+
+// NAV
+function goPage(page,el){document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));if(el)el.classList.add('on');document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.getElementById('page-'+page).classList.add('on');const titles={dashboard:'Dashboard',posts:'All Videos',new:'Add Video',playlists:'Manage Playlists'};document.getElementById('tbTitle').textContent=titles[page]||page;if(page==='posts')renderPosts(allPosts);if(page==='playlists')renderPlaylists();if(page==='new'){clearForm();popExPl();}if(page==='dashboard')renderDash();}
+function updateCounts(){document.getElementById('sbPostCnt').textContent=allPosts.length;const n=allPosts.filter(p=>p.playlist&&p.playlist.length).length;const el=document.getElementById('sbPlCnt');el.textContent=n;el.className='sb-cnt'+(n>0?' hi':'');}
+
+// UI
+function showLoad(m){document.getElementById('loadingTxt').textContent=m||'Loading...';document.getElementById('loadingOv').classList.add('on');}
+function hideLoad(){document.getElementById('loadingOv').classList.remove('on');}
+function setStatus(ok,m){document.getElementById('apiDot').className='api-dot '+(ok?'ok':'err');document.getElementById('apiTxt').textContent=ok?'Connected':'Error: '+(m||'');}
+function toast(m,t){const el=document.getElementById('toast');el.textContent=m;el.className='toast on '+(t||'');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),3800);}
+
+// BOOT
+window.addEventListener('load',async()=>{if(parseToken()){document.getElementById('authScreen').style.display='none';document.getElementById('app').style.display='block';await fetchUser();await fetchPosts();renderDash();renderEps();updatePreview();}});
 </script>
 </body>
 </html>
