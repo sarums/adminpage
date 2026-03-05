@@ -488,7 +488,7 @@ async function fetchPosts(){showLoad('Loading posts...');try{let posts=[],pt='';
 
 // ENRICH
 function enrich(p){const c=p.content||'';const svType=c.match(/data-sv-type=["']([^"']+)["']/i);const svId=c.match(/data-sv-id=["']([^"']+)["']/i);const svEps=c.match(/data-sv-eps=["']([^"']*?)["']/i);let src=null,embedId=null,playlist=null;
-if(svType&&svId){src=svType[1];embedId=svId[1];if(src==='playlist'&&svEps){try{playlist=JSON.parse(svEps[1]);if(playlist.length){src=playlist[0].src;embedId=playlist[0].id;}}catch(e){}}}
+if(svType){src=svType[1];if(svId)embedId=svId[1];if(src==='playlist'&&svEps){try{playlist=JSON.parse(svEps[1]);if(playlist.length){src=playlist[0].src;embedId=playlist[0].id;if(!embedId&&svId)embedId=svId[1];}}catch(e){}}else if(svId){embedId=svId[1];}}
 if(!embedId){const dm=c.match(/<dm[^>]+id=["']([^"']+)["']/i);const rm=c.match(/<rm[^>]+id=["']([^"']+)["']/i);if(dm){src='dm';embedId=dm[1];}else if(rm){src='rm';embedId=rm[1];}}
 const labels=(p.labels||[]).map(l=>typeof l==='string'?l:(l.name||''));
 const tm=c.match(/src=["']([^"']*(?:bp\.blogspot|googleusercontent|picsum)[^"']*\.(jpg|jpeg|png|webp)[^"']*)["']/i);
@@ -496,7 +496,7 @@ const thumb=(p.images&&p.images[0]&&p.images[0].url)||(tm&&tm[1])||'';
 return{...p,src,embedId,playlist,labels,thumb};}
 
 // BUILD CONTENT
-function buildContent(src,embedId,desc,eps,dur,thumb){let b='';if(thumb)b+=`<div style="display:none"><img src="${ea(thumb)}" /></div>\n`;if(desc)b+=`<p>${et(desc)}</p>\n`;if(eps&&eps.length){b+=`<div class="sv-embed" data-sv-type="playlist" data-sv-eps="${ea(JSON.stringify(eps))}" style="display:none"></div>`;}else if(embedId){b+=`<div class="sv-embed" data-sv-type="${ea(src)}" data-sv-id="${ea(embedId)}"${dur?` data-sv-dur="${ea(dur)}"`:''} style="display:none"></div>`;}return b;}
+function buildContent(src,embedId,desc,eps,dur,thumb){let b='';if(thumb)b+=`<div style="display:none"><img src="${ea(thumb)}" /></div>\n`;if(desc)b+=`<p>${et(desc)}</p>\n`;if(eps&&eps.length){b+=`<div class="sv-embed" data-sv-type="playlist" data-sv-id="${ea(eps[0].id||'')}" data-sv-eps="${ea(JSON.stringify(eps))}" style="display:none"></div>`;}else if(embedId){b+=`<div class="sv-embed" data-sv-type="${ea(src)}" data-sv-id="${ea(embedId)}"${dur?` data-sv-dur="${ea(dur)}"`:''} style="display:none"></div>`;}return b;}
 function ea(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
 function et(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function eh(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
